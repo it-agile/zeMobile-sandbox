@@ -6,6 +6,8 @@
 // Page: uebersicht
 // ==========================================================================
 
+m_require('app/views/tabs.js');
+
 zeMobile.uebersicht = M.PageView.design({
 
     /*
@@ -20,7 +22,7 @@ zeMobile.uebersicht = M.PageView.design({
      },
      */
 
-    childViews: 'header content',
+    childViews: 'header content tabs',
 
     header: M.ToolbarView.design({
 
@@ -42,6 +44,6 @@ zeMobile.uebersicht = M.PageView.design({
 
     }),
 
-    tabs: zeMobile.tabs
+    tabs: zeMobile.tabsView
 });
 

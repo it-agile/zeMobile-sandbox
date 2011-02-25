@@ -1,7 +1,7 @@
-zeMobile.tabs = M.TabBarView.design({
+zeMobile.tabsView = M.TabBarView.design({
     childViews: 'tabNeu tabUebersicht tabEinstellungen',
+    transition: M.TRANSITION.FLIP,
     anchorLocation:M.BOTTOM,
-    transition:M.TRANSITION.FLIP,
     name: 'tabbar',
 
     tabNeu: M.TabBarItemView.design({
@@ -11,7 +11,7 @@ zeMobile.tabs = M.TabBarView.design({
     }),
     tabUebersicht: M.TabBarItemView.design({
         value: '†bersicht',
-        page: 'uebersich'
+        page: 'uebersicht'
     }),
     tabEinstellungen: M.TabBarItemView.design({
         value: 'Einstellungen',

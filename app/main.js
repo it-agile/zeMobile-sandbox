@@ -13,5 +13,5 @@ zeMobile.app = M.Application.design({
 
     neu: zeMobile.neu,
     uebersicht: zeMobile.uebersicht,
-    einstellungen: zeMobile.einstllungen
+    einstellungen: zeMobile.einstellungen
 });

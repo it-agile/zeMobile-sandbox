@@ -6,6 +6,8 @@
 // Page: neu
 // ==========================================================================
 
+m_require('app/views/tabs.js');
+
 zeMobile.neu = M.PageView.design({
 
     /*
@@ -38,32 +40,13 @@ zeMobile.neu = M.PageView.design({
 
         label: M.LabelView.design({
 
-            value: 'neu'
+            value: 'neu3'
 
         })
 
     }),
 
-    tabs: M.TabBarView.design({
-        childViews: 'tabNeu tabUebersicht tabEinstellungen',
-        anchorLocation:M.BOTTOM,
-        transition:M.TRANSITION.FLIP,
-        name: 'tabbar',
-
-        tabNeu: M.TabBarItemView.design({
-            value: 'Neu',
-            page: 'neu',
-            isActive: YES
-        }),
-        tabUebersicht: M.TabBarItemView.design({
-            value: '†bersicht',
-            page: 'uebersich'
-        }),
-        tabEinstellungen: M.TabBarItemView.design({
-            value: 'Einstellungen',
-            page: 'einstellungen'
-        })
-    })
+    tabs: zeMobile.tabsView
 
 
 });

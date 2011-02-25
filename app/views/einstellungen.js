@@ -6,7 +6,9 @@
 // Page: einstllungen
 // ==========================================================================
 
-zeMobile.einstllungen = M.PageView.design({
+m_require('app/views/tabs.js');
+
+zeMobile.einstellungen = M.PageView.design({
 
     /*
      * uncomment the following lines, to use the onLoad function
@@ -20,7 +22,7 @@ zeMobile.einstllungen = M.PageView.design({
      },
      */
 
-    childViews: 'header content',
+    childViews: 'header content tabs',
 
     header: M.ToolbarView.design({
 
@@ -36,12 +38,11 @@ zeMobile.einstllungen = M.PageView.design({
 
         label: M.LabelView.design({
 
-            value: 'einstllungen'
+            value: 'einstellungen'
 
         })
 
     }),
-
-    tabs: zeMobile.tabs
+    tabs: zeMobile.tabsView
 });
 
