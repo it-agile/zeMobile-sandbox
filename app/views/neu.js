@@ -28,6 +28,7 @@ zeMobile.neu = M.PageView.design({
 
     header: M.ToolbarView.design({
 
+        id: 'neuHeader',
         value: 'HEADER',
 
         anchorLocation: M.TOP
@@ -36,7 +37,7 @@ zeMobile.neu = M.PageView.design({
 
     content: M.ScrollView.design({
 
-        childViews: 'label',
+        childViews: 'labelZeit labelProject label',
 
         label: M.LabelView.design({
 
