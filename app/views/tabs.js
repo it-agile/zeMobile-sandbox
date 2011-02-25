@@ -6,7 +6,7 @@ zeMobile.tabsView = M.TabBarView.design({
 
     tabNeu: M.TabBarItemView.design({
         id: 'neuTab',
-        value: 'Neu 3',
+        value: 'Neu',
         page: 'neu',
         isActive: YES
     }),
