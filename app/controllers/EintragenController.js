@@ -6,7 +6,7 @@
 // Controller: EintragenController
 // ==========================================================================
 
-zeMobile.EintragenController = M.Controller.extend({
+eMobile.EintragenController = M.Controller.extend({
 
     // sample controller property.
 	   myControllerProperty: '',
@@ -22,30 +22,18 @@ zeMobile.EintragenController = M.Controller.extend({
                 kommentar:'Dies ist ein Test'},
             url: 'http://ze-test.it-agile.de/api/zeiten/2010/8/sz/',
             type: 'POST',     */
-            url: 'http://127.0.0.1:8090/api/projekte/',
-            username: 'sz',
-            password: '123',
-            async:false,
+            url: '/api/projekte/',
+            dataType: 'text',
+            username: 'rb',
+            password: 'bla',
             success: function(data) {
-                alert(data);
+                alert('Erfolg:' + data);
             },
             error: function(data) {
-                alert(data);
+                alert('Fehler:'+ data);
             }
 
         })
-
-/*        M.Request.init({
-            url: 'http://sz:123@ze-test.it-agile.de/api/zeiten/2010/8/sz/',
-            data: "tag=13.08.2010&start=9:00&ende=17:00&taetigkeit=31&kommentar=Dies ist ein Test",
-            method: 'POST',
-            onSuccess: function(data) {
-                alert('funzt' +data);
-            },
-            onError: function(data) {
-                alert('funzt nicht' + data);
-            }
-        }).send();    */
     },
 
 
