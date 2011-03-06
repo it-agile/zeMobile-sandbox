@@ -6,7 +6,7 @@
 // Controller: EintragenController
 // ==========================================================================
 
-eMobile.EintragenController = M.Controller.extend({
+zeMobile.EintragenController = M.Controller.extend({
 
     // sample controller property.
 	   myControllerProperty: '',
