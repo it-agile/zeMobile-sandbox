@@ -1,19 +1,55 @@
+window.zeMobile =
+  benutzer:
+    name: -> $.cookie("benutzer")
+    passwort: -> $.cookie("passwort")
+
+    istAngemeldet: ->
+      @name() != null
+
+    anmelden: (benutzer, passwort) ->
+      $.cookie("benutzer", benutzer)
+      $.cookie("passwort", passwort)
+
+
+
+$.extend $.mobile.datebox.prototype.options,
+  "dateFormat": "dd.mm.YYYY"
+  "headerFormat": "dd.mm.YYYY"
+  "daysOfWeek": ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"]
+  "daysOfWeekShort": ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"]
+  "monthsOfYear": ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli",
+                   "August", "September", "Oktober", "November", "Dezember"]
+  "monthsOfYearShort": ["Jan", "Feb", "März", "Apr", "Mai", "Jun", "Jul",
+                        "Aug", "Sep", "Okt", "Nov", "Dez"]
+  "setDateButtonLabel": "Datum übernehmen"
+  "setTimeButtonLabel": "Uhrzeit übernehmen"
 
 
 $(document).ready ->
-#  $("#tabbar").tmpl(active: "neu").appendTo("#neu").page()
-#  $("#tabbar").tmpl(active: "uebersicht").appendTo("#uebersicht").page()
   $("#anmeldenForm").submit ->
-    $.cookie("benutzer", $("#benutzer").val())
-    $.cookie("passwort", $("#passwort").val())
+    window.zeMobile.benutzer.anmelden $("#benutzer").val(), $("#passwort").val()
+    $.ajax
+      url: '/api/projekte/'
+      username: window.zeMobile.benutzer.name()
+      password: window.zeMobile.benutzer.passwort()
+      dataType: 'json'
+      success: (data) ->
+        window.zeMobile.projekte = data
     false
+
+  $("zeitEditor").bind "pagebeforeshow", ->
+    projektEditor = $("projektZeitEditor")
+    projektEditor.remove(0) while projektEditor.options.length > 0
+    _.each window.zeMobile.projekte, (projekt) ->
+      alert(projekt.name)
+      projektEditor.add new Option(projekt.name, projekt.name)
+
 
   $("#zeitEditorForm").submit ->
     $.ajax
-      url: '/api/zeiten/',
-      dataType: 'text',
-      username: $.cookie("benutzer"),
-      password: $.cookie("passwort",
-      dataType: 'json',
+      url: '/api/zeiten/'
+      username: window.zeMobile.benutzer.name()
+      password: window.zeMobile.benutzer.passwort()
+      dataType: 'json'
     false
 
