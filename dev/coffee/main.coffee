@@ -37,12 +37,13 @@ $(document).ready ->
         window.zeMobile.projekte = data
     false
 
-  $("zeitEditor").bind "pagebeforeshow", ->
-    projektEditor = $("projektZeitEditor")
-    projektEditor.remove(0) while projektEditor.options.length > 0
+  $("#zeitEditor").bind "pagebeforeshow", ->
+    projektEditor = $("#projektZeitEditor")[0]
+    projektEditor.remove(0) while projektEditor.length > 0
     _.each window.zeMobile.projekte, (projekt) ->
-      alert(projekt.name)
       projektEditor.add new Option(projekt.name, projekt.name)
+    projektEditor.selectedIndex = 0
+    $("#projektZeitEditor").selectmenu("refresh")
 
 
   $("#zeitEditorForm").submit ->
