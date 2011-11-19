@@ -3,27 +3,11 @@
 <head>
     <title>Page Title</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="lib/jquery.mobile-1.0b2.css"/>
-    <link rel="stylesheet" href="lib/jquery.mobile.datebox.css"/>
-
-    <script type="text/javascript" src="lib/jquery-1.6.2.js"></script>
-    <script type="text/javascript" src="lib/jquery.cookie.js"></script>
-    <script type="text/javascript" src="lib/jquery.urls.js"></script>
-    <script type="text/javascript">
-        $(document).bind("mobileinit", function() {
-            $.mobile.page.prototype.options.degradeInputs.date = 'text';
-        });
-    </script>
-    <script type="text/javascript" src="lib/jquery.mobile-1.0b2.js"></script>
-    <script type="text/javascript" src="lib/jquery.mobile.datebox.js"></script>
-    <script type="text/javascript" src="lib/jquery.tmpl.js"></script>
-    <script type="text/javascript" src="lib/underscore.js"></script>
-    <script type="text/javascript" src="js/main.js"></script>
-
+    <link rel="stylesheet" href="closureMobile/jquery.mobile-1.0.css"/>
 </head>
 <body>
 <div data-role="page" id="menu">
-    <div data-role="header">
+    <div data-role="header" data-theme="e">
         <h1>ZE Mobile</h1>
     </div>
     <div data-role="content">
@@ -57,7 +41,7 @@
 </div>
 
 <div data-role="page" id="zeitEditor" data-add-back-btn="true">
-    <div data-role="header">
+    <div data-role="header" data-theme="f">
         <h1 id="zeitEditorHeader">Zeit erfassen  uuuu</h1>
     </div>
     <div data-role="content">
@@ -106,19 +90,6 @@
 
     </div>
 </div>
-
-<script id="tabbar" type="text/x-jquery-tmpl">
-    <div data-role="footer">
-        <div data-role="navbar">
-            <ul>
-                <li><a href="#zeitEditor" {{if active=='neu'}} class="ui-btn-active,ui-state-persist" {{/if}}
-                    data-icon="star">ZeitEditor</a></li>
-                <li><a href="#uebersicht" {{if active=='uebersicht'}} class="ui-btn-active,ui-state-persist" {{/if}} >&Uuml;bersicht</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</script>
-
+<script src="http://localhost:9810/compile?id=zeMobile"></script>
 </body>
 </html>

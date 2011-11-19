@@ -6,11 +6,17 @@
     </splitter-proportions>
     <settings />
   </component>
-  <component name="DependencyValidationManager">
-    <option name="SKIP_IMPORT_STATEMENTS" value="false" />
-  </component>
   <component name="EntryPointsManager">
     <entry_points version="2.0" />
+  </component>
+  <component name="FacetAutodetectingManager">
+    <autodetection-disabled>
+      <facet-type id="Python">
+        <modules>
+          <module name="zeMobile" />
+        </modules>
+      </facet-type>
+    </autodetection-disabled>
   </component>
   <component name="FacetStructureConfigurable.UI">
     <splitter-proportions>
@@ -22,6 +28,7 @@
       <SplitterProportionsDataImpl />
     </splitter-proportions>
   </component>
+  <component name="IdProvider" IDEtalkID="D6D59E765D3DDE1EA8A03CAA35FCBE00" />
   <component name="JavadocGenerationManager">
     <option name="OUTPUT_DIRECTORY" />
     <option name="OPTION_SCOPE" value="protected" />

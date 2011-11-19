@@ -1,4 +1,2 @@
-build
-.idea/workspace.xml
-*~
-dev/js
+dev/closure-library
+dev/closureMobile
