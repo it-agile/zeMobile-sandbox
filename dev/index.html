@@ -2,36 +2,37 @@
 <html>
 <head>
     <title>Page Title</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="closureMobile/jquery.mobile-1.0.css"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-<div data-role="page" id="menu">
-    <div data-role="header" data-theme="e">
+<div id="menu" class="page page-active">
+    <header>
         <h1>ZE Mobile</h1>
-    </div>
-    <div data-role="content">
-        <ul data-role="listview" data-inset="true">
-            <li><a href="#zeitEditor">Zeit erfassen</a></li>
-            <li><a href="#uebersicht">Monats&uuml;bersicht</a></li>
+    </header>
+    <div>
+        <ul class="menulist">
+            <li><a id="zeitEditorLink">Zeit erfassen</a></li>
+            <li><a id="uebersichtLink">Monats&uuml;bersicht</a></li>
         </ul>
-        <ul data-role="listview" data-inset="true">
-            <li><a href="#anmeldung">Anmelden</a></li>
+        <ul class="menulist">
+            <li><a id="anmeldungLink">Anmelden</a></li>
         </ul>
     </div>
 </div>
 
-<div data-role="page" id="anmeldung" data-add-back-btn="true">
-    <div data-role="header">
+<div id="anmeldung" class="page">
+    <header>
+        <a id="anmeldungmenubacklink" class="backlink">Men&uuml;</a>
         <h1>Anmeldung</h1>
-    </div>
-    <div data-role="content">
-        <form id="anmeldenForm" data-ajax="false">
-            <div data-role="fieldcontain">
+    </header>
+    <div>
+        <form id="anmeldenForm">
+            <div>
                 <label for="benutzer">Benutzername</label>
                 <input name="benutzer" id="benutzer" type="text"/>
             </div>
-            <div data-role="fieldcontain">
+            <div>
                 <label for="passwort">Passwort</label>
                 <input name="passwort" id="passwort" type="password"/>
             </div>
@@ -40,41 +41,39 @@
     </div>
 </div>
 
-<div data-role="page" id="zeitEditor" data-add-back-btn="true">
-    <div data-role="header" data-theme="f">
-        <h1 id="zeitEditorHeader">Zeit erfassen  uuuu</h1>
-    </div>
-    <div data-role="content">
+<div id="zeitEditor" class="page">
+    <header>
+        <a id="zeitEditormenubacklink" class="backlink">Men&uuml;</a>
+        <h1 id="zeitEditorHeader">Zeit erfassen</h1>
+    </header>
+    <div>
         <form id="zeitEditorForm" data-ajax="false">
-            <div data-role="fieldcontain">
+            <div>
                 <label for="tagZeitEditor">Datum</label>
-                <input name="tagZeitEditor" id="tagZeitEditor" type="date"
-                       data-role="datebox" data-options='{"mode": "calbox", "calStartDay": 1}'>
+                <input name="tagZeitEditor" id="tagZeitEditor" type="date">
             </div>
-            <div data-role="fieldcontain">
+            <div>
                 <label for="vonZeitZeitEditor">Von</label>
-                <input name="vonZeitZeitEditor" id="vonZeitZeitEditor" type="date"
-                       data-role="datebox" data-options='{"mode": "timeflipbox"}'>
+                <input name="vonZeitZeitEditor" id="vonZeitZeitEditor" type="time">
             </div>
-            <div data-role="fieldcontain">
+            <div>
                 <label for="bisZeitZeitEditor">Bis</label>
-                <input name="bisZeitZeitEditor" id="bisZeitZeitEditor" type="date"
-                       data-role="datebox" data-options='{"mode": "timeflipbox"}'>
+                <input name="bisZeitZeitEditor" id="bisZeitZeitEditor" type="time">
             </div>
-            <div data-role="fieldcontain">
+            <div>
                 <label for="projektZeitEditor" class="select">Projekt</label>
                 <select name="projektZeitEditor" id="projektZeitEditor">
                     <option value="hdi">HDI Gerling</option>
                     <option value="intern">Intern</option>
                 </select>
             </div>
-            <div data-role="fieldcontain">
-                <label for="taetigkeitZeitEditor" class="select">Projekt</label>
+            <div>
+                <label for="taetigkeitZeitEditor" class="select">T&auml;tigkeit</label>
                 <select name="taetigkeitZeitEditor" id="taetigkeitZeitEditor">
                     <option value="1">Entwicklung</option>
                 </select>
             </div>
-            <div data-role="fieldcontain">
+            <div>
                 <label for="kommentarZeitEditor">Kommentar (f&uuml;r Kunden sichtbar)</label>
                 <textarea cols="40" rows="8" name="kommentarZeitEditor" id="kommentarZeitEditor"></textarea>
             </div>
@@ -82,14 +81,15 @@
         </form>
     </div>
 </div>
-<div data-role="page" id="uebersicht" data-add-back-btn="true">
-    <div data-role="header">
+<div id="uebersicht" class="page">
+    <header>
+        <a id="uebersichtmenubacklink" class="backlink">Men&uuml;</a>
         <h1>&Uuml;bersicht</h1>
-    </div>
-    <div data-role="content">
+    </header>
+    <div>
 
     </div>
 </div>
-<script src="http://localhost:9810/compile?id=zeMobile"></script>
+<script src="http://robertbeeger.local:9810/compile?id=zeMobile"></script>
 </body>
 </html>
