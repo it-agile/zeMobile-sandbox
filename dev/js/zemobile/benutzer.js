@@ -25,19 +25,27 @@ zemobile.benutzer.passwort_ = '';
 zemobile.benutzer.anmelden = function(username, passwort) {
     zemobile.benutzer.username_ = username;
     zemobile.benutzer.passwort_ = passwort;
-}
+};
 
 /**
  * @return {string}
  */
 zemobile.benutzer.username = function() {
     return zemobile.benutzer.username_;
-}
+};
+
+/**
+ * @return {string}
+ */
+zemobile.benutzer.passwort = function() {
+    return zemobile.benutzer.passwort_;
+};
 
 
 goog.events.listen(goog.dom.getElement('anmeldenForm'), goog.events.EventType.SUBMIT, function(e) {
     var usernameInput = goog.dom.getElement('benutzer');
     var passwortInput = goog.dom.getElement('passwort');
     zemobile.benutzer.anmelden(usernameInput.value, passwortInput.value);
+    e.preventDefault();
 });
 
