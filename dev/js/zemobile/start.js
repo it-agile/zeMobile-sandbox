@@ -1,11 +1,11 @@
 goog.provide('zemobile.start');
 
-goog.require('goog.dom');
-goog.require('goog.events');
-goog.require('goog.events.EventType');
+goog.require('zemobile.Menu');
+goog.require('zemobile.Einstellungen');
+goog.require('zemobile.Uebersicht');
+goog.require('zemobile.ZeitEditor');
 
-goog.require('zemobile.page');
-goog.require('zemobile.benutzer');
+zemobile.seite.aktiviereSeite('menu');
 
-goog.events.listen(goog.dom.getElement('zeitEditorForm'), goog.events.EventType.SUBMIT, function(e) {
-});
+
+

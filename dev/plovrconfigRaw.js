@@ -1,7 +1,7 @@
 {
     "id": "zeMobile",
     "closure-library": "closure-library/closure/goog",
-    "paths": ["js"],
+    "paths": ["js", "closure-library/third_party/"],
     "inputs": "js/zemobile/start.js",
     "mode": "RAW",
     "checks": {

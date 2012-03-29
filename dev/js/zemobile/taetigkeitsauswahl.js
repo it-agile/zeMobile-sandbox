@@ -1,59 +1,65 @@
 goog.provide('zemobile.taetigkeitsauswahl');
 
 goog.require('goog.net.XhrIo');
-goog.require('goog.crypt.base64');
 goog.require('goog.dom');
 goog.require('goog.array');
 
-goog.require('zemobile.benutzer');
-
-
-
+/**
+ * @private
+ * @type {Object}
+ */
 zemobile.taetigkeitsauswahl.projekteUndTaetigkeiten_ = [];
 
 /**
- * @param {string} projektName
+ * @private
+ * @type {Number}
  */
-zemobile.taetigkeitsauswahl.waehleProjekt = function(projektName) {
-    var projekt = goog.array.find(zemobile.taetigkeitsauswahl.projekteUndTaetigkeiten_, function(projekt) {
-        if (projekt.name === projektName) {
+zemobile.taetigkeitsauswahl.letzteAktualisierung_ = null;
+
+/**
+ * @const
+ * @type {Number}
+ */
+zemobile.taetigkeitsauswahl.AKTUALISIERUNGSINTERVAL = 60 * 60 * 1000;
+
+/**
+ *
+ * @param {Function} callbackNachdemLaden
+ * @private
+ */
+zemobile.taetigkeitsauswahl.ladeProjekteVomServer = function (callbackNachDemLaden) {
+    goog.net.XhrIo.send('/api/projekte', function (e) {
+        var xhr = e.target;
+        zemobile.taetigkeitsauswahl.projekteUndTaetigkeiten_ = xhr.getResponseJson();
+        callbackNachDemLaden(zemobile.taetigkeitsauswahl.projekteUndTaetigkeiten_);
+    }, 'GET');
+};
+
+/**
+ * @param {string} projektName
+ * @returns {Array}
+ */
+zemobile.taetigkeitsauswahl.getTaetigkeitenFuerProjekt= function (projektName) {
+
+    var projekt = goog.array.find(zemobile.taetigkeitsauswahl.projekteUndTaetigkeiten_, function (projekt) {
+        if (projekt['name'] === projektName) {
             return true;
         }
     });
-    var taetigkeiten = projekt.taetigkeiten;
-
-    var taetigkeitZeitEditor = goog.dom.getElement('taetigkeitZeitEditor');
-    while (taetigkeitZeitEditor.length > 0) {
-        taetigkeitZeitEditor.remove(0);
-    }
-
-    goog.array.forEach(taetigkeiten, function(taetigkeit) {
-        taetigkeitZeitEditor.add(new Option(taetigkeit.name, taetigkeit.name));
-    });
-}
-
-zemobile.taetigkeitsauswahl.ladeTaetigkeiten = function() {
-    var username = zemobile.benutzer.username();
-    var passwort = zemobile.benutzer.passwort();
-    var auth = 'Basic ' + goog.crypt.base64.encodeString(username+':'+passwort, false);
-    goog.net.XhrIo.send('/api/projekte', function(e) {
-        var xhr = e.target;
-        zemobile.taetigkeitsauswahl.projekteUndTaetigkeiten_ =  xhr.getResponseJson();
-
-        var projektZeitEditor = goog.dom.getElement('projektZeitEditor');
-        while (projektZeitEditor.length > 0) {
-            projektZeitEditor.remove(0);
-        }
-        goog.array.forEach(zemobile.taetigkeitsauswahl.projekteUndTaetigkeiten_, function(projekt) {
-            projektZeitEditor.add(new Option(projekt.name, projekt.name));
-        });
-        zemobile.taetigkeitsauswahl.waehleProjekt(zemobile.taetigkeitsauswahl.projekteUndTaetigkeiten_[0].name);
-
-    },'GET', null,{'Authorization': auth});
+    return projekt.taetigkeiten;
 };
 
-goog.events.listen(goog.dom.getElement('projektZeitEditor'), goog.events.EventType.CHANGE, function(e) {
-    zemobile.taetigkeitsauswahl.waehleProjekt(zemobile.taetigkeitsauswahl.projekteUndTaetigkeiten_[e.target.selectedIndex].name);
-});
-
+/**
+ *
+ * @param {Function} callbackNachDemLaden
+ */
+zemobile.taetigkeitsauswahl.ladeProjekte = function (callbackNachDemLaden) {
+    var aktuelleZeitInMilis = Date.now()
+    if (zemobile.taetigkeitsauswahl.letzteAktualisierung_ === null ||
+        (zemobile.taetigkeitsauswahl.letzteAktualisierung_ < (aktuelleZeitInMilis - zemobile.taetigkeitsauswahl.AKTUALISIERUNGSINTERVAL))) {
+        zemobile.taetigkeitsauswahl.ladeProjekteVomServer(callbackNachDemLaden);
+    } else {
+        callbackNachDemLaden(zemobile.taetigkeitsauswahl.projekteUndTaetigkeiten_);
+    }
+};
 
