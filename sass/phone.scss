@@ -1,0 +1,308 @@
+@import "compass/reset";
+@import "compass/css3/images";
+@import "compass/css3/border-radius";
+@import "compass/css3/background-size";
+@import "compass/css3/box-sizing";
+@import "compass/css3/appearance";
+
+$default_border-radius: 5px;
+$monthHeader_background_color:#656565;
+$monthHeader_text_color: #fdff78;
+$dayHeader_background_color:#3c8948;
+$dayHeader_text_color: $monthHeader_text_color;
+$timeEntry_border_color: #808080;
+$dialog_background_color: #f5f5f5;
+$dialog_border_color: #808080;
+$input_text_color: #000000;
+$input_border_color: #656565;
+$input_background_color: #eff3f5;
+$disabled_input_text_color: #000000;
+$expander_color: #ffffff;
+
+$symbol_plus: "\f055";
+$symbol_minus: "\f056";
+$symbol_slash: "\2192";
+
+
+@mixin ze-background($color) {
+  background-color: $color;
+  @include background-image(linear-gradient(top, $color, darken($color, 17%)));
+}
+
+@font-face {
+  font-family: 'FontAwesome';
+  src: url('font/fontawesome-webfont.eot');
+  src: url('font/fontawesome-webfont.eot?#iefix') format('embedded-opentype'), url('font/fontawesome-webfont.woff') format('woff'), url('font/fontawesome-webfont.ttf') format('truetype'), url('font/fontawesome-webfont.svgz#FontAwesomeRegular') format('svg'), url('font/fontawesome-webfont.svg#FontAwesomeRegular') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
+  margin: 0;
+  width: 100%;
+  outline: none;
+  min-height: 100%;
+  font-size: 17px;
+  @include background-size(10px 10px);
+  background-color: #c5c7ba;
+  background-image: -webkit-gradient(linear, 0 0, 100% 0, color-stop(.5, rgba(255, 255, 255, .2)), color-stop(.5, transparent), to(transparent));
+  background-image: -webkit-linear-gradient(0deg, rgba(255, 255, 255, .2) 50%, transparent 50%, transparent);
+  background-image: -moz-linear-gradient(0deg, rgba(255, 255, 255, .2) 50%, transparent 50%, transparent);
+  background-image: -ms-linear-gradient(0deg, rgba(255, 255, 255, .2) 50%, transparent 50%, transparent);
+  background-image: -o-linear-gradient(0deg, rgba(255, 255, 255, .2) 50%, transparent 50%, transparent);
+  background-image: linear-gradient(0deg, rgba(255, 255, 255, .2) 50%, transparent 50%, transparent);
+
+}
+
+input, select, textarea, button {
+  font-size: 17px;
+}
+
+.month {
+  margin: 0;
+}
+
+.monthHeader {
+  padding: 5px;
+  margin: 0;
+  color: $monthHeader_text_color;
+  @include ze-background($monthHeader_background_color);
+}
+
+.monthHeader:active {
+  @include ze-background(lighten($monthHeader_background_color, 20%));
+}
+
+.day {
+  margin: 5px;
+}
+
+.dayHeader {
+  padding-top: 5px;
+  padding-right: 10px;
+  padding-left: 10px;
+  padding-bottom: 5px;
+  color: $dayHeader_text_color;
+  @include border-radius;
+  @include ze-background($dayHeader_background_color);
+}
+
+.dayHeader:active {
+  @include ze-background(lighten($dayHeader_background_color, 20%));
+}
+
+.floatRight {
+  float: right;
+}
+
+.hoursToWork:before {
+  content: "/ ";
+}
+
+.timeEntries {
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+
+.timeEntry {
+  display: block;
+  margin-left: 5px;
+  margin-right: 5px;
+  padding: 5px;
+  border: {
+    top:0;
+    left: solid 1px $timeEntry_border_color;
+    bottom: solid 1px $timeEntry_border_color;
+    right: solid 1px $timeEntry_border_color;
+  }
+  border-collapse: collapse;
+  @include ze-background(#e8ecee);
+}
+
+.timeEntry:last-child {
+  @include border-bottom-radius;
+}
+
+input,textarea, select {
+  @include appearance(none);
+  color: $input_text_color;
+  background: $input_background_color;
+  padding: 3px;
+  border: 1px solid $input_border_color;
+  @include border-radius;
+}
+
+input:disabled, textarea:disabled, select:disabled {
+  background: transparent;
+  border: transparent;
+  font-size: 14px;
+  color: $disabled_input_text_color;
+  opacity: 1;
+  font-weight: bold;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-top: 1px;
+  padding-bottom: 1px;
+}
+
+.time {
+  max-width: 3em;
+}
+
+.timeSeparator:before {
+  content: $symbol_slash;
+}
+
+.timeSeparator {
+  width: 0;
+}
+
+.fullSizeElement {
+  display: block;
+  padding-right: 10px;
+  padding-left: 10px;
+  width: 100%;
+}
+
+.project {
+  text-align: right;
+  direction: rtl;
+  @extend .fullSizeElement;
+}
+
+.project option {
+  text-align: right;
+}
+
+.activity {
+  text-align: right;
+  direction: rtl;
+  @extend .fullSizeElement;
+}
+
+.comment {
+  text-align: right;
+  @extend .fullSizeElement;
+  @include box-sizing(border-box);
+}
+
+.expander {
+  display: inline-block;
+  font-family: FontAwesome;
+  color: $expander_color;
+  padding: {
+    left: 0.5em;
+    right: 0;
+    top: 0;
+    bottom: 0;
+  }
+}
+
+.containerCollapsed > .content {
+  display: none;
+}
+
+.containerExpanded > .header .expander::before {
+  content: $symbol_minus;
+}
+
+.containerCollapsed > .header .expander::before {
+  content: $symbol_plus;
+}
+
+.modalifier {
+  display: block;
+  position: absolute;
+  z-index: 10;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  padding: {
+    top: 30px;
+    right: 0;
+    left: 0;
+    bottom: 0;
+  }
+}
+
+.dialog {
+  display: block;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+  border: solid 1px $dialog_border_color;
+  background-color: $dialog_background_color;
+  padding: 5px;
+  text-align: center;
+}
+
+$dialogText-border-color:#000000;
+.dialogText {
+  display: block;
+  border: solid 1px $dialogText-border-color;
+  @include ze-background(#adff2f);
+  color: #000000;
+  padding: 10px;
+  margin: 0;
+  text-align: left;
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  @include border-radius;
+}
+
+.dialogButtonBar {
+  display: block;
+  width: 100%;
+  margin-top: 10px;
+  text-align: right;
+}
+
+.zeButton {
+  display: inline-block;
+  text-decoration: none;
+  text-align: center;
+  font-size: 14px;
+  color: #ffffff;
+  padding: 8px;
+  min-width: 6em;
+  @include border-radius;
+  border: solid 1px #000000;
+  margin-right: 5px;
+}
+
+.zeButton:last-of-type {
+  margin-right: 0;
+}
+
+.dialogOkButton {
+  @extend .zeButton;
+  @include ze-background(#00aa00);
+}
+
+.dialogOkButton:active {
+  @include ze-background(lighten(#00aa00, 20%));
+}
+
+.dialogCancelButton {
+  @extend .zeButton;
+  @include ze-background(#aa0000);
+}
+
+.dialogCancelButton:active {
+  @include ze-background(lighten(#aa0000, 20%));
+}
+
+.modalifier-body {
+  overflow: hidden;
+}

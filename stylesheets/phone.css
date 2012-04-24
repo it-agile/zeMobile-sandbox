@@ -1,0 +1,412 @@
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+
+body {
+  line-height: 1;
+}
+
+ol, ul {
+  list-style: none;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+caption, th, td {
+  text-align: left;
+  font-weight: normal;
+  vertical-align: middle;
+}
+
+q, blockquote {
+  quotes: none;
+}
+q:before, q:after, blockquote:before, blockquote:after {
+  content: "";
+  content: none;
+}
+
+a img {
+  border: none;
+}
+
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section, summary {
+  display: block;
+}
+
+@font-face {
+  font-family: 'FontAwesome';
+  src: url("font/fontawesome-webfont.eot");
+  src: url("font/fontawesome-webfont.eot?#iefix") format("embedded-opentype"), url("font/fontawesome-webfont.woff") format("woff"), url("font/fontawesome-webfont.ttf") format("truetype"), url("font/fontawesome-webfont.svgz#FontAwesomeRegular") format("svg"), url("font/fontawesome-webfont.svg#FontAwesomeRegular") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
+  margin: 0;
+  width: 100%;
+  outline: none;
+  min-height: 100%;
+  font-size: 17px;
+  -webkit-background-size: 10px 10px;
+  -moz-background-size: 10px 10px;
+  -o-background-size: 10px 10px;
+  background-size: 10px 10px;
+  background-color: #c5c7ba;
+  background-image: -webkit-gradient(linear, 0 0, 100% 0, color-stop(0.5, rgba(255, 255, 255, 0.2)), color-stop(0.5, transparent), to(transparent));
+  background-image: -webkit-linear-gradient(0deg, rgba(255, 255, 255, 0.2) 50%, transparent 50%, transparent);
+  background-image: -moz-linear-gradient(0deg, rgba(255, 255, 255, 0.2) 50%, transparent 50%, transparent);
+  background-image: -ms-linear-gradient(0deg, rgba(255, 255, 255, 0.2) 50%, transparent 50%, transparent);
+  background-image: -o-linear-gradient(0deg, rgba(255, 255, 255, 0.2) 50%, transparent 50%, transparent);
+  background-image: linear-gradient(0deg, rgba(255, 255, 255, 0.2) 50%, transparent 50%, transparent);
+}
+
+input, select, textarea, button {
+  font-size: 17px;
+}
+
+.month {
+  margin: 0;
+}
+
+.monthHeader {
+  padding: 5px;
+  margin: 0;
+  color: #fdff78;
+  background-color: #656565;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #656565), color-stop(100%, #3a3a3a));
+  background-image: -webkit-linear-gradient(top, #656565, #3a3a3a);
+  background-image: -moz-linear-gradient(top, #656565, #3a3a3a);
+  background-image: -o-linear-gradient(top, #656565, #3a3a3a);
+  background-image: -ms-linear-gradient(top, #656565, #3a3a3a);
+  background-image: linear-gradient(top, #656565, #3a3a3a);
+}
+
+.monthHeader:active {
+  background-color: #989898;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #989898), color-stop(100%, #6d6d6d));
+  background-image: -webkit-linear-gradient(top, #989898, #6d6d6d);
+  background-image: -moz-linear-gradient(top, #989898, #6d6d6d);
+  background-image: -o-linear-gradient(top, #989898, #6d6d6d);
+  background-image: -ms-linear-gradient(top, #989898, #6d6d6d);
+  background-image: linear-gradient(top, #989898, #6d6d6d);
+}
+
+.day {
+  margin: 5px;
+}
+
+.dayHeader {
+  padding-top: 5px;
+  padding-right: 10px;
+  padding-left: 10px;
+  padding-bottom: 5px;
+  color: #fdff78;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+  border-radius: 5px;
+  background-color: #3c8948;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #3c8948), color-stop(100%, #224d28));
+  background-image: -webkit-linear-gradient(top, #3c8948, #224d28);
+  background-image: -moz-linear-gradient(top, #3c8948, #224d28);
+  background-image: -o-linear-gradient(top, #3c8948, #224d28);
+  background-image: -ms-linear-gradient(top, #3c8948, #224d28);
+  background-image: linear-gradient(top, #3c8948, #224d28);
+}
+
+.dayHeader:active {
+  background-color: #6cbf79;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #6cbf79), color-stop(100%, #41944e));
+  background-image: -webkit-linear-gradient(top, #6cbf79, #41944e);
+  background-image: -moz-linear-gradient(top, #6cbf79, #41944e);
+  background-image: -o-linear-gradient(top, #6cbf79, #41944e);
+  background-image: -ms-linear-gradient(top, #6cbf79, #41944e);
+  background-image: linear-gradient(top, #6cbf79, #41944e);
+}
+
+.floatRight {
+  float: right;
+}
+
+.hoursToWork:before {
+  content: "/ ";
+}
+
+.timeEntries {
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+
+.timeEntry {
+  display: block;
+  margin-left: 5px;
+  margin-right: 5px;
+  padding: 5px;
+  border-top: 0;
+  border-left: solid 1px gray;
+  border-bottom: solid 1px gray;
+  border-right: solid 1px gray;
+  border-collapse: collapse;
+  background-color: #e8ecee;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #e8ecee), color-stop(100%, #b6c3c9));
+  background-image: -webkit-linear-gradient(top, #e8ecee, #b6c3c9);
+  background-image: -moz-linear-gradient(top, #e8ecee, #b6c3c9);
+  background-image: -o-linear-gradient(top, #e8ecee, #b6c3c9);
+  background-image: -ms-linear-gradient(top, #e8ecee, #b6c3c9);
+  background-image: linear-gradient(top, #e8ecee, #b6c3c9);
+}
+
+.timeEntry:last-child {
+  -moz-border-radius-bottomleft: 5px;
+  -webkit-border-bottom-left-radius: 5px;
+  -ms-border-bottom-left-radius: 5px;
+  -o-border-bottom-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  -moz-border-radius-bottomright: 5px;
+  -webkit-border-bottom-right-radius: 5px;
+  -ms-border-bottom-right-radius: 5px;
+  -o-border-bottom-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+input, textarea, select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  color: black;
+  background: #eff3f5;
+  padding: 3px;
+  border: 1px solid #656565;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+  border-radius: 5px;
+}
+
+input:disabled, textarea:disabled, select:disabled {
+  background: transparent;
+  border: transparent;
+  font-size: 14px;
+  color: black;
+  opacity: 1;
+  font-weight: bold;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-top: 1px;
+  padding-bottom: 1px;
+}
+
+.time {
+  max-width: 3em;
+}
+
+.timeSeparator:before {
+  content: "\2192";
+}
+
+.timeSeparator {
+  width: 0;
+}
+
+.fullSizeElement, .project, .activity, .comment {
+  display: block;
+  padding-right: 10px;
+  padding-left: 10px;
+  width: 100%;
+}
+
+.project {
+  text-align: right;
+  direction: rtl;
+}
+
+.project option {
+  text-align: right;
+}
+
+.activity {
+  text-align: right;
+  direction: rtl;
+}
+
+.comment {
+  text-align: right;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.expander {
+  display: inline-block;
+  font-family: FontAwesome;
+  color: white;
+  padding-left: 0.5em;
+  padding-right: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.containerCollapsed > .content {
+  display: none;
+}
+
+.containerExpanded > .header .expander::before {
+  content: "\f056";
+}
+
+.containerCollapsed > .header .expander::before {
+  content: "\f055";
+}
+
+.modalifier {
+  display: block;
+  position: absolute;
+  z-index: 10;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  padding-top: 30px;
+  padding-right: 0;
+  padding-left: 0;
+  padding-bottom: 0;
+}
+
+.dialog {
+  display: block;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+  border: solid 1px gray;
+  background-color: #f5f5f5;
+  padding: 5px;
+  text-align: center;
+}
+
+.dialogText {
+  display: block;
+  border: solid 1px black;
+  background-color: #adff2f;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #adff2f), color-stop(100%, #82d700));
+  background-image: -webkit-linear-gradient(top, #adff2f, #82d700);
+  background-image: -moz-linear-gradient(top, #adff2f, #82d700);
+  background-image: -o-linear-gradient(top, #adff2f, #82d700);
+  background-image: -ms-linear-gradient(top, #adff2f, #82d700);
+  background-image: linear-gradient(top, #adff2f, #82d700);
+  color: #000000;
+  padding: 10px;
+  margin: 0;
+  text-align: left;
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+  border-radius: 5px;
+}
+
+.dialogButtonBar {
+  display: block;
+  width: 100%;
+  margin-top: 10px;
+  text-align: right;
+}
+
+.zeButton, .dialogOkButton, .dialogCancelButton {
+  display: inline-block;
+  text-decoration: none;
+  text-align: center;
+  font-size: 14px;
+  color: #ffffff;
+  padding: 8px;
+  min-width: 6em;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+  border-radius: 5px;
+  border: solid 1px #000000;
+  margin-right: 5px;
+}
+
+.zeButton:last-of-type, .dialogOkButton:last-of-type, .dialogCancelButton:last-of-type {
+  margin-right: 0;
+}
+
+.dialogOkButton {
+  background-color: #00aa00;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #00aa00), color-stop(100%, #005300));
+  background-image: -webkit-linear-gradient(top, #00aa00, #005300);
+  background-image: -moz-linear-gradient(top, #00aa00, #005300);
+  background-image: -o-linear-gradient(top, #00aa00, #005300);
+  background-image: -ms-linear-gradient(top, #00aa00, #005300);
+  background-image: linear-gradient(top, #00aa00, #005300);
+}
+
+.dialogOkButton:active {
+  background-color: #11ff11;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #11ff11), color-stop(100%, #00b900));
+  background-image: -webkit-linear-gradient(top, #11ff11, #00b900);
+  background-image: -moz-linear-gradient(top, #11ff11, #00b900);
+  background-image: -o-linear-gradient(top, #11ff11, #00b900);
+  background-image: -ms-linear-gradient(top, #11ff11, #00b900);
+  background-image: linear-gradient(top, #11ff11, #00b900);
+}
+
+.dialogCancelButton {
+  background-color: #aa0000;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #aa0000), color-stop(100%, #530000));
+  background-image: -webkit-linear-gradient(top, #aa0000, #530000);
+  background-image: -moz-linear-gradient(top, #aa0000, #530000);
+  background-image: -o-linear-gradient(top, #aa0000, #530000);
+  background-image: -ms-linear-gradient(top, #aa0000, #530000);
+  background-image: linear-gradient(top, #aa0000, #530000);
+}
+
+.dialogCancelButton:active {
+  background-color: #ff1111;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ff1111), color-stop(100%, #b90000));
+  background-image: -webkit-linear-gradient(top, #ff1111, #b90000);
+  background-image: -moz-linear-gradient(top, #ff1111, #b90000);
+  background-image: -o-linear-gradient(top, #ff1111, #b90000);
+  background-image: -ms-linear-gradient(top, #ff1111, #b90000);
+  background-image: linear-gradient(top, #ff1111, #b90000);
+}
+
+.modalifier-body {
+  overflow: hidden;
+}
