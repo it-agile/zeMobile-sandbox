@@ -1,9 +1,10 @@
 class App {
-  Login login;
+  ActivityProvider activityProvider;
   
-  App(this.login);
+  App(this.activityProvider);
   
   void start() {
+    activityProvider.fetchProjects();
     
   }
   

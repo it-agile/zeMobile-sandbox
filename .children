@@ -1,5 +1,5 @@
-dart/ze_mobile_lib.dart
 dart/util/EncodeDecode.dart
-test/tests.dart
 test/test_suites.dart
+dart/ze_mobile_lib.dart
+test/tests.dart
 zeMobile.dart

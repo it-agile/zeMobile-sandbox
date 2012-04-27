@@ -10,12 +10,15 @@
 
 #source('controller/login.dart');
 #source('controller/activity_provider.dart');
+#source('controller/time_entry_provider.dart');
 
 #source('model/user.dart');
 #source('model/month.dart');
 #source('model/time_entry.dart');
 #source('model/project.dart');
 #source('model/activity.dart');
+#source('model/date.dart');
+#source('model/time.dart');
 
 #source('service/web_service_requester.dart');
 

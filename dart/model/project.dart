@@ -1,13 +1,13 @@
 class Project {
-  Map<String, Dynamic> projectJSON;
+  Map<String, Dynamic> _projectJSON;
   List<Activity> _activities;
   
-  Project(this.projectJSON);
+  Project(this._projectJSON);
   
-                String get name() => projectJSON['name'];
+                String get name() => _projectJSON['name'];
         List<Activity> get activities() {
-    if (activities == null) {
-      List activityJSONs = projectJSON['taetigkeiten'];
+    if (_activities == null) {
+      List activityJSONs = _projectJSON['taetigkeiten'];
       _activities = new List.from(activityJSONs.map((Map<String, Dynamic> activityJSON) => new Activity(activityJSON)));
       _activities.sort((Activity a, Activity b) => a.name.compareTo(b.name));
     }

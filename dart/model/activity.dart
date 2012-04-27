@@ -1,8 +1,8 @@
 class Activity {
-  Map<String, Dynamic> activityJSON;
+  Map<String, Dynamic> _activityJSON;
   
-  Activity(this.activityJSON);
+  Activity(this._activityJSON);
   
-     int get id() => activityJSON['id'];
-  String get name() => activityJSON['name'];
+     int get id() => _activityJSON['id'];
+  String get name() => _activityJSON['name'];
 }
