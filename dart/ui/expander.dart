@@ -10,28 +10,40 @@ class Expander {
   void executeExpander(Event event) {
     Element container = findContainer(event.currentTarget); 
     if (container != null) {
-      if (container.classes.contains('containerCollapsed')) {
-        container.classes.remove('containerCollapsed');
-        container.classes.add('containerExpanded');
+      if (container.classes.contains(Classes.CONTAINER_COLLAPSED)) {
+        expand(container);
       } else {
-        container.classes.remove('containerExpanded');
-        container.classes.add('containerCollapsed');
+        collapse(container);
       }
     }
   }
   
+  void expand(Element element) {
+    Element container = findContainer(element); 
+
+    container.classes.remove(Classes.CONTAINER_COLLAPSED);
+    container.classes.add(Classes.CONTAINER_EXPANDED);
+  }
+  
+  void collapse(Element element) {
+    Element container = findContainer(element); 
+
+    container.classes.remove(Classes.CONTAINER_EXPANDED);
+    container.classes.add(Classes.CONTAINER_COLLAPSED);
+  }
+  
   Element findExpander(Element element) {
     if (element ==  null) return null;
-    if(element.classes.contains('expander')) {
+    if(element.classes.contains(Classes.EXPANDER)) {
       return element;  
     } 
     
-    return element.query('.expander');
+    return element.query('.${Classes.EXPANDER}');
   }
   
   Element findHeader(Element element) {
     if (element ==  null) return null;
-    if (element.classes.contains('header')) {
+    if (element.classes.contains(Classes.HEADER)) {
       return element;
     }
     return findHeader(element.parent);
@@ -39,7 +51,7 @@ class Expander {
   
   Element findContainer(Element element) {
     if (element ==  null) return null;
-    if (element.classes.contains('container')) {
+    if (element.classes.contains(Classes.CONTAINER)) {
       return element;
     }
     return findContainer(element.parent);

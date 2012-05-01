@@ -11,6 +11,9 @@
 #source('controller/login.dart');
 #source('controller/activity_provider.dart');
 #source('controller/time_entry_provider.dart');
+#source('controller/month_display.dart');
+#source('controller/day_display.dart');
+#source('controller/time_entry_editor.dart');
 
 #source('model/user.dart');
 #source('model/month.dart');
@@ -25,3 +28,6 @@
 
 #source('ui/expander.dart');
 #source('ui/dialog.dart');
+#source('ui/element_creator.dart');
+#source('ui/tags.dart');
+#source('ui/classes.dart');

@@ -12,27 +12,27 @@ class Dialog {
   Dialog(this.text, [this.content = null, this.okButtonText='OK', this.cancelButtonText='Abbrechen']);
   
   void show(DialogCallback dialogCallback) {
-    modalifier = new Element.tag('div');
-    modalifier.classes.add('modalifier');
+    modalifier = new Element.tag(Tags.DIV);
+    modalifier.classes.add(Classes.MODALIFIER);
     
-    dialogFrame = new Element.tag('div');
-    dialogFrame.classes.add('dialog');
+    dialogFrame = new Element.tag(Tags.DIV);
+    dialogFrame.classes.add(Classes.DIALOG);
 
-    Element textDisplay = new Element.tag('div');
-    textDisplay.classes.add('dialogText');
-    textDisplay.innerHTML = text;
+    Element textDisplay = new Element.tag(Tags.DIV);
+    textDisplay.classes.add(Classes.DIALOG_TEXT);
+    textDisplay.text = text;
     dialogFrame.nodes.add(textDisplay);    
     
     dialogFrame.nodes.add(content);
      
-    Element buttonBar = new Element.tag('div');
-    buttonBar.classes.add('dialogButtonBar');
+    Element buttonBar = new Element.tag(Tags.DIV);
+    buttonBar.classes.add(Classes.DIALOG_BUTTON_BAR);
     dialogFrame.nodes.add(buttonBar);
     
     if (cancelButtonText != null) {
-      Element cancelButton = new Element.tag('a');
-      cancelButton.classes.add('dialogCancelButton');
-      cancelButton.innerHTML = cancelButtonText;
+      Element cancelButton = new Element.tag(Tags.A);
+      cancelButton.classes.add(Classes.DIALOG_CANCEL_BUTTON);
+      cancelButton.text = cancelButtonText;
       cancelButton.on.click.add((Event event) {
         dialogCallback(cancelButtonText);
         event.preventDefault();
@@ -41,9 +41,9 @@ class Dialog {
     }
     
     if (okButtonText != null) {
-      Element okButton = new Element.tag('a');
-      okButton.classes.add('dialogOkButton');
-      okButton.innerHTML = okButtonText;
+      Element okButton = new Element.tag(Tags.A);
+      okButton.classes.add(Classes.DIALOG_OK_BUTTON);
+      okButton.text = okButtonText;
       okButton.on.click.add((Event event) {
         dialogCallback(okButtonText);
         event.preventDefault();
@@ -56,13 +56,13 @@ class Dialog {
     touchMovePreventer = (Event event) => event.preventDefault();
     
     document.on.touchMove.add(touchMovePreventer);
-    document.body.classes.add('modalifier-body');
+    document.body.classes.add(Classes.MODALIFIED);
     document.body.nodes.add(modalifier);
   }
   
   void dispose() {
     document.on.touchMove.remove(touchMovePreventer);
-    document.body.classes.remove('modalifier-body');
+    document.body.classes.remove(Classes.MODALIFIED);
     modalifier.remove();
   }
   

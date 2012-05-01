@@ -1,7 +1,14 @@
 typedef void OnMonthFetched(Month fetchedMonth);
 
 class TimeEntryProvider {
-    
+  TimeEntryProviderModel model;
+  TimeEntryProviderView view;
+  
+  TimeEntryProvider(this.model, this.view);
+  
+  void fetchTimeEntries(int month, int year, OnMonthFetched onMonthFetched) {
+    model.fetchTimeEntries(month, year, onMonthFetched, (int statusCode, String response) => view.handleError(statusCode, response));
+  }    
 }
 
 class TimeEntryProviderModel {
@@ -23,5 +30,7 @@ class TimeEntryProviderModel {
 }
 
 class TimeEntryProviderView {
-  
+  void handleError(int statusCode, String response) {
+    print('$statusCode : $response');  
+  }
 }

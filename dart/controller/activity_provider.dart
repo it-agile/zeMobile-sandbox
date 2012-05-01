@@ -7,9 +7,11 @@ class ActivityProvider {
   ActivityProvider(this._model, this._view);
   
   void fetchProjects([OnProjectFetched onProjectsFetched]) {
-    _model.fetchProjects(onProjectsFetched, (int statusCode, String response) {
-      _view.handleError(statusCode, response);
-    });
+    _model.fetchProjects(onProjectsFetched, (int statusCode, String response) =>_view.handleError(statusCode, response));
+  }
+  
+  List<Project> get fetchedProjects() {
+    return _model.projects;
   }
   
   Activity activityWithId(int id) {
