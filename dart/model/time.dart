@@ -20,7 +20,8 @@ class ZeTime {
       && (seconds == other.seconds);
   
   String toString() {
-    return '$hour:$minutes';
+    return '${_toStringWithLeadingZeros(hour)}:${_toStringWithLeadingZeros(minutes)}';
   }
+  String _toStringWithLeadingZeros(int number) => number < 10 ? '0$number' : '$number'; 
   
 }

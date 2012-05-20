@@ -1,18 +1,18 @@
 typedef OnUserLoggedIn(User user);
 
 class Login {
-  final LoginView _view;
-  final LoginModel _model;
+  final LoginView view;
+  final LoginModel model;
   
-  Login(this._model, this._view);
+  Login(this.model, this.view);
   
   void loginUserIfNotAlreadyLoggedIn(OnUserLoggedIn onUserLoggedIn) {
-    if (_model.isUserLoggedIn()) {
-      onUserLoggedIn(_model.user);
+    if (model.isUserLoggedIn()) {
+      onUserLoggedIn(model.user);
     } else {
-      _view.showLoginDialog((String userName, String password) {
-        _model.loginUser(userName, password);
-        onUserLoggedIn(_model.user);
+      view.showLoginDialog((String userName, String password) {
+        model.loginUser(userName, password);
+        onUserLoggedIn(model.user);
       });
     }
   }
@@ -26,6 +26,8 @@ class LoginView {
     InputElement nameInput = new Element.tag('input');
     nameInput.type = 'text';
     nameInput.placeholder = 'Name';
+    nameInput.attributes['autocapitalize'] = 'off';
+    nameInput.attributes['autocorrect'] = 'off';
     loginDialogContent.nodes.add(nameInput);
     InputElement passwordInput = new Element.tag('input');
     passwordInput.type = 'password';
@@ -40,9 +42,8 @@ class LoginView {
 }
 
 class LoginModel {
-  User _user;
+  User user;
 
   bool isUserLoggedIn() => user != null;
-  User get user() => _user;
-  void loginUser(String userName, String password) {_user = new User(userName, password);}
+  void loginUser(String userName, String password) {user = new User(userName, password);}
 }

@@ -18,6 +18,8 @@ class Classes {
   static final String HOURS_TO_WORK = 'hoursToWork';
   static final String TIME_ENTRIES = 'timeEntries';
   static final String TIME_ENTRY = 'timeEntry';
+  static final String TIME_ENTRY_EDIT = 'timeEntryEdit';
+  static final String TIME_ENTRY_VIEW = 'timeEntryView';
   static final String TIME = 'time';
   static final String TIME_SEPARATOR = 'timeSeparator';
   static final String ENTRY_TIME_FROM = 'entryTimeFrom';
@@ -32,6 +34,8 @@ class Classes {
   static final String DIALOG_CANCEL_BUTTON = 'dialogCancelButton';
   static final String DIALOG_OK_BUTTON = 'dialogOkButton';
   static final String MODALIFIED = 'modalified';
-  
+  static final String ADD_ENTRY_SECTION = 'addEntrySection';
+  static final String ADD_ENTRY_BUTTON = 'addEntryButton';
+
   Classes.internal();
 }

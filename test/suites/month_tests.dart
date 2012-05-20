@@ -5,8 +5,8 @@ void monthTests() {
       "status": "offen", 
       "jahr": 2012, 
       "zeiten": [
-          {}, 
-          {}
+          {"tag": "2012-02-08"}, 
+          {"tag": "2012-02-09"}
       ], 
       "saldo": "-106,00", 
       "monat": 2, 
@@ -22,5 +22,6 @@ void monthTests() {
     it('should extract the hours worked', () => expect(month.hoursWorked).to(equal(6.25)));
     it('should extract the hours to work', () => expect(month.hoursToWork).to(equal(120.25)));
     it('should extract two time entries', () => expect(month.timeEntries.length).to(equal(2)));
+    it('should have one time entry for 2012-02-08', () => expect(month.timeEntriesFor(new ZeDate.fromString('2012-02-08')).length).to(equal(1)));
   });
 }

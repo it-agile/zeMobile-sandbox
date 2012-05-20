@@ -1,24 +1,32 @@
 class DayDisplayFactory {
   final ElementCreator elementCreator;
   final Expander expander;
+  final TimeEntryEditorFactory timeEntryEditorFactory;
 
-  DayDisplayFactory(this.elementCreator, this.expander);
+  DayDisplayFactory(this.elementCreator, this.expander, this.timeEntryEditorFactory);
   
   DayDisplay createDayDisplay(ZeDate day) {
     DayDisplayView view = new DayDisplayView(elementCreator, expander);
-    return new DayDisplay(day, view);
+    return new DayDisplay(day, view, timeEntryEditorFactory);
   }
 }
 
 class DayDisplay {
   final ZeDate day;
-  DayDisplayView view;
-  DayDisplay(this.day, this.view);
+  final TimeEntryEditorFactory timeEntryEditorFactory;
+  final DayDisplayView view;
+  DayDisplay(this.day, this.view, this.timeEntryEditorFactory);
  
   Element createUI() {
     view.createUI();
     view.dayDate = day;
+    
     return view.containerElement;
+  }
+  
+  void addTimeEntry(TimeEntry timeEntry) {
+    TimeEntryEditor editor = timeEntryEditorFactory.createTimeEntryEditor(timeEntry);
+    view.timeEntriesElement.nodes.add(editor.createUI());
   }
   
   void addTimeEntryUI(Element timeEntryUI) {

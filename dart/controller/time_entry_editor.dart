@@ -1,3 +1,17 @@
+class TimeEntryEditorFactory {
+  final ActivityProvider activityProvider;
+  final ElementCreator elementCreator;
+  final Expander expander;
+
+  TimeEntryEditorFactory(this.elementCreator, this.expander, this.activityProvider);
+  
+  TimeEntryEditor createTimeEntryEditor(TimeEntry timeEntry) {
+    TimeEntryEditorModel model = new TimeEntryEditorModel();
+    TimeEntryEditorView view = new TimeEntryEditorView(elementCreator);
+    return new TimeEntryEditor(timeEntry, activityProvider, model, view);
+  }
+}
+
 class TimeEntryEditor {
   TimeEntry _timeEntry;
   ActivityProvider activityProvider;
@@ -9,6 +23,8 @@ class TimeEntryEditor {
   Element createUI() {
     view.createUI();
     _updateTimeEntry(_timeEntry);
+    
+    return view.editorElement;
   }
   
   TimeEntry get timeEntry() => _timeEntry;
@@ -16,11 +32,18 @@ class TimeEntryEditor {
             
   void _updateTimeEntry(TimeEntry entry) {
     _timeEntry = entry;
+    List<Project> projects = activityProvider.fetchedProjects;
+    Activity activity = entry.activityId != null ? activityProvider.activityWithId(entry.activityId) : null;
+    Project project = activity != null ? activityProvider.projectWithActivity(activity) : projects[0];
+    if (activity == null) activity = project.activities[0];
     
     view.timeFrom = entry.start;
     view.timeTo = entry.end;
     view.comment = entry.comment;
-    view.availableProjects = activityProvider.fetchedProjects;    
+    view.availableProjects = projects;
+    view.project = project;
+    view.availableActivities = project.activities;
+    view.activity = activity;
   }
 }
 
@@ -30,7 +53,6 @@ class TimeEntryEditorModel {
 
 class TimeEntryEditorView {
   final ElementCreator elementCreator;
-  TimeEntryEditorView(this.elementCreator);
   Element editorElement;
   InputElement timeFromInput;
   InputElement timeToInput;
@@ -38,17 +60,23 @@ class TimeEntryEditorView {
   SelectElement activitySelect;
   TextAreaElement commentTextArea;
   
+  TimeEntryEditorView(this.elementCreator);
   
   void createUI() {
-    editorElement = elementCreator.createElement(Tags.DIV, [Classes.TIME_ENTRY]);
+    editorElement = elementCreator.createElement(Tags.DIV, [Classes.TIME_ENTRY,Classes.TIME_ENTRY_VIEW]);
     timeFromInput = elementCreator.createElement(Tags.INPUT, [Classes.TIME, Classes.ENTRY_TIME_FROM]);
     timeFromInput.type = 'time';
+    timeFromInput.disabled = true;
     timeToInput = elementCreator.createElement(Tags.INPUT, [Classes.TIME, Classes.ENTRY_TIME_TO]);
     timeToInput.type = 'time';
+    timeToInput.disabled = true;
     projectSelect = elementCreator.createElement(Tags.SELECT, [Classes.PROJECT]);
+    projectSelect.disabled = true;
     activitySelect = elementCreator.createElement(Tags.SELECT, [Classes.PROJECT]);
+    activitySelect.disabled = true;
     commentTextArea = elementCreator.createElement(Tags.TEXTAREA, [Classes.COMMENT]);
     commentTextArea.rows = 2;
+    commentTextArea.disabled = true;
     
     editorElement.nodes.add(timeFromInput);
     editorElement.nodes.add(elementCreator.createElement(Tags.SPAN, [Classes.TIME_SEPARATOR]));
@@ -75,6 +103,7 @@ class TimeEntryEditorView {
          set availableProjects(List<Project> projectList) => _replaceOptions(projectSelect, projectList, (p) => p.name, (p) => p.name);
          set availableActivities(List<Activity> activityList) => _replaceOptions(activitySelect, activityList, (a) => '${a.id}', (a) => a.name);
          set project(Project project) => _selectOption(projectSelect, project.name);
+         set activity(Activity activity) => _selectOption(activitySelect, '${activity.id}');
          
   void _replaceOptions(SelectElement select, List objects, String value(object), String text(object)) {
     while(select.nodes.length > 0) {

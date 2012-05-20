@@ -1,7 +1,8 @@
 void timeEntryProviderTests() {
-  describe('time entry provider model', () {
+  describe('time entry provider', () {
+    ErrorDisplayMock errorDisplay = new ErrorDisplayMock();
     WebServiceRequesterMock webServiceRequester = new WebServiceRequesterMock();
-    TimeEntryProviderModel model = new TimeEntryProviderModel(webServiceRequester);
+    TimeEntryProvider timeEntryProvider = new TimeEntryProvider(errorDisplay, webServiceRequester);
     Month fetchedMonth = null;
     void onMonthFetched(Month month) {
       fetchedMonth = month;
@@ -51,7 +52,7 @@ void timeEntryProviderTests() {
         "soll_arbeitszeit": "140,00"
     }        
 """;
-    model.fetchTimeEntries(4, 2012, onMonthFetched, null);
+    timeEntryProvider.fetchTimeEntries(4, 2012, onMonthFetched);
     it('should return a month created from the JSON of the request response', () => expect(fetchedMonth.balance).to(equal(-131)));
     
   });

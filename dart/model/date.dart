@@ -1,39 +1,52 @@
 class ZeDate {
-  int day; 
-  int month; 
-  int year;
+  static final DAY_DURATION = const Duration(1);
+  final int day; 
+  final int month; 
+  final int year;
   
-  ZeDate(this.day, this.month, this.year);
+  const ZeDate(this.day, this.month, this.year);
   
-  ZeDate.fromGermanString(String dateString)  {
+  factory ZeDate.fromGermanString(String dateString)  {
     RegExp dateReg = const RegExp(@'(\d*)\.(\d*)\.(\d*)');
     Iterable<Match> matches = dateReg.allMatches(dateString);
     for(Match m in matches) {
-      day = Math.parseInt(m.group(1));
-      month = Math.parseInt(m.group(2));
-      year = Math.parseInt(m.group(3));
+      return new ZeDate(Math.parseInt(m.group(1)), Math.parseInt(m.group(2)), Math.parseInt(m.group(3)));
     }
   }
   
-  ZeDate.fromString(String dateString)  {
+  factory ZeDate.fromString(String dateString)  {
     RegExp dateReg = const RegExp(@'(\d*)-(\d*)-(\d*)');
     Iterable<Match> matches = dateReg.allMatches(dateString);
     for(Match m in matches) {
-      day = Math.parseInt(m.group(3));
-      month = Math.parseInt(m.group(2));
-      year = Math.parseInt(m.group(1));
+      return new ZeDate(Math.parseInt(m.group(3)), Math.parseInt(m.group(2)), Math.parseInt(m.group(1)));
     }
   }
+  
+  factory ZeDate.fromDate(Date date)  {
+    return new ZeDate(date.day, date.month, date.year);
+  }
+  
+  factory ZeDate.currentDay()  {
+    return new ZeDate.fromDate(new Date.now());
+  }
+  
+  ZeDate nextDay() {
+    Date thisDay = new Date(year, month, day);
+    return new ZeDate.fromDate(thisDay.add(DAY_DURATION));
+  }
+  
+  
   
   bool operator ==(ZeDate other) => !(other == null) && equals(other);
   bool equals(ZeDate other) => (day == other.day) && (month == other.month) && (year == other.year);
   
   String toString() {
-    return '$year-$month-$day';
+    return '$year-${_toStringWithLeadingZeros(month)}-${_toStringWithLeadingZeros(day)}';
   }
 
   String toGermanString() {
-    return '$day.$month.$year';
+    return '${_toStringWithLeadingZeros(day)}.${_toStringWithLeadingZeros(month)}.$year';
   }
-
+  
+  String _toStringWithLeadingZeros(int number) => number < 10 ? '0$number' : '$number'; 
 }

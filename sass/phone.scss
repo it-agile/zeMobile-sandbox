@@ -73,6 +73,10 @@ input, select, textarea, button {
   @include ze-background($monthHeader_background_color);
 }
 
+.monthName:after {
+  content: ' ';
+}
+
 .monthHeader:active {
   @include ze-background(lighten($monthHeader_background_color, 20%));
 }
@@ -202,6 +206,33 @@ input:disabled, textarea:disabled, select:disabled {
     bottom: 0;
   }
 }
+
+.addEntrySection {
+  display: block;
+  margin-left: 5px;
+  margin-right: 5px;
+  text-align: center;
+}
+
+.addEntryButton {
+  display: inline-block;
+  margin: {
+    left: auto;
+    right: auto;
+    top:0.2em;
+    bottom: 0;
+  }
+  color: #5e8c1a;
+  margin-left: auto;
+  margin-right: auto;
+  font-family: FontAwesome;
+  font-size: 200%;
+}
+
+.addEntryButton:before {
+  content: $symbol_plus;
+}
+
 
 .containerCollapsed > .content {
   display: none;

@@ -1,6 +1,5 @@
 class LoginModelMock extends LoginModel {
   bool loginUserCalled = false;
-  User user;
 
   void loginUser(String userName, String password) {
     loginUserCalled = true;

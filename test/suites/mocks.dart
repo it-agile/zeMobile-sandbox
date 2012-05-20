@@ -25,3 +25,21 @@ class WebServiceRequesterMock extends WebServiceRequester {
     statusCode = 0;
   }
 }
+
+class ErrorDisplayMock implements ErrorDisplay {
+  bool showWebServiceErrorCalled = false;
+  int statusCode;
+  String response;
+  
+  void showWebServiceError(int aStatusCode, String aResponse) {
+    this.statusCode = aStatusCode;
+    this.response = aResponse;
+    showWebServiceErrorCalled = true;
+  }
+  
+  void resetMock() {
+    showWebServiceErrorCalled = false;
+    statusCode = -1;
+    response = null;
+  }
+}

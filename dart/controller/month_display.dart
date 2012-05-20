@@ -1,24 +1,43 @@
 class MonthDisplayFactory {
   final ElementCreator elementCreator;
   final Expander expander;
+  final DayDisplayFactory dayDisplayFactory;
+  List<String> monthNames;
 
-  MonthDisplayFactory(this.elementCreator, this.expander);
+
+  MonthDisplayFactory(this.elementCreator, this.expander, this.dayDisplayFactory) {
+    monthNames = ['Nullember','Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 
+                  'August', 'September', 'Oktober', 'Dezember'];
+  }
   
   MonthDisplay createMonthDisplay(Month month) {
-    MonthDisplayView view = new MonthDisplayView(elementCreator, expander);
-    return new MonthDisplay(month, view);
+    MonthDisplayView view = new MonthDisplayView(elementCreator, expander, monthNames);
+    return new MonthDisplay(month, view, dayDisplayFactory);
   }
 }
 
 class MonthDisplay {
-  MonthDisplayView view;
+  final MonthDisplayView view;
   final Month month;
+  final DayDisplayFactory dayDisplayFactory;
   
-  MonthDisplay(this.month, this.view);
+  MonthDisplay(this.month, this.view, this.dayDisplayFactory);
   
   Element createUI() {
     view.createUI();
     view.setMonth(month.month, month.year);
+    
+    ZeDate currentDay = new ZeDate(1, month.month, month.year);
+    
+    while (currentDay.month == month.month) {
+      DayDisplay dayDisplay = dayDisplayFactory.createDayDisplay(currentDay);
+      view.daysElement.nodes.add(dayDisplay.createUI());
+      Collection<TimeEntry> timeEntries = month.timeEntriesFor(currentDay);
+      for(TimeEntry timeEntry in timeEntries) {
+        dayDisplay.addTimeEntry(timeEntry);
+      }
+      currentDay = currentDay.nextDay();
+    }
     
     return view.containerElement;
   }
@@ -27,12 +46,13 @@ class MonthDisplay {
 class MonthDisplayView {
   final ElementCreator elementCreator;
   final Expander expander;
+  final List<String> monthNames;
   Element containerElement;
   Element monthNameElement;
   Element yearElement;
   Element daysElement;
   
-  MonthDisplayView(this.elementCreator, this.expander);
+  MonthDisplayView(this.elementCreator, this.expander, this.monthNames);
   void createUI() {
     containerElement = elementCreator.createElement(Tags.DIV, [Classes.MONTH, Classes.CONTAINER]);
     
@@ -50,20 +70,14 @@ class MonthDisplayView {
     floatRight.nodes.add(expanderElement);
 
     daysElement = elementCreator.createElement(Tags.DIV,[Classes.DAYS, Classes.CONTENT]);
-    containerElement.nodes.add(yearElement);
+    containerElement.nodes.add(daysElement);
     
     expander.connect(containerElement);
     expander.expand(containerElement);
   }
   
   void setMonth(int month, int year) {
-    monthNameElement.text = const MonthNames().monthNames[month];
+    monthNameElement.text = monthNames[month];
     yearElement.text = '$year';
   }
-}
-
-class MonthNames {
-  final List<String> monthNames;
-  const MonthNames(): monthNames = ['Nullember','Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 
-                                    'August', 'September', 'Oktober', 'Dezember'];
 }

@@ -106,6 +106,10 @@ input, select, textarea, button {
   background-image: linear-gradient(top, #656565, #3a3a3a);
 }
 
+.monthName:after {
+  content: ' ';
+}
+
 .monthHeader:active {
   background-color: #989898;
   background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #989898), color-stop(100%, #6d6d6d));
@@ -274,6 +278,30 @@ input:disabled, textarea:disabled, select:disabled {
   padding-bottom: 0;
 }
 
+.addEntrySection {
+  display: block;
+  margin-left: 5px;
+  margin-right: 5px;
+  text-align: center;
+}
+
+.addEntryButton {
+  display: inline-block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 0.2em;
+  margin-bottom: 0;
+  color: #5e8c1a;
+  margin-left: auto;
+  margin-right: auto;
+  font-family: FontAwesome;
+  font-size: 200%;
+}
+
+.addEntryButton:before {
+  content: "\f055";
+}
+
 .containerCollapsed > .content {
   display: none;
 }
@@ -407,6 +435,6 @@ input:disabled, textarea:disabled, select:disabled {
   background-image: linear-gradient(top, #ff1111, #b90000);
 }
 
-.modalifier-body {
+.modalified {
   overflow: hidden;
 }
