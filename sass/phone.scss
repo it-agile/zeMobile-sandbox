@@ -128,7 +128,7 @@ input, select, textarea, button {
   @include ze-background(#e8ecee);
 }
 
-.timeEntry:last-child {
+.timeEntry:nth-last-child(2) {
   @include border-bottom-radius;
 }
 
@@ -207,6 +207,38 @@ input:disabled, textarea:disabled, select:disabled {
   }
 }
 
+.timeEntryActions {
+  display: block;
+  margin-top: 10px;
+  margin-left: 5px;
+  margin-right: 5px;
+  text-align: center;
+}
+
+.timeEntryEdit {
+  @extend .zeButton;
+  @include ze-background(#3b63b7);
+  font-family: FontAwesome;
+}
+
+.timeEntrySave {
+  @extend .zeButton;
+  @include ze-background(#00aa00);
+  font-family: FontAwesome;
+}
+
+.timeEntryDelete {
+  @extend .zeButton;
+  @include ze-background(#aa0000);
+  font-family: FontAwesome;
+}
+
+.timeEntryCancel {
+  @extend .zeButton;
+  @include ze-background(#750a17);
+  font-family: FontAwesome;
+}
+
 .addEntrySection {
   display: block;
   margin-left: 5px;
@@ -223,8 +255,6 @@ input:disabled, textarea:disabled, select:disabled {
     bottom: 0;
   }
   color: #5e8c1a;
-  margin-left: auto;
-  margin-right: auto;
   font-family: FontAwesome;
   font-size: 200%;
 }
@@ -327,11 +357,11 @@ $dialogText-border-color:#000000;
 
 .dialogCancelButton {
   @extend .zeButton;
-  @include ze-background(#aa0000);
+  @include ze-background(#750a17);
 }
 
 .dialogCancelButton:active {
-  @include ze-background(lighten(#aa0000, 20%));
+  @include ze-background(lighten(#750a17, 20%));
 }
 
 .modalified {

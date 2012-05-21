@@ -1101,6 +1101,7 @@ Isolate.$defineClass("LoginView", "Object", [], {
   t0.nameInput_2.set$type('text');
   t0.nameInput_2.set$placeholder('Name');
   $.indexSet(t0.nameInput_2.get$attributes(), 'autocapitalize', 'off');
+  $.indexSet(t0.nameInput_2.get$attributes(), 'autocorrect', 'off');
   $.add$1(loginDialogContent.get$nodes(), t0.nameInput_2);
   t0.passwordInput_3 = $.Element$tag('input');
   t0.passwordInput_3.set$type('password');
@@ -1179,19 +1180,24 @@ Isolate.$defineClass("DayDisplayFactory", "Object", ["timeEntryEditorFactory", "
 });
 
 Isolate.$defineClass("DayDisplay", "Object", ["view", "timeEntryEditorFactory", "day?"], {
+ addEntryButtonTouched$1: function(event$) {
+  this.addTimeEntry$1($.TimeEntry$fresh$0());
+ },
+ get$addEntryButtonTouched: function() { return new $.Closure51(this); },
  addTimeEntry$1: function(timeEntry) {
   var editor = this.timeEntryEditorFactory.createTimeEntryEditor$1(timeEntry);
-  $.add$1(this.view.get$timeEntriesElement().get$nodes(), editor.createUI$0());
+  this.view.get$timeEntriesElement().insertBefore$2(editor.createUI$0(), this.view.get$addEntrySection());
  },
  createUI$0: function() {
   this.view.createUI$0();
   var t0 = this.day;
   this.view.set$dayDate(t0);
+  $.add$1(this.view.get$addEntryButton().get$on().get$click(), this.get$addEntryButtonTouched());
   return this.view.get$containerElement();
  }
 });
 
-Isolate.$defineClass("DayDisplayView", "Object", ["timeEntriesElement?", "dayDateElement", "containerElement?", "expander", "elementCreator"], {
+Isolate.$defineClass("DayDisplayView", "Object", ["addEntryButton?", "addEntrySection?", "timeEntriesElement?", "dayDateElement", "containerElement?", "expander", "elementCreator"], {
  set$dayDate: function(day) {
   var t0 = day.toGermanString$0();
   this.dayDateElement.set$text(t0);
@@ -1209,6 +1215,10 @@ Isolate.$defineClass("DayDisplayView", "Object", ["timeEntriesElement?", "dayDat
   $.add$1(floatRight.get$nodes(), expanderElement);
   this.timeEntriesElement = this.elementCreator.createElement$2('div', ['timeEntries', 'content']);
   $.add$1(this.containerElement.get$nodes(), this.timeEntriesElement);
+  this.addEntrySection = this.elementCreator.createElement$2('div', ['addEntrySection']);
+  $.add$1(this.timeEntriesElement.get$nodes(), this.addEntrySection);
+  this.addEntryButton = this.elementCreator.createElement$2('span', ['addEntryButton']);
+  $.add$1(this.addEntrySection.get$nodes(), this.addEntryButton);
   this.expander.connect$1(this.containerElement);
   this.expander.collapse$1(this.containerElement);
  }
@@ -1240,12 +1250,14 @@ Isolate.$defineClass("TimeEntryEditor", "Object", ["view", "model?", "activityPr
   if ($.eqNullB(activity)) {
     activity0 = $.index(project.get$activities(), 0);
   }
-  var t0 = entry.get$start();
-  this.view.set$timeFrom(t0);
-  var t1 = entry.get$end();
-  this.view.set$timeTo(t1);
-  var t2 = entry.get$comment();
-  this.view.set$comment(t2);
+  if (!$.eqNullB(entry.get$activityId())) {
+    var t0 = entry.get$start();
+    this.view.set$timeFrom(t0);
+    var t1 = entry.get$end();
+    this.view.set$timeTo(t1);
+    var t2 = entry.get$comment();
+    this.view.set$comment(t2);
+  }
   this.view.set$availableProjects(projects);
   this.view.set$project(project);
   var t3 = project.get$activities();
@@ -1365,7 +1377,12 @@ Isolate.$defineClass("TimeEntry", "Object", ["timeEntryJSON"], {
   return $.ZeDate$fromString($.index(this.timeEntryJSON, 'tag'));
  },
  get$activityId: function() {
-  return $.index($.index(this.timeEntryJSON, 'taetigkeit'), 'id');
+  if (!$.eqNullB($.index(this.timeEntryJSON, 'taetigkeit'))) {
+    var t0 = $.index($.index(this.timeEntryJSON, 'taetigkeit'), 'id');
+  } else {
+    t0 = (void 0);
+  }
+  return t0;
  },
  get$id: function() {
   return $.index(this.timeEntryJSON, 'id');
@@ -1439,6 +1456,9 @@ Isolate.$defineClass("ZeTime", "Object", ["seconds?", "minutes?", "hour?"], {
   return !$.eqNullB(other) && this.equals$1(other) === true;
  },
  ZeTime$fromString$1: function(timeString) {
+  if ($.eqNullB(timeString)) {
+    return;
+  }
   for (var t0 = $.iterator($.CTC10.allMatches$1(timeString)); t0.hasNext$0() === true; ) {
     var t1 = t0.next$0();
     this.hour = $.parseInt(t1.group$1(1));
@@ -1585,7 +1605,7 @@ Isolate.$defineClass("Expander", "Object", [], {
     }
   }
  },
- get$executeExpander: function() { return new $.Closure51(this); },
+ get$executeExpander: function() { return new $.Closure52(this); },
  connect$1: function(element) {
   var header = this.findHeader$1(this.findExpander$1(element));
   if (!$.eqNullB(header)) {
@@ -2081,7 +2101,7 @@ Isolate.$defineClass("_AttributeClassSet", "_CssClassSet", ["_element"], {
  $dom_className$0: function() {
   return $.index(this._element.get$attributes(), 'class');
  },
- get$$$dom_className: function() { return new $.Closure56(this); }
+ get$$$dom_className: function() { return new $.Closure57(this); }
 });
 
 Isolate.$defineClass("_SVGElementInstanceEventsImpl", "_EventsImpl", ["_ptr"], {
@@ -2886,12 +2906,12 @@ $call$0: function() {
 });
 Isolate.$defineClass('Closure51', 'Closure45', function BoundClosure(self) { this.self = self; }, {
 $call$1: function(arg0) {
-  return this.self.executeExpander$1(arg0);
+  return this.self.addEntryButtonTouched$1(arg0);
 },
 });
 Isolate.$defineClass('Closure52', 'Closure45', function BoundClosure(self) { this.self = self; }, {
-$call$0: function() {
-  return this.self.click$0();
+$call$1: function(arg0) {
+  return this.self.executeExpander$1(arg0);
 },
 });
 Isolate.$defineClass('Closure53', 'Closure45', function BoundClosure(self) { this.self = self; }, {
@@ -2901,7 +2921,7 @@ $call$0: function() {
 });
 Isolate.$defineClass('Closure54', 'Closure45', function BoundClosure(self) { this.self = self; }, {
 $call$0: function() {
-  return this.self.start$0();
+  return this.self.click$0();
 },
 });
 Isolate.$defineClass('Closure55', 'Closure45', function BoundClosure(self) { this.self = self; }, {
@@ -2911,20 +2931,25 @@ $call$0: function() {
 });
 Isolate.$defineClass('Closure56', 'Closure45', function BoundClosure(self) { this.self = self; }, {
 $call$0: function() {
-  return this.self.$dom_className$0();
+  return this.self.start$0();
 },
 });
 Isolate.$defineClass('Closure57', 'Closure45', function BoundClosure(self) { this.self = self; }, {
 $call$0: function() {
-  return this.self.start$0();
+  return this.self.$dom_className$0();
 },
 });
 Isolate.$defineClass('Closure58', 'Closure45', function BoundClosure(self) { this.self = self; }, {
+$call$0: function() {
+  return this.self.start$0();
+},
+});
+Isolate.$defineClass('Closure59', 'Closure45', function BoundClosure(self) { this.self = self; }, {
 $call$1: function(arg0) {
   return this.self.start$1(arg0);
 },
 });
-Isolate.$defineClass('Closure59', 'Closure45', function BoundClosure(self) { this.self = self; }, {
+Isolate.$defineClass('Closure60', 'Closure45', function BoundClosure(self) { this.self = self; }, {
 $call$1: function(arg0) {
   return this.self.end$1(arg0);
 },
@@ -3651,6 +3676,10 @@ $.StringMatch$3 = function(_start, str, pattern) {
   return new $.StringMatch(pattern, str, _start);
 };
 
+$.TimeEntry$fresh$0 = function() {
+  return new $.TimeEntry($.HashMapImplementation$0());
+};
+
 $.invokeClosure = function(closure, isolate, numberOfArguments, arg1, arg2) {
   var t0 = ({});
   t0.arg2_3 = arg2;
@@ -4175,7 +4204,7 @@ $._emitObject = function(o, result, visiting) {
 };
 
 $.DayDisplayView$2 = function(elementCreator, expander) {
-  return new $.DayDisplayView((void 0), (void 0), (void 0), expander, elementCreator);
+  return new $.DayDisplayView((void 0), (void 0), (void 0), (void 0), (void 0), expander, elementCreator);
 };
 
 $._emitMap = function(m, result, visiting) {
@@ -6746,7 +6775,7 @@ $.$defineNativeClass('DocumentFragment', [], {
  },
  click$0: function() {
  },
- get$click: function() { return new $.Closure52(this); },
+ get$click: function() { return new $.Closure53(this); },
  get$classes: function() {
   var t0 = $.HashSetImplementation$0();
   $.setRuntimeTypeInfo(t0, ({E: 'String'}));
@@ -6785,7 +6814,7 @@ $.$defineNativeClass('Element', ["id?"], {
  click$0: function() {
   return this.click();
  },
- get$click: function() { return new $.Closure53(this); },
+ get$click: function() { return new $.Closure54(this); },
  set$$$dom_className: function(value) {
   this.className = value;;
  },
@@ -7438,7 +7467,7 @@ $.$defineNativeClass('HTMLMarqueeElement', [], {
  start$0: function() {
   return this.start();
  },
- get$start: function() { return new $.Closure54(this); }
+ get$start: function() { return new $.Closure55(this); }
 });
 
 $.$defineNativeClass('MediaController', [], {
@@ -7527,7 +7556,7 @@ $.$defineNativeClass('MessagePort', [], {
  start$0: function() {
   return this.start();
  },
- get$start: function() { return new $.Closure55(this); },
+ get$start: function() { return new $.Closure56(this); },
  $dom_removeEventListener$3: function(type, listener, useCapture) {
   return this.removeEventListener(type,$.convertDartClosureToJS(listener),useCapture);
  },
@@ -7603,6 +7632,9 @@ $.$defineNativeClass('Node', [], {
  },
  $dom_removeChild$1: function(oldChild) {
   return this.removeChild(oldChild);
+ },
+ insertBefore$2: function(newChild, refChild) {
+  return this.insertBefore(newChild,refChild);
  },
  contains$1: function(other) {
   return this.contains(other);
@@ -7893,7 +7925,7 @@ $.$defineNativeClass('SpeechRecognition', [], {
  start$0: function() {
   return this.start();
  },
- get$start: function() { return new $.Closure57(this); },
+ get$start: function() { return new $.Closure58(this); },
  $dom_removeEventListener$3: function(type, listener, useCapture) {
   return this.removeEventListener(type,$.convertDartClosureToJS(listener),useCapture);
  },
@@ -8069,11 +8101,11 @@ $.$defineNativeClass('TimeRanges', ["length?"], {
  start$1: function(index) {
   return this.start(index);
  },
- get$start: function() { return new $.Closure58(this); },
+ get$start: function() { return new $.Closure59(this); },
  end$1: function(index) {
   return this.end(index);
  },
- get$end: function() { return new $.Closure59(this); }
+ get$end: function() { return new $.Closure60(this); }
 });
 
 $.$defineNativeClass('TouchList', ["length?"], {

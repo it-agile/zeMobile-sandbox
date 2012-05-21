@@ -1044,6 +1044,18 @@ HashMapImplementation_Dynamic$DoubleLinkedQueueEntry_KeyValuePair.prototype.forE
   return this.forEach(to$call$2($0));
 };
 HashMapImplementation_Dynamic$DoubleLinkedQueueEntry_KeyValuePair.prototype.remove$1 = HashMapImplementation_Dynamic$DoubleLinkedQueueEntry_KeyValuePair.prototype.remove;
+$inherits(HashMapImplementation_dart_core_String$Dynamic, HashMapImplementation);
+function HashMapImplementation_dart_core_String$Dynamic() {
+  this._numberOfEntries = (0);
+  this._numberOfDeleted = (0);
+  this._loadLimit = HashMapImplementation._computeLoadLimit((8));
+  this._keys = new Array((8));
+  this._values = new Array((8));
+}
+HashMapImplementation_dart_core_String$Dynamic.prototype.forEach$1 = function($0) {
+  return this.forEach(to$call$2($0));
+};
+HashMapImplementation_dart_core_String$Dynamic.prototype.remove$1 = HashMapImplementation_dart_core_String$Dynamic.prototype.remove;
 $inherits(HashMapImplementation_dart_core_String$dart_core_String, HashMapImplementation);
 function HashMapImplementation_dart_core_String$dart_core_String() {
   this._numberOfEntries = (0);
@@ -4222,6 +4234,7 @@ LoginView.prototype.showLoginDialog = function(onLoginDialogFinished) {
   nameInput.type = "text";
   nameInput.placeholder = "Name";
   nameInput.get$attributes().$setindex("autocapitalize", "off");
+  nameInput.get$attributes().$setindex("autocorrect", "off");
   loginDialogContent.get$nodes().add(nameInput);
   var passwordInput = _ElementFactoryProvider.Element$tag$factory("input");
   passwordInput.type = "password";
@@ -4317,11 +4330,19 @@ function DayDisplay(day, view, timeEntryEditorFactory) {
 DayDisplay.prototype.createUI = function() {
   this.view.createUI();
   this.view.set$dayDate(this.day);
+  this.view.addEntryButton.get$on().get$click().add$1(this.get$addEntryButtonTouched());
   return this.view.containerElement;
 }
 DayDisplay.prototype.addTimeEntry = function(timeEntry) {
   var editor = this.timeEntryEditorFactory.createTimeEntryEditor(timeEntry);
-  this.view.timeEntriesElement.get$nodes().add(editor.createUI());
+  this.view.timeEntriesElement.insertBefore(editor.createUI(), this.view.addEntrySection);
+}
+DayDisplay.prototype.addEntryButtonTouched = function(event) {
+  var newEntry = new TimeEntry.fresh$ctor();
+  this.addTimeEntry(newEntry);
+}
+DayDisplay.prototype.get$addEntryButtonTouched = function() {
+  return this.addEntryButtonTouched.bind(this);
 }
 function DayDisplayView(elementCreator, expander) {
   this.elementCreator = elementCreator;
@@ -4339,6 +4360,10 @@ DayDisplayView.prototype.createUI = function() {
   floatRight.get$nodes().add(expanderElement);
   this.timeEntriesElement = this.elementCreator.createElement$_("div", ["timeEntries", "content"]);
   this.containerElement.get$nodes().add(this.timeEntriesElement);
+  this.addEntrySection = this.elementCreator.createElement$_("div", ["addEntrySection"]);
+  this.timeEntriesElement.get$nodes().add(this.addEntrySection);
+  this.addEntryButton = this.elementCreator.createElement$_("span", ["addEntryButton"]);
+  this.addEntrySection.get$nodes().add(this.addEntryButton);
   this.expander.connect(this.containerElement);
   this.expander.collapse(this.containerElement);
 }
@@ -4373,9 +4398,11 @@ TimeEntryEditor.prototype._updateTimeEntry = function(entry) {
   var activity = entry.get$activityId() != null ? this.activityProvider.activityWithId(entry.get$activityId()) : null;
   var project = activity != null ? this.activityProvider.projectWithActivity(activity) : projects.$index((0));
   if (activity == null) activity = project.get$activities().$index((0));
-  this.view.set$timeFrom(entry.get$start());
-  this.view.set$timeTo(entry.get$end());
-  this.view.set$comment(entry.get$comment());
+  if (entry.get$activityId() != null) {
+    this.view.set$timeFrom(entry.get$start());
+    this.view.set$timeTo(entry.get$end());
+    this.view.set$comment(entry.get$comment());
+  }
   this.view.set$availableProjects(projects);
   this.view.set$project(project);
   this.view.set$availableActivities(project.get$activities());
@@ -4490,11 +4517,15 @@ Month.prototype.timeEntriesFor = function(day) {
 function TimeEntry(timeEntryJSON) {
   this.timeEntryJSON = timeEntryJSON;
 }
+TimeEntry.fresh$ctor = function() {
+  this.timeEntryJSON = new HashMapImplementation_dart_core_String$Dynamic();
+}
+TimeEntry.fresh$ctor.prototype = TimeEntry.prototype;
 TimeEntry.prototype.get$id = function() {
   return this.timeEntryJSON.$index("id");
 }
 TimeEntry.prototype.get$activityId = function() {
-  return this.timeEntryJSON.$index("taetigkeit").$index("id");
+  return $ne$(this.timeEntryJSON.$index("taetigkeit")) ? this.timeEntryJSON.$index("taetigkeit").$index("id") : null;
 }
 TimeEntry.prototype.get$date = function() {
   return ZeDate.ZeDate$fromString$factory(this.timeEntryJSON.$index("tag"));
@@ -4558,7 +4589,7 @@ ZeDate.ZeDate$currentDay$factory = function() {
 }
 ZeDate.prototype.nextDay = function() {
   var thisDay = DateImplementation.DateImplementation$factory(this.year, this.month, this.day, (0), (0), (0), (0));
-  return ZeDate.ZeDate$fromDate$factory(thisDay.add(const$0006));
+  return ZeDate.ZeDate$fromDate$factory(thisDay.add(const$0007));
 }
 ZeDate.prototype.$eq = function(other) {
   return !(other == null) && this.equals(other);
@@ -4576,7 +4607,8 @@ ZeDate.prototype._toStringWithLeadingZeros = function(number) {
   return number < (10) ? ("0" + number) : ("" + number);
 }
 ZeTime.fromString$ctor = function(timeString) {
-  var dateReg = const$0007;
+  if (timeString == null) return;
+  var dateReg = const$0006;
   var matches = dateReg.allMatches(timeString);
   for (var $$i = matches.iterator(); $$i.hasNext(); ) {
     var m = $$i.next();
@@ -4899,8 +4931,8 @@ var const$0001 = Object.create(NoMoreElementsException.prototype, {});
 var const$0002 = Object.create(EmptyQueueException.prototype, {});
 var const$0003 = Object.create(UnsupportedOperationException.prototype, {_message: {"value": "", writeable: false}});
 var const$0005 = new JSSyntaxRegExp("^#[_a-zA-Z]\\w*$");
-var const$0006 = Object.create(DurationImplementation.prototype, {inMilliseconds: {"value": (86400000), writeable: false}});
-var const$0007 = new JSSyntaxRegExp("(\\d*):(\\d*):(\\d*)");
+var const$0006 = new JSSyntaxRegExp("(\\d*):(\\d*):(\\d*)");
+var const$0007 = Object.create(DurationImplementation.prototype, {inMilliseconds: {"value": (86400000), writeable: false}});
 var const$0008 = new JSSyntaxRegExp("(\\d*)-(\\d*)-(\\d*)");
 var const$0009 = Object.create(IllegalAccessException.prototype, {});
 var const$0010 = _constMap([]);

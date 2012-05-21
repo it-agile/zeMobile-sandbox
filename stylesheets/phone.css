@@ -187,7 +187,7 @@ input, select, textarea, button {
   background-image: linear-gradient(top, #e8ecee, #b6c3c9);
 }
 
-.timeEntry:last-child {
+.timeEntry:nth-last-child(2) {
   -moz-border-radius-bottomleft: 5px;
   -webkit-border-bottom-left-radius: 5px;
   -ms-border-bottom-left-radius: 5px;
@@ -278,6 +278,58 @@ input:disabled, textarea:disabled, select:disabled {
   padding-bottom: 0;
 }
 
+.timeEntryActions {
+  display: block;
+  margin-top: 10px;
+  margin-left: 5px;
+  margin-right: 5px;
+  text-align: center;
+}
+
+.timeEntryEdit {
+  background-color: #3b63b7;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #3b63b7), color-stop(100%, #264075));
+  background-image: -webkit-linear-gradient(top, #3b63b7, #264075);
+  background-image: -moz-linear-gradient(top, #3b63b7, #264075);
+  background-image: -o-linear-gradient(top, #3b63b7, #264075);
+  background-image: -ms-linear-gradient(top, #3b63b7, #264075);
+  background-image: linear-gradient(top, #3b63b7, #264075);
+  font-family: FontAwesome;
+}
+
+.timeEntrySave {
+  background-color: #00aa00;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #00aa00), color-stop(100%, #005300));
+  background-image: -webkit-linear-gradient(top, #00aa00, #005300);
+  background-image: -moz-linear-gradient(top, #00aa00, #005300);
+  background-image: -o-linear-gradient(top, #00aa00, #005300);
+  background-image: -ms-linear-gradient(top, #00aa00, #005300);
+  background-image: linear-gradient(top, #00aa00, #005300);
+  font-family: FontAwesome;
+}
+
+.timeEntryDelete {
+  background-color: #aa0000;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #aa0000), color-stop(100%, #530000));
+  background-image: -webkit-linear-gradient(top, #aa0000, #530000);
+  background-image: -moz-linear-gradient(top, #aa0000, #530000);
+  background-image: -o-linear-gradient(top, #aa0000, #530000);
+  background-image: -ms-linear-gradient(top, #aa0000, #530000);
+  background-image: linear-gradient(top, #aa0000, #530000);
+  font-family: FontAwesome;
+}
+
+.timeEntryCancel {
+  background-color: #750a17;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #750a17), color-stop(100%, #250307));
+  background-image: -webkit-linear-gradient(top, #750a17, #250307);
+  background-image: -moz-linear-gradient(top, #750a17, #250307);
+  background-image: -o-linear-gradient(top, #750a17, #250307);
+  background-image: -ms-linear-gradient(top, #750a17, #250307);
+  background-image: linear-gradient(top, #750a17, #250307);
+  font-family: FontAwesome;
+}
+
 .addEntrySection {
   display: block;
   margin-left: 5px;
@@ -292,8 +344,6 @@ input:disabled, textarea:disabled, select:disabled {
   margin-top: 0.2em;
   margin-bottom: 0;
   color: #5e8c1a;
-  margin-left: auto;
-  margin-right: auto;
   font-family: FontAwesome;
   font-size: 200%;
 }
@@ -374,7 +424,7 @@ input:disabled, textarea:disabled, select:disabled {
   text-align: right;
 }
 
-.zeButton, .dialogOkButton, .dialogCancelButton {
+.zeButton, .timeEntryEdit, .timeEntrySave, .timeEntryDelete, .timeEntryCancel, .dialogOkButton, .dialogCancelButton {
   display: inline-block;
   text-decoration: none;
   text-align: center;
@@ -391,7 +441,7 @@ input:disabled, textarea:disabled, select:disabled {
   margin-right: 5px;
 }
 
-.zeButton:last-of-type, .dialogOkButton:last-of-type, .dialogCancelButton:last-of-type {
+.zeButton:last-of-type, .timeEntryEdit:last-of-type, .timeEntrySave:last-of-type, .timeEntryDelete:last-of-type, .timeEntryCancel:last-of-type, .dialogOkButton:last-of-type, .dialogCancelButton:last-of-type {
   margin-right: 0;
 }
 
@@ -416,23 +466,23 @@ input:disabled, textarea:disabled, select:disabled {
 }
 
 .dialogCancelButton {
-  background-color: #aa0000;
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #aa0000), color-stop(100%, #530000));
-  background-image: -webkit-linear-gradient(top, #aa0000, #530000);
-  background-image: -moz-linear-gradient(top, #aa0000, #530000);
-  background-image: -o-linear-gradient(top, #aa0000, #530000);
-  background-image: -ms-linear-gradient(top, #aa0000, #530000);
-  background-image: linear-gradient(top, #aa0000, #530000);
+  background-color: #750a17;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #750a17), color-stop(100%, #250307));
+  background-image: -webkit-linear-gradient(top, #750a17, #250307);
+  background-image: -moz-linear-gradient(top, #750a17, #250307);
+  background-image: -o-linear-gradient(top, #750a17, #250307);
+  background-image: -ms-linear-gradient(top, #750a17, #250307);
+  background-image: linear-gradient(top, #750a17, #250307);
 }
 
 .dialogCancelButton:active {
-  background-color: #ff1111;
-  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ff1111), color-stop(100%, #b90000));
-  background-image: -webkit-linear-gradient(top, #ff1111, #b90000);
-  background-image: -moz-linear-gradient(top, #ff1111, #b90000);
-  background-image: -o-linear-gradient(top, #ff1111, #b90000);
-  background-image: -ms-linear-gradient(top, #ff1111, #b90000);
-  background-image: linear-gradient(top, #ff1111, #b90000);
+  background-color: #d31229;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #d31229), color-stop(100%, #830b1a));
+  background-image: -webkit-linear-gradient(top, #d31229, #830b1a);
+  background-image: -moz-linear-gradient(top, #d31229, #830b1a);
+  background-image: -o-linear-gradient(top, #d31229, #830b1a);
+  background-image: -ms-linear-gradient(top, #d31229, #830b1a);
+  background-image: linear-gradient(top, #d31229, #830b1a);
 }
 
 .modalified {

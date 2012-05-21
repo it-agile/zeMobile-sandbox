@@ -21,16 +21,19 @@ class DayDisplay {
     view.createUI();
     view.dayDate = day;
     
+    view.addEntryButton.on.click.add(addEntryButtonTouched);
+    
     return view.containerElement;
   }
   
   void addTimeEntry(TimeEntry timeEntry) {
     TimeEntryEditor editor = timeEntryEditorFactory.createTimeEntryEditor(timeEntry);
-    view.timeEntriesElement.nodes.add(editor.createUI());
+    view.timeEntriesElement.insertBefore(editor.createUI(), view.addEntrySection);
   }
   
-  void addTimeEntryUI(Element timeEntryUI) {
-    view.addTimeEntryUI(timeEntryUI);
+  void addEntryButtonTouched(Event event) {
+    TimeEntry newEntry = new TimeEntry.fresh();
+    addTimeEntry(newEntry);
   }
 }
 
@@ -40,6 +43,8 @@ class DayDisplayView {
   Element containerElement;
   Element dayDateElement;
   Element timeEntriesElement;
+  Element addEntrySection;
+  Element addEntryButton;
 
   DayDisplayView(this.elementCreator, this.expander);
   void createUI() {
@@ -58,6 +63,11 @@ class DayDisplayView {
     
     timeEntriesElement = elementCreator.createElement(Tags.DIV,[Classes.TIME_ENTRIES, Classes.CONTENT]);
     containerElement.nodes.add(timeEntriesElement);
+    
+    addEntrySection = elementCreator.createElement(Tags.DIV, [Classes.ADD_ENTRY_SECTION]);
+    timeEntriesElement.nodes.add(addEntrySection);
+    addEntryButton = elementCreator.createElement(Tags.SPAN, [Classes.ADD_ENTRY_BUTTON]);
+    addEntrySection.nodes.add(addEntryButton);
     
     expander.connect(containerElement);
     expander.collapse(containerElement);

@@ -37,9 +37,11 @@ class TimeEntryEditor {
     Project project = activity != null ? activityProvider.projectWithActivity(activity) : projects[0];
     if (activity == null) activity = project.activities[0];
     
-    view.timeFrom = entry.start;
-    view.timeTo = entry.end;
-    view.comment = entry.comment;
+    if(entry.activityId != null) {
+      view.timeFrom = entry.start;
+      view.timeTo = entry.end;
+      view.comment = entry.comment;
+    }
     view.availableProjects = projects;
     view.project = project;
     view.availableActivities = project.activities;

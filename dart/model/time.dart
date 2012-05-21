@@ -5,6 +5,7 @@ class ZeTime {
   
   ZeTime(this.hour, this.minutes, this.seconds);
   ZeTime.fromString(String timeString) {
+    if (timeString == null) return;
     RegExp dateReg = const RegExp(@'(\d*):(\d*):(\d*)');
     Iterable<Match> matches = dateReg.allMatches(timeString);
     for(Match m in matches) {
