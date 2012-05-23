@@ -1233,6 +1233,17 @@ Isolate.$defineClass("TimeEntryEditorFactory", "Object", ["expander", "elementCr
 });
 
 Isolate.$defineClass("TimeEntryEditor", "Object", ["view", "model?", "activityProvider", "_timeEntry"], {
+ cancelTouched$1: function(event$) {
+  this._updateTimeEntry$1(this._timeEntry);
+  this.view.enableEditing$1(false);
+  event$.preventDefault$0();
+ },
+ get$cancelTouched: function() { return new $.Closure52(this); },
+ editTouched$1: function(event$) {
+  this.view.enableEditing$1(true);
+  event$.preventDefault$0();
+ },
+ get$editTouched: function() { return new $.Closure53(this); },
  _updateTimeEntry$1: function(entry) {
   this._timeEntry = entry;
   var projects = this.activityProvider.get$fetchedProjects();
@@ -1267,6 +1278,8 @@ Isolate.$defineClass("TimeEntryEditor", "Object", ["view", "model?", "activityPr
  createUI$0: function() {
   this.view.createUI$0();
   this._updateTimeEntry$1(this._timeEntry);
+  $.add$1(this.view.get$editButton().get$on().get$click(), this.get$editTouched());
+  $.add$1(this.view.get$cancelButton().get$on().get$click(), this.get$cancelTouched());
   return this.view.get$editorElement();
  }
 });
@@ -1274,7 +1287,7 @@ Isolate.$defineClass("TimeEntryEditor", "Object", ["view", "model?", "activityPr
 Isolate.$defineClass("TimeEntryEditorModel", "Object", [], {
 });
 
-Isolate.$defineClass("TimeEntryEditorView", "Object", ["commentTextArea", "activitySelect", "projectSelect", "timeToInput", "timeFromInput", "editorElement?", "elementCreator"], {
+Isolate.$defineClass("TimeEntryEditorView", "Object", ["cancelButton?", "deleteButton", "saveButton", "editButton?", "commentTextArea", "activitySelect", "projectSelect", "timeToInput", "timeFromInput", "editorElement?", "elementCreator"], {
  _selectOption$2: function(select, value) {
   var optionToSelect = select.namedItem$1(value);
   select.set$selectedIndex($.indexOf$1(select.get$nodes(), optionToSelect));
@@ -1318,27 +1331,47 @@ Isolate.$defineClass("TimeEntryEditorView", "Object", ["commentTextArea", "activ
   this.timeFromInput.set$value(t0);
   return t0;
  },
+ enableEditing$1: function(enabled) {
+  var t0 = enabled === true;
+  if (t0) {
+    this.editorElement.get$classes().remove$1('timeEntryView');
+    $.add$1(this.editorElement.get$classes(), 'timeEntryEditing');
+  } else {
+    this.editorElement.get$classes().remove$1('timeEntryEditing');
+    $.add$1(this.editorElement.get$classes(), 'timeEntryView');
+  }
+  var t1 = !t0;
+  this.timeFromInput.set$disabled(t1);
+  this.timeToInput.set$disabled(t1);
+  this.projectSelect.set$disabled(t1);
+  this.activitySelect.set$disabled(t1);
+  this.commentTextArea.set$disabled(t1);
+ },
  createUI$0: function() {
   this.editorElement = this.elementCreator.createElement$2('div', ['timeEntry', 'timeEntryView']);
-  this.timeFromInput = this.elementCreator.createElement$2('input', ['time', 'entryTimeFrom']);
+  this.timeFromInput = this.elementCreator.createElement$3('input', ['time', 'entryTimeFrom'], this.editorElement);
   this.timeFromInput.set$type('time');
   this.timeFromInput.set$disabled(true);
-  this.timeToInput = this.elementCreator.createElement$2('input', ['time', 'entryTimeTo']);
+  this.elementCreator.createElement$3('span', ['timeSeparator'], this.editorElement);
+  this.timeToInput = this.elementCreator.createElement$3('input', ['time', 'entryTimeTo'], this.editorElement);
   this.timeToInput.set$type('time');
   this.timeToInput.set$disabled(true);
-  this.projectSelect = this.elementCreator.createElement$2('select', ['project']);
+  this.projectSelect = this.elementCreator.createElement$3('select', ['project'], this.editorElement);
   this.projectSelect.set$disabled(true);
-  this.activitySelect = this.elementCreator.createElement$2('select', ['project']);
+  this.activitySelect = this.elementCreator.createElement$3('select', ['project'], this.editorElement);
   this.activitySelect.set$disabled(true);
-  this.commentTextArea = this.elementCreator.createElement$2('textarea', ['comment']);
+  this.commentTextArea = this.elementCreator.createElement$3('textarea', ['comment'], this.editorElement);
   this.commentTextArea.set$rows(2);
   this.commentTextArea.set$disabled(true);
-  $.add$1(this.editorElement.get$nodes(), this.timeFromInput);
-  $.add$1(this.editorElement.get$nodes(), this.elementCreator.createElement$2('span', ['timeSeparator']));
-  $.add$1(this.editorElement.get$nodes(), this.timeToInput);
-  $.add$1(this.editorElement.get$nodes(), this.projectSelect);
-  $.add$1(this.editorElement.get$nodes(), this.activitySelect);
-  $.add$1(this.editorElement.get$nodes(), this.commentTextArea);
+  var editorActionsElement = this.elementCreator.createElement$3('div', ['timeEntryActions'], this.editorElement);
+  this.editButton = this.elementCreator.createElement$3('a', ['timeEntryEdit'], editorActionsElement);
+  this.editButton.set$text('Editieren');
+  this.saveButton = this.elementCreator.createElement$3('a', ['timeEntrySave'], editorActionsElement);
+  this.saveButton.set$text('Sichern');
+  this.deleteButton = this.elementCreator.createElement$3('a', ['timeEntryDelete'], editorActionsElement);
+  this.deleteButton.set$text('L\xf6schen');
+  this.cancelButton = this.elementCreator.createElement$3('a', ['timeEntryCancel'], editorActionsElement);
+  this.cancelButton.set$text('Abbrechen');
  }
 });
 
@@ -1605,7 +1638,7 @@ Isolate.$defineClass("Expander", "Object", [], {
     }
   }
  },
- get$executeExpander: function() { return new $.Closure52(this); },
+ get$executeExpander: function() { return new $.Closure54(this); },
  connect$1: function(element) {
   var header = this.findHeader$1(this.findExpander$1(element));
   if (!$.eqNullB(header)) {
@@ -1658,13 +1691,19 @@ Isolate.$defineClass("Dialog", "Object", ["touchMovePreventer", "modalifier", "d
 });
 
 Isolate.$defineClass("ElementCreator", "Object", [], {
- createElement$2: function(tagName, classes) {
+ createElement$3: function(tagName, classes, parent$) {
   var element = $.Element$tag(tagName);
   if (!$.eqNullB(classes)) {
     $.addAll(element.get$classes(), classes);
   }
+  if (!$.eqNullB(parent$)) {
+    $.add$1(parent$.get$nodes(), element);
+  }
   return element;
- }
+ },
+ createElement$2: function(tagName,classes) {
+  return this.createElement$3(tagName,classes,(void 0))
+}
 });
 
 Isolate.$defineClass("ErrorDisplay", "Object", [], {
@@ -2101,7 +2140,7 @@ Isolate.$defineClass("_AttributeClassSet", "_CssClassSet", ["_element"], {
  $dom_className$0: function() {
   return $.index(this._element.get$attributes(), 'class');
  },
- get$$$dom_className: function() { return new $.Closure57(this); }
+ get$$$dom_className: function() { return new $.Closure59(this); }
 });
 
 Isolate.$defineClass("_SVGElementInstanceEventsImpl", "_EventsImpl", ["_ptr"], {
@@ -2911,32 +2950,32 @@ $call$1: function(arg0) {
 });
 Isolate.$defineClass('Closure52', 'Closure45', function BoundClosure(self) { this.self = self; }, {
 $call$1: function(arg0) {
-  return this.self.executeExpander$1(arg0);
+  return this.self.cancelTouched$1(arg0);
 },
 });
 Isolate.$defineClass('Closure53', 'Closure45', function BoundClosure(self) { this.self = self; }, {
-$call$0: function() {
-  return this.self.click$0();
+$call$1: function(arg0) {
+  return this.self.editTouched$1(arg0);
 },
 });
 Isolate.$defineClass('Closure54', 'Closure45', function BoundClosure(self) { this.self = self; }, {
-$call$0: function() {
-  return this.self.click$0();
+$call$1: function(arg0) {
+  return this.self.executeExpander$1(arg0);
 },
 });
 Isolate.$defineClass('Closure55', 'Closure45', function BoundClosure(self) { this.self = self; }, {
 $call$0: function() {
-  return this.self.start$0();
+  return this.self.click$0();
 },
 });
 Isolate.$defineClass('Closure56', 'Closure45', function BoundClosure(self) { this.self = self; }, {
 $call$0: function() {
-  return this.self.start$0();
+  return this.self.click$0();
 },
 });
 Isolate.$defineClass('Closure57', 'Closure45', function BoundClosure(self) { this.self = self; }, {
 $call$0: function() {
-  return this.self.$dom_className$0();
+  return this.self.start$0();
 },
 });
 Isolate.$defineClass('Closure58', 'Closure45', function BoundClosure(self) { this.self = self; }, {
@@ -2945,11 +2984,21 @@ $call$0: function() {
 },
 });
 Isolate.$defineClass('Closure59', 'Closure45', function BoundClosure(self) { this.self = self; }, {
+$call$0: function() {
+  return this.self.$dom_className$0();
+},
+});
+Isolate.$defineClass('Closure60', 'Closure45', function BoundClosure(self) { this.self = self; }, {
+$call$0: function() {
+  return this.self.start$0();
+},
+});
+Isolate.$defineClass('Closure61', 'Closure45', function BoundClosure(self) { this.self = self; }, {
 $call$1: function(arg0) {
   return this.self.start$1(arg0);
 },
 });
-Isolate.$defineClass('Closure60', 'Closure45', function BoundClosure(self) { this.self = self; }, {
+Isolate.$defineClass('Closure62', 'Closure45', function BoundClosure(self) { this.self = self; }, {
 $call$1: function(arg0) {
   return this.self.end$1(arg0);
 },
@@ -4145,7 +4194,7 @@ $.regExpMakeNative = function(regExp, global) {
 };
 
 $.TimeEntryEditorView$1 = function(elementCreator) {
-  return new $.TimeEntryEditorView((void 0), (void 0), (void 0), (void 0), (void 0), (void 0), elementCreator);
+  return new $.TimeEntryEditorView((void 0), (void 0), (void 0), (void 0), (void 0), (void 0), (void 0), (void 0), (void 0), (void 0), elementCreator);
 };
 
 $.BadNumberFormatException$1 = function(_s) {
@@ -6775,7 +6824,7 @@ $.$defineNativeClass('DocumentFragment', [], {
  },
  click$0: function() {
  },
- get$click: function() { return new $.Closure53(this); },
+ get$click: function() { return new $.Closure55(this); },
  get$classes: function() {
   var t0 = $.HashSetImplementation$0();
   $.setRuntimeTypeInfo(t0, ({E: 'String'}));
@@ -6814,7 +6863,7 @@ $.$defineNativeClass('Element', ["id?"], {
  click$0: function() {
   return this.click();
  },
- get$click: function() { return new $.Closure54(this); },
+ get$click: function() { return new $.Closure56(this); },
  set$$$dom_className: function(value) {
   this.className = value;;
  },
@@ -7467,7 +7516,7 @@ $.$defineNativeClass('HTMLMarqueeElement', [], {
  start$0: function() {
   return this.start();
  },
- get$start: function() { return new $.Closure55(this); }
+ get$start: function() { return new $.Closure57(this); }
 });
 
 $.$defineNativeClass('MediaController', [], {
@@ -7556,7 +7605,7 @@ $.$defineNativeClass('MessagePort', [], {
  start$0: function() {
   return this.start();
  },
- get$start: function() { return new $.Closure56(this); },
+ get$start: function() { return new $.Closure58(this); },
  $dom_removeEventListener$3: function(type, listener, useCapture) {
   return this.removeEventListener(type,$.convertDartClosureToJS(listener),useCapture);
  },
@@ -7925,7 +7974,7 @@ $.$defineNativeClass('SpeechRecognition', [], {
  start$0: function() {
   return this.start();
  },
- get$start: function() { return new $.Closure58(this); },
+ get$start: function() { return new $.Closure60(this); },
  $dom_removeEventListener$3: function(type, listener, useCapture) {
   return this.removeEventListener(type,$.convertDartClosureToJS(listener),useCapture);
  },
@@ -8101,11 +8150,11 @@ $.$defineNativeClass('TimeRanges', ["length?"], {
  start$1: function(index) {
   return this.start(index);
  },
- get$start: function() { return new $.Closure59(this); },
+ get$start: function() { return new $.Closure61(this); },
  end$1: function(index) {
   return this.end(index);
  },
- get$end: function() { return new $.Closure60(this); }
+ get$end: function() { return new $.Closure62(this); }
 });
 
 $.$defineNativeClass('TouchList', ["length?"], {

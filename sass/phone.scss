@@ -58,6 +58,20 @@ body {
 
 }
 
+.zeButton {
+  display: inline-block;
+  text-decoration: none;
+  text-align: center;
+  font-size: 14px;
+  color: #ffffff;
+  padding: 8px;
+  min-width: 5em;
+  @include border-radius;
+  border: solid 1px #000000;
+  margin-right: 5px;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+
 input, select, textarea, button {
   font-size: 17px;
 }
@@ -71,6 +85,7 @@ input, select, textarea, button {
   margin: 0;
   color: $monthHeader_text_color;
   @include ze-background($monthHeader_background_color);
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
 }
 
 .monthName:after {
@@ -93,6 +108,7 @@ input, select, textarea, button {
   color: $dayHeader_text_color;
   @include border-radius;
   @include ze-background($dayHeader_background_color);
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
 }
 
 .dayHeader:active {
@@ -218,25 +234,45 @@ input:disabled, textarea:disabled, select:disabled {
 .timeEntryEdit {
   @extend .zeButton;
   @include ze-background(#3b63b7);
-  font-family: FontAwesome;
+}
+
+.timeEntryEdit:active {
+  @include ze-background(lighten(#3b63b7, 20%));
 }
 
 .timeEntrySave {
   @extend .zeButton;
   @include ze-background(#00aa00);
-  font-family: FontAwesome;
+}
+
+.timeEntrySave:active {
+  @include ze-background(lighten(#00aa00, 20%));
 }
 
 .timeEntryDelete {
   @extend .zeButton;
   @include ze-background(#aa0000);
-  font-family: FontAwesome;
+}
+
+.timeEntryDelete:active {
+  @include ze-background(lighten(#aa0000, 20%));
 }
 
 .timeEntryCancel {
   @extend .zeButton;
   @include ze-background(#750a17);
-  font-family: FontAwesome;
+}
+
+.timeEntryCancel:active {
+  @include ze-background(lighten(#750a17, 20%));
+}
+
+.timeEntryView .timeEntrySave, .timeEntryView .timeEntryDelete, .timeEntryView .timeEntryCancel {
+  display: none;
+}
+
+.timeEntryEditing .timeEntryEdit {
+  display: none;
 }
 
 .addEntrySection {
@@ -295,9 +331,7 @@ input:disabled, textarea:disabled, select:disabled {
 
 .dialog {
   display: block;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
+  @include border-radius;
   width: 90%;
   margin-left: auto;
   margin-right: auto;
@@ -327,19 +361,6 @@ $dialogText-border-color:#000000;
   width: 100%;
   margin-top: 10px;
   text-align: right;
-}
-
-.zeButton {
-  display: inline-block;
-  text-decoration: none;
-  text-align: center;
-  font-size: 14px;
-  color: #ffffff;
-  padding: 8px;
-  min-width: 6em;
-  @include border-radius;
-  border: solid 1px #000000;
-  margin-right: 5px;
 }
 
 .zeButton:last-of-type {

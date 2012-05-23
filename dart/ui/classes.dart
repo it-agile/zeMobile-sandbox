@@ -18,8 +18,13 @@ class Classes {
   static final String HOURS_TO_WORK = 'hoursToWork';
   static final String TIME_ENTRIES = 'timeEntries';
   static final String TIME_ENTRY = 'timeEntry';
-  static final String TIME_ENTRY_EDIT = 'timeEntryEdit';
+  static final String TIME_ENTRY_EDITING = 'timeEntryEditing';
   static final String TIME_ENTRY_VIEW = 'timeEntryView';
+  static final String TIME_ENTRY_ACTIONS = 'timeEntryActions';
+  static final String TIME_ENTRY_EDIT = 'timeEntryEdit';
+  static final String TIME_ENTRY_SAVE = 'timeEntrySave';
+  static final String TIME_ENTRY_DELETE = 'timeEntryDelete';
+  static final String TIME_ENTRY_CANCEL = 'timeEntryCancel';
   static final String TIME = 'time';
   static final String TIME_SEPARATOR = 'timeSeparator';
   static final String ENTRY_TIME_FROM = 'entryTimeFrom';

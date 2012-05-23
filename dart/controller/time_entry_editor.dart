@@ -23,6 +23,8 @@ class TimeEntryEditor {
   Element createUI() {
     view.createUI();
     _updateTimeEntry(_timeEntry);
+    view.editButton.on.click.add(editTouched);
+    view.cancelButton.on.click.add(cancelTouched);
     
     return view.editorElement;
   }
@@ -47,6 +49,17 @@ class TimeEntryEditor {
     view.availableActivities = project.activities;
     view.activity = activity;
   }
+  
+  void editTouched(Event event) {
+    view.enableEditing(true);
+    event.preventDefault();
+  }
+  
+  void cancelTouched(Event event) {
+    _updateTimeEntry(_timeEntry);
+    view.enableEditing(false);
+    event.preventDefault();
+  }
 }
 
 class TimeEntryEditorModel {
@@ -61,34 +74,50 @@ class TimeEntryEditorView {
   SelectElement projectSelect;
   SelectElement activitySelect;
   TextAreaElement commentTextArea;
+  Element editButton;
+  Element saveButton;
+  Element deleteButton;
+  Element cancelButton;
   
   TimeEntryEditorView(this.elementCreator);
   
   void createUI() {
     editorElement = elementCreator.createElement(Tags.DIV, [Classes.TIME_ENTRY,Classes.TIME_ENTRY_VIEW]);
-    timeFromInput = elementCreator.createElement(Tags.INPUT, [Classes.TIME, Classes.ENTRY_TIME_FROM]);
+    timeFromInput = elementCreator.createElement(Tags.INPUT, [Classes.TIME, Classes.ENTRY_TIME_FROM], editorElement);
     timeFromInput.type = 'time';
     timeFromInput.disabled = true;
-    timeToInput = elementCreator.createElement(Tags.INPUT, [Classes.TIME, Classes.ENTRY_TIME_TO]);
+    elementCreator.createElement(Tags.SPAN, [Classes.TIME_SEPARATOR], editorElement);
+    timeToInput = elementCreator.createElement(Tags.INPUT, [Classes.TIME, Classes.ENTRY_TIME_TO], editorElement);
     timeToInput.type = 'time';
     timeToInput.disabled = true;
-    projectSelect = elementCreator.createElement(Tags.SELECT, [Classes.PROJECT]);
+    projectSelect = elementCreator.createElement(Tags.SELECT, [Classes.PROJECT], editorElement);
     projectSelect.disabled = true;
-    activitySelect = elementCreator.createElement(Tags.SELECT, [Classes.PROJECT]);
+    activitySelect = elementCreator.createElement(Tags.SELECT, [Classes.PROJECT], editorElement);
     activitySelect.disabled = true;
-    commentTextArea = elementCreator.createElement(Tags.TEXTAREA, [Classes.COMMENT]);
+    commentTextArea = elementCreator.createElement(Tags.TEXTAREA, [Classes.COMMENT], editorElement);
     commentTextArea.rows = 2;
     commentTextArea.disabled = true;
     
-    editorElement.nodes.add(timeFromInput);
-    editorElement.nodes.add(elementCreator.createElement(Tags.SPAN, [Classes.TIME_SEPARATOR]));
-    editorElement.nodes.add(timeToInput);
-    editorElement.nodes.add(projectSelect);
-    editorElement.nodes.add(activitySelect);
-    editorElement.nodes.add(commentTextArea);
+    Element editorActionsElement = elementCreator.createElement(Tags.DIV, [Classes.TIME_ENTRY_ACTIONS], editorElement);
+    editButton = elementCreator.createElement(Tags.A, [Classes.TIME_ENTRY_EDIT], editorActionsElement);
+    editButton.text = 'Editieren';
+    saveButton = elementCreator.createElement(Tags.A, [Classes.TIME_ENTRY_SAVE], editorActionsElement);
+    saveButton.text = 'Sichern';
+    deleteButton = elementCreator.createElement(Tags.A, [Classes.TIME_ENTRY_DELETE], editorActionsElement);
+    deleteButton.text = 'Löschen';
+    cancelButton = elementCreator.createElement(Tags.A, [Classes.TIME_ENTRY_CANCEL], editorActionsElement);
+    cancelButton.text = 'Abbrechen';
   }
   
   void enableEditing(bool enabled) {
+    if (enabled) {
+      editorElement.classes.remove(Classes.TIME_ENTRY_VIEW);
+      editorElement.classes.add(Classes.TIME_ENTRY_EDITING);
+    } else {
+      editorElement.classes.remove(Classes.TIME_ENTRY_EDITING);
+      editorElement.classes.add(Classes.TIME_ENTRY_VIEW);
+    }
+      
     timeFromInput.disabled = !enabled;
     timeToInput.disabled = !enabled;
     projectSelect.disabled = !enabled;

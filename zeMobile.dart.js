@@ -4390,6 +4390,8 @@ function TimeEntryEditor(_timeEntry, activityProvider, model, view) {
 TimeEntryEditor.prototype.createUI = function() {
   this.view.createUI();
   this._updateTimeEntry(this._timeEntry);
+  this.view.editButton.get$on().get$click().add$1(this.get$editTouched());
+  this.view.cancelButton.get$on().get$click().add$1(this.get$cancelTouched());
   return this.view.editorElement;
 }
 TimeEntryEditor.prototype._updateTimeEntry = function(entry) {
@@ -4408,6 +4410,21 @@ TimeEntryEditor.prototype._updateTimeEntry = function(entry) {
   this.view.set$availableActivities(project.get$activities());
   this.view.set$activity(activity);
 }
+TimeEntryEditor.prototype.editTouched = function(event) {
+  this.view.enableEditing(true);
+  event.preventDefault();
+}
+TimeEntryEditor.prototype.get$editTouched = function() {
+  return this.editTouched.bind(this);
+}
+TimeEntryEditor.prototype.cancelTouched = function(event) {
+  this._updateTimeEntry(this._timeEntry);
+  this.view.enableEditing(false);
+  event.preventDefault();
+}
+TimeEntryEditor.prototype.get$cancelTouched = function() {
+  return this.cancelTouched.bind(this);
+}
 function TimeEntryEditorModel() {
 
 }
@@ -4416,25 +4433,44 @@ function TimeEntryEditorView(elementCreator) {
 }
 TimeEntryEditorView.prototype.createUI = function() {
   this.editorElement = this.elementCreator.createElement$_("div", ["timeEntry", "timeEntryView"]);
-  this.timeFromInput = this.elementCreator.createElement$_("input", ["time", "entryTimeFrom"]);
+  this.timeFromInput = this.elementCreator.createElement$_("input", ["time", "entryTimeFrom"], this.editorElement);
   this.timeFromInput.type = "time";
   this.timeFromInput.disabled = true;
-  this.timeToInput = this.elementCreator.createElement$_("input", ["time", "entryTimeTo"]);
+  this.elementCreator.createElement$_("span", ["timeSeparator"], this.editorElement);
+  this.timeToInput = this.elementCreator.createElement$_("input", ["time", "entryTimeTo"], this.editorElement);
   this.timeToInput.type = "time";
   this.timeToInput.disabled = true;
-  this.projectSelect = this.elementCreator.createElement$_("select", ["project"]);
+  this.projectSelect = this.elementCreator.createElement$_("select", ["project"], this.editorElement);
   this.projectSelect.disabled = true;
-  this.activitySelect = this.elementCreator.createElement$_("select", ["project"]);
+  this.activitySelect = this.elementCreator.createElement$_("select", ["project"], this.editorElement);
   this.activitySelect.disabled = true;
-  this.commentTextArea = this.elementCreator.createElement$_("textarea", ["comment"]);
+  this.commentTextArea = this.elementCreator.createElement$_("textarea", ["comment"], this.editorElement);
   this.commentTextArea.rows = (2);
   this.commentTextArea.disabled = true;
-  this.editorElement.get$nodes().add(this.timeFromInput);
-  this.editorElement.get$nodes().add(this.elementCreator.createElement$_("span", ["timeSeparator"]));
-  this.editorElement.get$nodes().add(this.timeToInput);
-  this.editorElement.get$nodes().add(this.projectSelect);
-  this.editorElement.get$nodes().add(this.activitySelect);
-  this.editorElement.get$nodes().add(this.commentTextArea);
+  var editorActionsElement = this.elementCreator.createElement$_("div", ["timeEntryActions"], this.editorElement);
+  this.editButton = this.elementCreator.createElement$_("a", ["timeEntryEdit"], editorActionsElement);
+  this.editButton.set$text("Editieren");
+  this.saveButton = this.elementCreator.createElement$_("a", ["timeEntrySave"], editorActionsElement);
+  this.saveButton.set$text("Sichern");
+  this.deleteButton = this.elementCreator.createElement$_("a", ["timeEntryDelete"], editorActionsElement);
+  this.deleteButton.set$text("L\xf6schen");
+  this.cancelButton = this.elementCreator.createElement$_("a", ["timeEntryCancel"], editorActionsElement);
+  this.cancelButton.set$text("Abbrechen");
+}
+TimeEntryEditorView.prototype.enableEditing = function(enabled) {
+  if (enabled) {
+    this.editorElement.get$classes().remove$1("timeEntryView");
+    this.editorElement.get$classes().add$1("timeEntryEditing");
+  }
+  else {
+    this.editorElement.get$classes().remove$1("timeEntryEditing");
+    this.editorElement.get$classes().add$1("timeEntryView");
+  }
+  this.timeFromInput.disabled = !enabled;
+  this.timeToInput.disabled = !enabled;
+  this.projectSelect.disabled = !enabled;
+  this.activitySelect.disabled = !enabled;
+  this.commentTextArea.disabled = !enabled;
 }
 TimeEntryEditorView.prototype.set$timeFrom = function(time) {
   var $0;
@@ -4869,10 +4905,13 @@ Dialog.prototype.dispose = function() {
 function ElementCreator() {
 
 }
-ElementCreator.prototype.createElement$_ = function(tagName, classes) {
+ElementCreator.prototype.createElement$_ = function(tagName, classes, parent) {
   var element = _ElementFactoryProvider.Element$tag$factory(tagName);
   if (classes != null) {
     element.get$classes().addAll(classes);
+  }
+  if (parent != null) {
+    parent.get$nodes().add(element);
   }
   return element;
 }
