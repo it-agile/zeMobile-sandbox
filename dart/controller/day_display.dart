@@ -26,15 +26,16 @@ class DayDisplay {
     return view.containerElement;
   }
   
-  void addTimeEntry(TimeEntry timeEntry) {
+  TimeEntryEditor addTimeEntry(TimeEntry timeEntry) {
     TimeEntryEditor editor = timeEntryEditorFactory.createTimeEntryEditor(timeEntry);
     view.timeEntriesElement.insertBefore(editor.createUI(), view.addEntrySection);
+    return editor;
   }
   
   void addEntryButtonTouched(Event event) {
     TimeEntry newEntry = new TimeEntry.fresh();
     newEntry.date = day;
-    addTimeEntry(newEntry);
+    addTimeEntry(newEntry).editEntry();
   }
 }
 

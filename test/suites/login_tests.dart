@@ -19,6 +19,7 @@ class LoginViewMock extends LoginView {
 void loginTests() {
   describe('login model', () {
     LoginModel model = new LoginModel();
+    beforeEach(() => document.window.localStorage.clear());
     
     it('should initially have no logged in user', () => expect(model.isUserLoggedIn()).to(beFalse()));
     it('should return null if asked for the user before a user is logged in', () => expect(model.user).to(beNull()));
@@ -41,6 +42,7 @@ void loginTests() {
     User loggedInUser;
     OnUserLoggedIn callback = (User user) {loggedInUser = user; callbackCalled = true;};
     
+    beforeEach(() => document.window.localStorage.clear());
     
     describe('with no logged in user', () {
       login.loginUserIfNotAlreadyLoggedIn(callback);

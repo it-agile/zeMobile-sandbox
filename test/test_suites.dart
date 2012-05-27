@@ -1,6 +1,7 @@
 #library('zeMobile test suites');
 
 #import('dart:json');
+#import('dart:html');
 #import('../dart/ze_mobile_lib.dart');
 #import('../../../dahlia/src/dahlia.dart');
 

@@ -1039,8 +1039,17 @@ Isolate.$defineClass("LoginView", "Object", [], {
 Isolate.$defineClass("LoginModel", "Object", ["user?"], {
  loginUser$2: function(userName, password) {
   this.user = $.User$2(userName, password);
+  $.indexSet($.document().get$window().get$localStorage(), 'user', userName);
+  $.indexSet($.document().get$window().get$localStorage(), 'password', password);
  },
  isUserLoggedIn$0: function() {
+  if ($.eqNullB(this.user)) {
+    var userName = $.index($.document().get$window().get$localStorage(), 'user');
+    var password = $.index($.document().get$window().get$localStorage(), 'password');
+    if (!$.eqNullB(userName) && !$.eqNullB(password)) {
+      this.user = $.User$2(userName, password);
+    }
+  }
   return !$.eqNullB(this.user);
  }
 });
@@ -1107,12 +1116,13 @@ Isolate.$defineClass("DayDisplay", "Object", ["view?", "timeEntryEditorFactory",
  addEntryButtonTouched$1: function(event$) {
   var newEntry = $.TimeEntry$fresh$0();
   newEntry.set$date(this.day);
-  this.addTimeEntry$1(newEntry);
+  this.addTimeEntry$1(newEntry).editEntry$0();
  },
  get$addEntryButtonTouched: function() { return new $.Closure59(this); },
  addTimeEntry$1: function(timeEntry) {
   var editor = this.timeEntryEditorFactory.createTimeEntryEditor$1(timeEntry);
   this.view.get$timeEntriesElement().insertBefore$2(editor.createUI$0(), this.view.get$addEntrySection());
+  return editor;
  },
  createUI$0: function() {
   this.view.createUI$0();
@@ -1205,6 +1215,9 @@ Isolate.$defineClass("TimeEntryEditor", "Object", ["projectSelectIndex!", "proje
   event$.preventDefault$0();
  },
  get$editTouched: function() { return new $.Closure65(this); },
+ editEntry$0: function() {
+  this.view.enableEditing$1(true);
+ },
  _updateTimeEntry$1: function(entry) {
   this._timeEntry = entry;
   var projects = this.activityProvider.get$fetchedProjects();
@@ -4257,10 +4270,6 @@ $.ObjectNotClosureException$0 = function() {
   return new $.ObjectNotClosureException();
 };
 
-$.window = function() {
-  return window;;
-};
-
 $.add = function(a, b) {
   if ($.checkNumbers(a, b) === true) {
     return a + b;
@@ -4275,6 +4284,10 @@ $.add = function(a, b) {
     }
   }
   return a.operator$add$1(b);
+};
+
+$.window = function() {
+  return window;;
 };
 
 $.ErrorDisplay$0 = function() {
@@ -8465,7 +8478,7 @@ $.$defineNativeClass('WebSocket', ["readyState?"], {
  }
 });
 
-$.$defineNativeClass('DOMWindow', ["window?", "status?", "parent?", "navigator?", "name?", "length?"], {
+$.$defineNativeClass('DOMWindow', ["window?", "status?", "parent?", "navigator?", "name?", "localStorage?", "length?"], {
  setInterval$2: function(handler, timeout) {
   return this.setInterval($.convertDartClosureToJS(handler),timeout);
  },

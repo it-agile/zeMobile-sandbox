@@ -62,6 +62,10 @@ class TimeEntryEditor {
     view.activity = activity;
   }
   
+  void editEntry() {
+    view.enableEditing(true);
+  }
+  
   void editTouched(Event event) {
     view.enableEditing(true);
     event.preventDefault();

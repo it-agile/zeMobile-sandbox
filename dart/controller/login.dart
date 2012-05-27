@@ -44,6 +44,22 @@ class LoginView {
 class LoginModel {
   User user;
 
-  bool isUserLoggedIn() => user != null;
-  void loginUser(String userName, String password) {user = new User(userName, password);}
+  bool isUserLoggedIn() {
+    if (user == null) {
+      String userName = document.window.localStorage[USER_KEY];
+      String password = document.window.localStorage[PASSWORD_KEY];
+      if (userName != null && password != null) {
+        user = new User(userName, password);
+      }
+    }
+    return user != null;
+  }
+  void loginUser(String userName, String password) {
+    user = new User(userName, password);
+    document.window.localStorage[USER_KEY] = userName;
+    document.window.localStorage[PASSWORD_KEY] = password;
+  }
+  
+  static final String USER_KEY = 'user';
+  static final String PASSWORD_KEY = 'password';
 }
