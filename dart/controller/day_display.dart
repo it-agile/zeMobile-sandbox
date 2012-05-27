@@ -20,6 +20,7 @@ class DayDisplay {
   Element createUI() {
     view.createUI();
     view.dayDate = day;
+    view.containerElement.id = 'day${day.toString()}';
     
     view.addEntryButton.on.click.add(addEntryButtonTouched);
     
@@ -43,6 +44,7 @@ class DayDisplayView {
   final ElementCreator elementCreator;
   final Expander expander;
   Element containerElement;
+  Element headerElement;
   Element dayDateElement;
   Element timeEntriesElement;
   Element addEntrySection;
@@ -52,14 +54,14 @@ class DayDisplayView {
   void createUI() {
     containerElement = elementCreator.createElement(Tags.DIV, [Classes.DAY, Classes.CONTAINER]);
     
-    Element header = elementCreator.createElement(Tags.DIV,[Classes.HEADER, Classes.DAY_HEADER]); 
-    containerElement.nodes.add(header);
+    headerElement = elementCreator.createElement(Tags.DIV,[Classes.HEADER, Classes.DAY_HEADER]); 
+    containerElement.nodes.add(headerElement);
     
     dayDateElement = elementCreator.createElement(Tags.SPAN,[Classes.DAY_DATE]);
-    header.nodes.add(dayDateElement);
+    headerElement.nodes.add(dayDateElement);
 
     Element floatRight = elementCreator.createElement(Tags.SPAN,[Classes.FLOAT_RIGHT]);
-    header.nodes.add(floatRight);
+    headerElement.nodes.add(floatRight);
     Element expanderElement = elementCreator.createElement(Tags.SPAN,[Classes.EXPANDER]);
     floatRight.nodes.add(expanderElement);
     
@@ -75,7 +77,12 @@ class DayDisplayView {
     expander.collapse(containerElement);
   }
   
-  set dayDate(ZeDate day) => dayDateElement.text = day.toGermanString();
+  set dayDate(ZeDate day) { 
+    dayDateElement.text = day.toGermanString();
+    if(day.isWeekend()) {
+      headerElement.classes.add(Classes.WEEKEND);
+    }
+  }
   
   void addTimeEntryUI(Element timeEntryUI) {
     timeEntriesElement.nodes.add(timeEntryUI);

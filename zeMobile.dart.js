@@ -756,6 +756,9 @@ Isolate.$defineClass("DateImplementation", "Object", ["timeZone?", "value?"], {
   return this.timeZone.get$isUtc();
  },
  get$isUtc: function() { return new $.Closure55(this); },
+ get$weekday: function() {
+  return $.mod($.add($.getWeekday(this), 6), 7);
+ },
  get$milliseconds: function() {
   return $.getMilliseconds(this);
  },
@@ -997,7 +1000,7 @@ Isolate.$defineClass("IllegalJSRegExpException", "Object", ["_errmsg", "_pattern
  }
 });
 
-Isolate.$defineClass("App", "Object", ["monthDisplayFactory?", "timeEntryProvider?", "activityProvider"], {
+Isolate.$defineClass("App", "Object", ["expander?", "monthDisplayFactory?", "timeEntryProvider?", "activityProvider"], {
  start$0: function() {
   this.activityProvider.fetchProjects$1(new $.Closure(this));
  },
@@ -1054,7 +1057,7 @@ Isolate.$defineClass("LoginModel", "Object", ["user?"], {
  }
 });
 
-Isolate.$defineClass("MonthDisplayFactory", "Object", ["monthNames", "dayDisplayFactory", "expander", "elementCreator"], {
+Isolate.$defineClass("MonthDisplayFactory", "Object", ["monthNames", "dayDisplayFactory", "expander?", "elementCreator"], {
  createMonthDisplay$1: function(month) {
   return $.MonthDisplay$3(month, $.MonthDisplayView$3(this.elementCreator, this.expander, this.monthNames), this.dayDisplayFactory);
  },
@@ -1080,7 +1083,7 @@ Isolate.$defineClass("MonthDisplay", "Object", ["dayDisplayFactory", "month?", "
  }
 });
 
-Isolate.$defineClass("MonthDisplayView", "Object", ["daysElement?", "yearElement", "monthNameElement", "containerElement?", "monthNames", "expander", "elementCreator"], {
+Isolate.$defineClass("MonthDisplayView", "Object", ["daysElement?", "yearElement", "monthNameElement", "containerElement?", "monthNames", "expander?", "elementCreator"], {
  setMonth$2: function(month, year) {
   var t0 = $.index(this.monthNames, month);
   this.monthNameElement.set$text(t0);
@@ -1106,7 +1109,7 @@ Isolate.$defineClass("MonthDisplayView", "Object", ["daysElement?", "yearElement
  }
 });
 
-Isolate.$defineClass("DayDisplayFactory", "Object", ["timeEntryEditorFactory", "expander", "elementCreator"], {
+Isolate.$defineClass("DayDisplayFactory", "Object", ["timeEntryEditorFactory", "expander?", "elementCreator"], {
  createDayDisplay$1: function(day) {
   return $.DayDisplay$3(day, $.DayDisplayView$2(this.elementCreator, this.expander), this.timeEntryEditorFactory);
  }
@@ -1128,25 +1131,29 @@ Isolate.$defineClass("DayDisplay", "Object", ["view?", "timeEntryEditorFactory",
   this.view.createUI$0();
   var t0 = this.day;
   this.view.set$dayDate(t0);
+  var t1 = 'day' + $.stringToString($.toString(this.day));
+  this.view.get$containerElement().set$id(t1);
   $.add$1(this.view.get$addEntryButton().get$on().get$click(), this.get$addEntryButtonTouched());
   return this.view.get$containerElement();
  }
 });
 
-Isolate.$defineClass("DayDisplayView", "Object", ["addEntryButton?", "addEntrySection?", "timeEntriesElement?", "dayDateElement", "containerElement?", "expander", "elementCreator"], {
+Isolate.$defineClass("DayDisplayView", "Object", ["addEntryButton?", "addEntrySection?", "timeEntriesElement?", "dayDateElement", "headerElement", "containerElement?", "expander?", "elementCreator"], {
  set$dayDate: function(day) {
   var t0 = day.toGermanString$0();
   this.dayDateElement.set$text(t0);
-  return t0;
+  if (day.isWeekend$0() === true) {
+    $.add$1(this.headerElement.get$classes(), 'weekend');
+  }
  },
  createUI$0: function() {
   this.containerElement = this.elementCreator.createElement$2('div', ['day', 'container']);
-  var header = this.elementCreator.createElement$2('div', ['header', 'dayHeader']);
-  $.add$1(this.containerElement.get$nodes(), header);
+  this.headerElement = this.elementCreator.createElement$2('div', ['header', 'dayHeader']);
+  $.add$1(this.containerElement.get$nodes(), this.headerElement);
   this.dayDateElement = this.elementCreator.createElement$2('span', ['dayDate']);
-  $.add$1(header.get$nodes(), this.dayDateElement);
+  $.add$1(this.headerElement.get$nodes(), this.dayDateElement);
   var floatRight = this.elementCreator.createElement$2('span', ['floatRight']);
-  $.add$1(header.get$nodes(), floatRight);
+  $.add$1(this.headerElement.get$nodes(), floatRight);
   var expanderElement = this.elementCreator.createElement$2('span', ['expander']);
   $.add$1(floatRight.get$nodes(), expanderElement);
   this.timeEntriesElement = this.elementCreator.createElement$2('div', ['timeEntries', 'content']);
@@ -1160,7 +1167,7 @@ Isolate.$defineClass("DayDisplayView", "Object", ["addEntryButton?", "addEntrySe
  }
 });
 
-Isolate.$defineClass("TimeEntryEditorFactory", "Object", ["expander", "elementCreator", "timeEntryProvider?", "activityProvider"], {
+Isolate.$defineClass("TimeEntryEditorFactory", "Object", ["expander?", "elementCreator", "timeEntryProvider?", "activityProvider"], {
  createTimeEntryEditor$1: function(timeEntry) {
   var model = $.TimeEntryEditorModel$0();
   var view = $.TimeEntryEditorView$1(this.elementCreator);
@@ -1437,6 +1444,10 @@ Isolate.$defineClass("TimeEntry", "Object", ["timeEntryJSON"], {
   }
   return t0;
  },
+ set$id: function(id) {
+  $.indexSet(this.timeEntryJSON, 'id', id);
+  return id;
+ },
  get$id: function() {
   return $.index(this.timeEntryJSON, 'id');
  }
@@ -1484,6 +1495,10 @@ Isolate.$defineClass("ZeDate", "Object", ["year?", "month?", "day?"], {
  },
  operator$eq$1: function(other) {
   return !$.eqNullB(other) && this.equals$1(other) === true;
+ },
+ isWeekend$0: function() {
+  var weekday = $.DateImplementation2(this.year, this.month, this.day, 0, 0, 0, 0).get$weekday();
+  return $.eqB(weekday, 5) || $.eqB(weekday, 6);
  },
  nextDay$0: function() {
   return $.ZeDate$fromDate($.add$1($.DateImplementation2(this.year, this.month, this.day, 0, 0, 0, 0), $.CTC9));
@@ -2680,17 +2695,21 @@ Isolate.$defineClass("_JsonParser", "Object", ["position", "length?", "json"], {
  }
 });
 
-Isolate.$defineClass("Closure", "Closure53", ["this_0"], {
+Isolate.$defineClass("Closure", "Closure53", ["this_2"], {
  $call$1: function(projects) {
-  var currentDay = $.ZeDate$currentDay();
-  this.this_0.get$timeEntryProvider().fetchTimeEntries$3(currentDay.get$month(), currentDay.get$year(), new $.Closure24(this.this_0));
+  var t0 = ({});
+  t0.currentDay_1 = $.ZeDate$currentDay();
+  this.this_2.get$timeEntryProvider().fetchTimeEntries$3(t0.currentDay_1.get$month(), t0.currentDay_1.get$year(), new $.Closure24(this.this_2, t0));
  }
 });
 
-Isolate.$defineClass("Closure24", "Closure53", ["this_1"], {
+Isolate.$defineClass("Closure24", "Closure53", ["this_3", "box_0"], {
  $call$1: function(month) {
-  var monthDisplay = this.this_1.get$monthDisplayFactory().createMonthDisplay$1(month);
+  var monthDisplay = this.this_3.get$monthDisplayFactory().createMonthDisplay$1(month);
   $.add$1($.document().get$body().get$nodes(), monthDisplay.createUI$0());
+  var currentDayElement = monthDisplay.get$view().get$containerElement().query$1('#day' + $.stringToString($.toString(this.box_0.currentDay_1)));
+  this.this_3.get$expander().expand$1(currentDayElement);
+  currentDayElement.scrollIntoView$0();
  }
 });
 
@@ -4257,13 +4276,13 @@ $.buildApp = function() {
     var webServiceRequester = $.WebServiceRequester$1($.Login$2($.LoginModel$0(), $.LoginView$0()));
     var activityProvider = $.ActivityProvider$2(errorDisplay, webServiceRequester);
     var timeEntryProvider = $.TimeEntryProvider$2(errorDisplay, webServiceRequester);
-    $.app = $.App$3(activityProvider, timeEntryProvider, $.MonthDisplayFactory$3(elementCreator, expander, $.DayDisplayFactory$3(elementCreator, expander, $.TimeEntryEditorFactory$4(elementCreator, expander, activityProvider, timeEntryProvider))));
+    $.app = $.App$4(activityProvider, timeEntryProvider, $.MonthDisplayFactory$3(elementCreator, expander, $.DayDisplayFactory$3(elementCreator, expander, $.TimeEntryEditorFactory$4(elementCreator, expander, activityProvider, timeEntryProvider))), expander);
   }
   return $.app;
 };
 
-$.App$3 = function(activityProvider, timeEntryProvider, monthDisplayFactory) {
-  return new $.App(monthDisplayFactory, timeEntryProvider, activityProvider);
+$.App$4 = function(activityProvider, timeEntryProvider, monthDisplayFactory, expander) {
+  return new $.App(expander, monthDisplayFactory, timeEntryProvider, activityProvider);
 };
 
 $.ObjectNotClosureException$0 = function() {
@@ -4324,6 +4343,25 @@ $.isNegative = function(receiver) {
   } else {
     return receiver.isNegative$0();
   }
+};
+
+$.mod = function(a, b) {
+  if ($.checkNumbers(a, b) === true) {
+    var result = (a % b);
+    if (result === 0) {
+      return 0;
+    }
+    if (result > 0) {
+      return result;
+    }
+    var b0 = (b);
+    if (b0 < 0) {
+      return result - b0;
+    } else {
+      return result + b0;
+    }
+  }
+  return a.operator$mod$1(b);
 };
 
 $.regExpMakeNative = function(regExp, global) {
@@ -4410,7 +4448,7 @@ $._emitObject = function(o, result, visiting) {
 };
 
 $.DayDisplayView$2 = function(elementCreator, expander) {
-  return new $.DayDisplayView((void 0), (void 0), (void 0), (void 0), (void 0), expander, elementCreator);
+  return new $.DayDisplayView((void 0), (void 0), (void 0), (void 0), (void 0), (void 0), expander, elementCreator);
 };
 
 $._emitMap = function(m, result, visiting) {
@@ -4937,6 +4975,15 @@ $._FixedSizeListIterator$1 = function(array) {
 
 $.parse2 = function(json) {
   return $._JsonParser$_internal$1(json)._parseToplevel$0();
+};
+
+$.getWeekday = function(receiver) {
+  if (receiver.get$timeZone().get$isUtc() === true) {
+    var t0 = ($.lazyAsJsDate(receiver).getUTCDay());
+  } else {
+    t0 = ($.lazyAsJsDate(receiver).getDay());
+  }
+  return t0;
 };
 
 $.split = function(receiver, pattern) {
@@ -6906,6 +6953,14 @@ $.$defineNativeClass('DocumentFragment', [], {
  get$on: function() {
   return $._ElementEventsImpl$1(this);
  },
+ set$id: function(value) {
+  throw $.captureStackTrace($.UnsupportedOperationException$1('ID can\'t be set for document fragments.'));
+ },
+ scrollIntoView$1: function(centerIfNeeded) {
+ },
+ scrollIntoView$0: function() {
+  return this.scrollIntoView$1((void 0))
+},
  click$0: function() {
  },
  get$click: function() { return new $.Closure67(this); },
@@ -6934,10 +6989,16 @@ $.$defineNativeClass('DocumentFragment', [], {
 $.$defineNativeClass('DocumentType', ["name?"], {
 });
 
-$.$defineNativeClass('Element', ["id?"], {
+$.$defineNativeClass('Element', ["id="], {
  $dom_setAttribute$2: function(name, value) {
   return this.setAttribute(name,value);
  },
+ scrollIntoView$1: function(centerIfNeeded) {
+  return this.scrollIntoViewIfNeeded(centerIfNeeded);
+ },
+ scrollIntoView$0: function() {
+  return this.scrollIntoViewIfNeeded();
+},
  $dom_removeAttribute$1: function(name) {
   return this.removeAttribute(name);
  },
@@ -7961,6 +8022,9 @@ $.$defineNativeClass('SVGAngle', ["value="], {
 });
 
 $.$defineNativeClass('SVGElement', [], {
+ set$id: function(value) {
+  this.id = value;;
+ },
  get$id: function() {
   return this.id;;
  },
@@ -8208,7 +8272,7 @@ $.$defineNativeClass('TextTrack', [], {
  }
 });
 
-$.$defineNativeClass('TextTrackCue', ["text!", "id?"], {
+$.$defineNativeClass('TextTrackCue', ["text!", "id="], {
  $dom_removeEventListener$3: function(type, listener, useCapture) {
   return this.removeEventListener(type,$.convertDartClosureToJS(listener),useCapture);
  },

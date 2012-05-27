@@ -9,6 +9,7 @@ $default_border-radius: 5px;
 $monthHeader_background_color:#656565;
 $monthHeader_text_color: #fdff78;
 $dayHeader_background_color:#3c8948;
+$dayHeaderWeekend_background_color: #676f9d;
 $dayHeader_text_color: $monthHeader_text_color;
 $timeEntry_border_color: #808080;
 $dialog_background_color: #f5f5f5;
@@ -113,6 +114,14 @@ input, select, textarea, button {
 
 .dayHeader:active {
   @include ze-background(lighten($dayHeader_background_color, 20%));
+}
+
+.weekend {
+  @include ze-background($dayHeaderWeekend_background_color);
+}
+
+.weekend:active {
+  @include ze-background(lighten($dayHeaderWeekend_background_color, 20%));
 }
 
 .floatRight {

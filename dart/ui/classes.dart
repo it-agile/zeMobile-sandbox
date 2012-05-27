@@ -13,6 +13,7 @@ class Classes {
   static final String DAYS = 'days';
   static final String DAY = 'day';
   static final String DAY_HEADER = 'dayHeader';
+  static final String WEEKEND = 'weekend';
   static final String DAY_DATE = 'dayDate';
   static final String HOURS_WORKED = 'hoursWorked';
   static final String HOURS_TO_WORK = 'hoursToWork';

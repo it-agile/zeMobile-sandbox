@@ -19,7 +19,7 @@ class AppBuilder {
       DayDisplayFactory dayDisplayFactory = new DayDisplayFactory(elementCreator, expander, timeEntryEditorFactory);
       MonthDisplayFactory monthDisplayFactory = new MonthDisplayFactory(elementCreator, expander, dayDisplayFactory);
       
-      app = new App(activityProvider, timeEntryProvider, monthDisplayFactory);
+      app = new App(activityProvider, timeEntryProvider, monthDisplayFactory, expander);
     }
     return app;
   }

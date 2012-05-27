@@ -1,5 +1,5 @@
 CACHE MANIFEST
-#2012-05-27 13:12
+#2012-05-27 21:05
 CACHE:
 zeMobile.dart.js
 stylesheets/phone.css
@@ -8,5 +8,9 @@ stylesheets/font/fontawesome-webfont.svg
 stylesheets/font/fontawesome-webfont.svgz
 stylesheets/font/fontawesome-webfont.woff
 stylesheets/font/fontawesome-webfont.ttf
+images/apple-touch-icon.png
+images/apple-touch-icon-72x72.png
+images/apple-touch-icon-114x114.png
+images/apple-touch-icon-144x144.png
 NETWORK:
 *

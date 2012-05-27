@@ -1,5 +1,6 @@
 class ZeDate {
   static final DAY_DURATION = const Duration(1);
+  static final MONTH_DURATION = const Duration(30);
   final int day; 
   final int month; 
   final int year;
@@ -33,6 +34,20 @@ class ZeDate {
   ZeDate nextDay() {
     Date thisDay = new Date(year, month, day);
     return new ZeDate.fromDate(thisDay.add(DAY_DURATION));
+  }
+  
+  ZeDate firstOfMonth() {
+    return new ZeDate(1, month, year);
+  }
+  
+  ZeDate firstOfPreviousMonth() {
+    return new ZeDate.fromDate(new Date(year, month, 1).subtract(MONTH_DURATION)).firstOfMonth();
+  }
+  
+  bool isWeekend() {
+    Date date = new Date(year, month, day);
+    int weekday = date.weekday;
+    return weekday == Date.SAT || weekday == Date.SUN;
   }
   
   
