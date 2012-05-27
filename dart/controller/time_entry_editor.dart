@@ -1,31 +1,43 @@
 class TimeEntryEditorFactory {
   final ActivityProvider activityProvider;
+  final TimeEntryProvider timeEntryProvider;
   final ElementCreator elementCreator;
   final Expander expander;
 
-  TimeEntryEditorFactory(this.elementCreator, this.expander, this.activityProvider);
+  TimeEntryEditorFactory(this.elementCreator, this.expander, this.activityProvider, this.timeEntryProvider);
   
   TimeEntryEditor createTimeEntryEditor(TimeEntry timeEntry) {
     TimeEntryEditorModel model = new TimeEntryEditorModel();
     TimeEntryEditorView view = new TimeEntryEditorView(elementCreator);
-    return new TimeEntryEditor(timeEntry, activityProvider, model, view);
+    return new TimeEntryEditor(timeEntry, activityProvider, timeEntryProvider, model, view);
   }
 }
 
 class TimeEntryEditor {
   TimeEntry _timeEntry;
   ActivityProvider activityProvider;
+  final TimeEntryProvider timeEntryProvider;
   TimeEntryEditorModel model;
   TimeEntryEditorView view;
+  int projectSelectinterval;
+  int projectSelectIndex;
   
-  TimeEntryEditor(this._timeEntry, this.activityProvider, this.model, this.view);
+  TimeEntryEditor(this._timeEntry, this.activityProvider, this.timeEntryProvider, this.model, this.view);
   
   Element createUI() {
     view.createUI();
     _updateTimeEntry(_timeEntry);
     view.editButton.on.click.add(editTouched);
     view.cancelButton.on.click.add(cancelTouched);
-    
+    view.saveButton.on.click.add(saveTouched);
+    view.deleteButton.on.click.add(deleteTouched);
+    view.projectSelect.on.change.add((Event event) => projectSelected());
+
+    view.projectSelect.on.focus.add((Event event) {
+      projectSelectIndex = view.projectSelect.selectedIndex;
+      projectSelectinterval = document.window.setInterval(projectSelected, 100);
+    });
+    view.projectSelect.on.blur.add((Event event) {document.window.clearInterval(projectSelectinterval);});
     return view.editorElement;
   }
   
@@ -60,6 +72,38 @@ class TimeEntryEditor {
     view.enableEditing(false);
     event.preventDefault();
   }
+  
+  void saveTouched(Event event) {
+    timeEntry.start = view.timeFrom;
+    timeEntry.end = view.timeTo;
+    timeEntry.activityId = Math.parseInt(view.activitySelect.value);
+    timeEntry.comment = view.comment;
+    
+    timeEntryProvider.save(timeEntry, () => view.enableEditing(false));
+    event.preventDefault();
+  }
+  
+  void deleteTouched(Event event) {
+    if (timeEntry.id == null) {
+      removeEditor();
+    } else {
+      timeEntryProvider.delete(timeEntry, removeEditor);
+    }
+    event.preventDefault();
+  }
+  
+  void removeEditor() {
+    view.editorElement.remove();
+  }
+  
+  void projectSelected() {
+    if (projectSelectIndex != view.projectSelect.selectedIndex) {
+      String projectName = view.projectSelect.value;
+      Project project = activityProvider.projectWithName(projectName);
+      view.availableActivities = project.activities;
+      projectSelectIndex = view.projectSelect.selectedIndex;
+    }
+  }
 }
 
 class TimeEntryEditorModel {
@@ -92,7 +136,7 @@ class TimeEntryEditorView {
     timeToInput.disabled = true;
     projectSelect = elementCreator.createElement(Tags.SELECT, [Classes.PROJECT], editorElement);
     projectSelect.disabled = true;
-    activitySelect = elementCreator.createElement(Tags.SELECT, [Classes.PROJECT], editorElement);
+    activitySelect = elementCreator.createElement(Tags.SELECT, [Classes.ACTIVITY], editorElement);
     activitySelect.disabled = true;
     commentTextArea = elementCreator.createElement(Tags.TEXTAREA, [Classes.COMMENT], editorElement);
     commentTextArea.rows = 2;
@@ -149,7 +193,13 @@ class TimeEntryEditorView {
   }
   
   void _selectOption(SelectElement select, String value) {
-    Element optionToSelect = select.namedItem(value);
-    select.selectedIndex = select.nodes.indexOf(optionToSelect);
+    for(int i = 0; i < select.nodes.length; i++) {
+      OptionElement option = select.nodes[i];
+      if(option.value == value) {
+        select.selectedIndex = i;
+        break;
+      }
+      
+    }
   }
 }

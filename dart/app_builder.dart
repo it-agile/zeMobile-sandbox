@@ -15,7 +15,7 @@ class AppBuilder {
       ActivityProvider activityProvider = new ActivityProvider(errorDisplay, webServiceRequester);
       TimeEntryProvider timeEntryProvider = new TimeEntryProvider(errorDisplay, webServiceRequester);
       
-      TimeEntryEditorFactory timeEntryEditorFactory = new TimeEntryEditorFactory(elementCreator, expander, activityProvider);
+      TimeEntryEditorFactory timeEntryEditorFactory = new TimeEntryEditorFactory(elementCreator, expander, activityProvider, timeEntryProvider);
       DayDisplayFactory dayDisplayFactory = new DayDisplayFactory(elementCreator, expander, timeEntryEditorFactory);
       MonthDisplayFactory monthDisplayFactory = new MonthDisplayFactory(elementCreator, expander, dayDisplayFactory);
       

@@ -33,6 +33,7 @@ class DayDisplay {
   
   void addEntryButtonTouched(Event event) {
     TimeEntry newEntry = new TimeEntry.fresh();
+    newEntry.date = day;
     addTimeEntry(newEntry);
   }
 }

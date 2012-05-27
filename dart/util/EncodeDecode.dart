@@ -76,9 +76,9 @@ String encodeURI(text) {
       byteList.add(charCode >> 6 & 0x3F | 0x80);
       byteList.add(charCode & 0x3F | 0x80);
     }
-    for (int i = 0; i < byteList.length; i++) {
-      encodedText.add('%').add(hexDigits[byteList[i] >> 4])
-                          .add(hexDigits[byteList[i] & 0xF]);        
+    for (int j = 0; j < byteList.length; j++) {
+      encodedText.add('%').add(hexDigits[byteList[j] >> 4])
+                          .add(hexDigits[byteList[j] & 0xF]);        
     }
   }
   return encodedText.toString();

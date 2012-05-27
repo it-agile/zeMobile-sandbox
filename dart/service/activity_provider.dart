@@ -42,6 +42,15 @@ class ActivityProvider {
     return null;
   }
   
+  Project projectWithName(String name) {
+    if(fetchedProjects != null) {
+      for(Project project in fetchedProjects) {
+        if (project.name == name) return project;
+      }
+    }
+    return null;
+  }
+  
   void _processFetchedProjects(String response, OnProjectFetched onProjectsFetched) {
     List projectJSONs = JSON.parse(response);
     fetchedProjects = new List.from(projectJSONs.map((Map<String, Dynamic> projectJSON) => new Project(projectJSON)));
