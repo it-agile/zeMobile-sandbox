@@ -143,6 +143,7 @@ class TimeEntryEditorView {
     activitySelect = elementCreator.createElement(Tags.SELECT, [Classes.ACTIVITY], editorElement);
     activitySelect.disabled = true;
     commentTextArea = elementCreator.createElement(Tags.TEXTAREA, [Classes.COMMENT], editorElement);
+    commentTextArea.placeholder = 'Kommentar (für Kunden sichtbar)';
     commentTextArea.rows = 2;
     commentTextArea.disabled = true;
     

@@ -16,8 +16,8 @@ void projectTests() {
       }
     """));
     
-    it('should extract the name', () => expect(project.name).to(equal('P1')));
-    it('should extract two activities', () => expect(project.activities.length).to(equal(2)));
+    it('should extract the name', () => expect(project.name).to.equal('P1'));
+    it('should extract two activities', () => expect(project.activities.length).to.equal(2));
   });
   
 }

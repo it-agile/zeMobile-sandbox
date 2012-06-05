@@ -199,19 +199,19 @@ input:disabled, textarea:disabled, select:disabled {
 }
 
 .project {
-  text-align: right;
-  direction: rtl;
   @extend .fullSizeElement;
 }
 
-.project option {
-  text-align: right;
+.project:disabled {
+  direction: rtl;
 }
 
 .activity {
-  text-align: right;
-  direction: rtl;
   @extend .fullSizeElement;
+}
+
+.activity:disabled {
+  direction: rtl;
 }
 
 .comment {

@@ -2,16 +2,11 @@ class MonthDisplayFactory {
   final ElementCreator elementCreator;
   final Expander expander;
   final DayDisplayFactory dayDisplayFactory;
-  List<String> monthNames;
 
-
-  MonthDisplayFactory(this.elementCreator, this.expander, this.dayDisplayFactory) {
-    monthNames = ['Nullember','Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 
-                  'August', 'September', 'Oktober', 'Dezember'];
-  }
+  MonthDisplayFactory(this.elementCreator, this.expander, this.dayDisplayFactory);
   
   MonthDisplay createMonthDisplay(Month month) {
-    MonthDisplayView view = new MonthDisplayView(elementCreator, expander, monthNames);
+    MonthDisplayView view = new MonthDisplayView(elementCreator, expander);
     return new MonthDisplay(month, view, dayDisplayFactory);
   }
 }
@@ -46,13 +41,14 @@ class MonthDisplay {
 class MonthDisplayView {
   final ElementCreator elementCreator;
   final Expander expander;
-  final List<String> monthNames;
   Element containerElement;
   Element monthNameElement;
   Element yearElement;
   Element daysElement;
+  static final List<String> MONTH_NAMES = const ['Nullember','Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 
+                                                'August', 'September', 'Oktober', 'Dezember'];
   
-  MonthDisplayView(this.elementCreator, this.expander, this.monthNames);
+  MonthDisplayView(this.elementCreator, this.expander);
   void createUI() {
     containerElement = elementCreator.createElement(Tags.DIV, [Classes.MONTH, Classes.CONTAINER]);
     
@@ -77,7 +73,7 @@ class MonthDisplayView {
   }
   
   void setMonth(int month, int year) {
-    monthNameElement.text = monthNames[month];
+    monthNameElement.text = MONTH_NAMES[month];
     yearElement.text = '$year';
   }
 }

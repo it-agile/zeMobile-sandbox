@@ -7,8 +7,8 @@ void activityTests() {
       }
     """));
     
-    it('should extract the name', () => expect(activity.name).to(equal('P1T1')));
-    it('should extract the id', () => expect(activity.id).to(equal(1)));
+    it('should extract the name', () => expect(activity.name).to.equal('P1T1'));
+    it('should extract the id', () => expect(activity.id).to.equal(1));
   });
   
 }

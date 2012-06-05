@@ -287,17 +287,11 @@ input:disabled, textarea:disabled, select:disabled {
   width: 100%;
 }
 
-.project {
-  text-align: right;
+.project:disabled {
   direction: rtl;
 }
 
-.project option {
-  text-align: right;
-}
-
-.activity {
-  text-align: right;
+.activity:disabled {
   direction: rtl;
 }
 

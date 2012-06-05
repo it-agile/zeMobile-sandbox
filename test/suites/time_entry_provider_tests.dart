@@ -53,7 +53,7 @@ void timeEntryProviderTests() {
     }        
 """;
     timeEntryProvider.fetchTimeEntries(4, 2012, onMonthFetched);
-    it('should return a month created from the JSON of the request response', () => expect(fetchedMonth.balance).to(equal(-131)));
+    it('should return a month created from the JSON of the request response', () => expect(fetchedMonth.balance).to.equal(-131));
     
   });
   
