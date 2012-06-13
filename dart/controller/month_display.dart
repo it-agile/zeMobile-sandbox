@@ -22,7 +22,7 @@ class MonthDisplay {
     view.createUI();
     view.setMonth(month.month, month.year);
     
-    ZeDate currentDay = new ZeDate(1, month.month, month.year);
+    var currentDay = new ZeDate(1, month.month, month.year);
     
     while (currentDay.month == month.month) {
       DayDisplay dayDisplay = dayDisplayFactory.createDayDisplay(currentDay);
@@ -52,7 +52,7 @@ class MonthDisplayView {
   void createUI() {
     containerElement = elementCreator.createElement(Tags.DIV, [Classes.MONTH, Classes.CONTAINER]);
     
-    Element header = elementCreator.createElement(Tags.DIV,[Classes.HEADER, Classes.MONTH_HEADER]); 
+    var header = elementCreator.createElement(Tags.DIV,[Classes.HEADER, Classes.MONTH_HEADER]);
     containerElement.nodes.add(header);
     
     monthNameElement = elementCreator.createElement(Tags.SPAN,[Classes.MONTH_NAME]);
@@ -60,7 +60,7 @@ class MonthDisplayView {
     yearElement = elementCreator.createElement(Tags.SPAN,[Classes.YEAR]);
     header.nodes.add(yearElement);
 
-    Element floatRight = elementCreator.createElement(Tags.SPAN,[Classes.FLOAT_RIGHT]);
+    var floatRight = elementCreator.createElement(Tags.SPAN,[Classes.FLOAT_RIGHT]);
     header.nodes.add(floatRight);
     Element expanderElement = elementCreator.createElement(Tags.SPAN,[Classes.EXPANDER]);
     floatRight.nodes.add(expanderElement);
