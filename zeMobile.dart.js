@@ -1489,7 +1489,6 @@ Isolate.$defineClass("TimeEntryEditorView", "Object", ["cancelButton?", "deleteB
   this.activitySelect = t1.createElement$3('select', ['activity'], this.editorElement);
   this.activitySelect.set$disabled(true);
   this.commentTextArea = t1.createElement$3('textarea', ['comment'], this.editorElement);
-  this.commentTextArea.set$placeholder('Kommentar (f\xfcr Kunden sichtbar)');
   this.commentTextArea.set$rows(2);
   this.commentTextArea.set$disabled(true);
   var editorActionsElement = t1.createElement$3('div', ['timeEntryActions'], this.editorElement);
