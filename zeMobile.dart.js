@@ -1461,9 +1461,11 @@ Isolate.$defineClass("TimeEntryEditorView", "Object", ["cancelButton?", "deleteB
   if (t1) {
     this.editorElement.get$classes().remove$1('timeEntryView');
     $.add$1(this.editorElement.get$classes(), 'timeEntryEditing');
+    this.commentTextArea.set$placeholder('Kommentar (f\xfcr Kunden sichtbar)');
   } else {
     this.editorElement.get$classes().remove$1('timeEntryEditing');
     $.add$1(this.editorElement.get$classes(), 'timeEntryView');
+    this.commentTextArea.set$placeholder('');
   }
   t1 = !t1;
   this.timeFromInput.set$disabled(t1);
@@ -2454,6 +2456,9 @@ Isolate.$defineClass("_XMLHttpRequestEventsImpl", "_EventsImpl", ["_ptr"], {
 Isolate.$defineClass("_XMLHttpRequestUploadEventsImpl", "_EventsImpl", ["_ptr"], {
 });
 
+Isolate.$defineClass("_IDBOpenDBRequestEventsImpl", "_IDBRequestEventsImpl", ["_ptr"], {
+});
+
 Isolate.$defineClass("_FixedSizeListIterator", "_VariableSizeListIterator", ["_length", "_pos", "_array"], {
  hasNext$0: function() {
   return $.gt(this._length, this._pos);
@@ -3304,6 +3309,18 @@ $.IllegalJSRegExpException$2 = function(_pattern, _errmsg) {
   return new $.IllegalJSRegExpException(_errmsg, _pattern);
 };
 
+$.map = function(receiver, f) {
+  if ($.isJsArray(receiver) !== true) {
+    return receiver.map$1(f);
+  } else {
+    return $.map2(receiver, [], f);
+  }
+};
+
+$._IDBOpenDBRequestEventsImpl$1 = function(_ptr) {
+  return new $._IDBOpenDBRequestEventsImpl(_ptr);
+};
+
 $.typeNameInIE = function(obj) {
   var name$ = $.constructorNameFallback(obj);
   if ($.eqB(name$, 'Window')) {
@@ -3358,14 +3375,6 @@ $.clear = function(receiver) {
 
 $.NullPointerException$2 = function(functionName, arguments$) {
   return new $.NullPointerException(arguments$, functionName);
-};
-
-$.map = function(receiver, f) {
-  if ($.isJsArray(receiver) !== true) {
-    return receiver.map$1(f);
-  } else {
-    return $.map2(receiver, [], f);
-  }
 };
 
 $.tdiv = function(a, b) {
@@ -5054,6 +5063,13 @@ $.getWeekday = function(receiver) {
   return t1;
 };
 
+$.map3 = function(source, destination, f) {
+  for (var t1 = $.iterator(source); t1.hasNext$0() === true; ) {
+    $.add$1(destination, f.$call$1(t1.next$0()));
+  }
+  return destination;
+};
+
 $.split = function(receiver, pattern) {
   if (!(typeof receiver === 'string')) {
     return receiver.split$1(pattern);
@@ -5077,13 +5093,6 @@ $.concatAll = function(strings) {
     result = result + t2;
   }
   return result;
-};
-
-$.map3 = function(source, destination, f) {
-  for (var t1 = $.iterator(source); t1.hasNext$0() === true; ) {
-    $.add$1(destination, f.$call$1(t1.next$0()));
-  }
-  return destination;
 };
 
 $.userAgent = function() {
@@ -8790,8 +8799,14 @@ $.$defineNativeClass('XPathException', ["name?"], {
  }
 });
 
-// 175 dynamic classes.
-// 340 classes
+$.$defineNativeClass('IDBOpenDBRequest', [], {
+ get$on: function() {
+  return $._IDBOpenDBRequestEventsImpl$1(this);
+ }
+});
+
+// 176 dynamic classes.
+// 341 classes
 // 31 !leaf
 (function(){
   var v0/*class(_SVGElementImpl)*/ = 'SVGElement|SVGViewElement|SVGVKernElement|SVGUseElement|SVGTitleElement|SVGTextContentElement|SVGTextPositioningElement|SVGTextElement|SVGTSpanElement|SVGTRefElement|SVGAltGlyphElement|SVGTextPathElement|SVGSymbolElement|SVGSwitchElement|SVGStyleElement|SVGStopElement|SVGScriptElement|SVGSVGElement|SVGRectElement|SVGPolylineElement|SVGPolygonElement|SVGPatternElement|SVGPathElement|SVGMissingGlyphElement|SVGMetadataElement|SVGMaskElement|SVGMarkerElement|SVGMPathElement|SVGLineElement|SVGImageElement|SVGHKernElement|SVGGradientElement|SVGRadialGradientElement|SVGLinearGradientElement|SVGGlyphRefElement|SVGGlyphElement|SVGGElement|SVGForeignObjectElement|SVGFontFaceUriElement|SVGFontFaceSrcElement|SVGFontFaceNameElement|SVGFontFaceFormatElement|SVGFontFaceElement|SVGFontElement|SVGFilterElement|SVGFETurbulenceElement|SVGFETileElement|SVGFESpotLightElement|SVGFESpecularLightingElement|SVGFEPointLightElement|SVGFEOffsetElement|SVGFEMorphologyElement|SVGFEMergeNodeElement|SVGFEMergeElement|SVGFEImageElement|SVGFEGaussianBlurElement|SVGFEFloodElement|SVGFEDropShadowElement|SVGFEDistantLightElement|SVGFEDisplacementMapElement|SVGFEDiffuseLightingElement|SVGFEConvolveMatrixElement|SVGFECompositeElement|SVGFEComponentTransferElement|SVGFEColorMatrixElement|SVGFEBlendElement|SVGEllipseElement|SVGDescElement|SVGDefsElement|SVGCursorElement|SVGComponentTransferFunctionElement|SVGFEFuncRElement|SVGFEFuncGElement|SVGFEFuncBElement|SVGFEFuncAElement|SVGClipPathElement|SVGCircleElement|SVGAnimationElement|SVGSetElement|SVGAnimateTransformElement|SVGAnimateMotionElement|SVGAnimateElement|SVGAnimateColorElement|SVGAltGlyphItemElement|SVGAltGlyphDefElement|SVGAElement';
@@ -8804,7 +8819,7 @@ $.$defineNativeClass('XPathException', ["name?"], {
   var v7/*class(_WorkerContextImpl)*/ = 'WorkerContext|SharedWorkerContext|DedicatedWorkerContext';
   var v8/*class(_NodeImpl)*/ = [v3/*class(_ElementImpl)*/,v4/*class(_DocumentFragmentImpl)*/,v5/*class(_DocumentImpl)*/,v6/*class(_CharacterDataImpl)*/,'Node|ProcessingInstruction|Notation|EntityReference|Entity|DocumentType|Attr'].join('|');
   var v9/*class(_MediaStreamImpl)*/ = 'MediaStream|LocalMediaStream';
-  var v10/*class(_IDBRequestImpl)*/ = 'IDBRequest|IDBVersionChangeRequest';
+  var v10/*class(_IDBRequestImpl)*/ = 'IDBRequest|IDBOpenDBRequest|IDBVersionChangeRequest';
   var v11/*class(_AbstractWorkerImpl)*/ = 'AbstractWorker|Worker|SharedWorker';
   var table = [
     // [dynamic-dispatch-tag, tags of classes implementing dynamic-dispatch-tag]

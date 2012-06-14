@@ -162,9 +162,11 @@ class TimeEntryEditorView {
     if (enabled) {
       editorElement.classes.remove(Classes.TIME_ENTRY_VIEW);
       editorElement.classes.add(Classes.TIME_ENTRY_EDITING);
+      commentTextArea.placeholder = 'Kommentar (für Kunden sichtbar)';
     } else {
       editorElement.classes.remove(Classes.TIME_ENTRY_EDITING);
       editorElement.classes.add(Classes.TIME_ENTRY_VIEW);
+      commentTextArea.placeholder = '';
     }
       
     timeFromInput.disabled = !enabled;
