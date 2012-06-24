@@ -31,8 +31,8 @@ cp zeMobile.dart.js $RELEASE_DIR
 
 cd ${RELEASE_DIR}
 
-sed -i "" "s|@@ZE_BUILD_TIME@@|$BUILD_ID|g" zeMobile.dart.js
-sed -i "" "s|@@ZE_BUILD_NUMBER@@|$BUILD_NUMBER|g" zeMobile.dart.js
+sed "s|@@ZE_BUILD_TIME@@|$BUILD_ID|g" -i zeMobile.dart.js
+sed "s|@@ZE_BUILD_NUMBER@@|$BUILD_NUMBER|g" -i zeMobile.dart.js
 
 echo "Tausche den symbolischen Link 'current'"
 CURRENT=${RELEASE_BASEDIR}/current
