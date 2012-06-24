@@ -42,6 +42,18 @@ class Classes {
   static final String MODALIFIED = 'modalified';
   static final String ADD_ENTRY_SECTION = 'addEntrySection';
   static final String ADD_ENTRY_BUTTON = 'addEntryButton';
+  static final String SETTINGS = 'settings';
+  static final String SETTINGS_HEADER = 'settingsHeader';
+  static final String SETTINGS_TITLE = 'settingsTitle';
+  static final String SETTINGS_CONTENT = 'settingsContent';
+  static final String RELOAD_SECTION = 'reloadSection';
+  static final String SECTION = 'section';
+  static final String SECTION_TITLE = 'sectionTitle';
+  static final String RELOAD_ACTIVITIES = 'reloadActivities';
+  static final String RELOAD_TIME_ENTRIES = 'reloadTimeEntries';
+  static final String LOGIN_SECTION = 'loginSection';
+  static final String CHANGE_LOGIN = 'changeLogin';
+  static final String VERSION_INFO = 'versionInfo';
 
   Classes.internal();
 }

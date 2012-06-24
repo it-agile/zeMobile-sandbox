@@ -10,8 +10,20 @@ class ActivityMock implements Activity {
   ActivityMock(this.id, this.name);
 }
 
+class ActivityRepositoryMock extends ActivityRepository {
+  List<Project> loadProjects() {
+    return null; 
+  }
+
+  void saveProjects(String projectsJSON) { 
+  }
+}
+
 
 void activityProviderTests() {
+  var describe = group;
+  var it = test;
+  
   List<Project> fetchedProjects = [];
   void onProjectsFetched(List<Project> projects) {
     fetchedProjects = projects;
@@ -20,20 +32,24 @@ void activityProviderTests() {
   describe('activity provider', () {
     ErrorDisplayMock errorDisplay = new ErrorDisplayMock();
     WebServiceRequesterMock webServiceRequester = new WebServiceRequesterMock();
-    ActivityProvider activityProvider = new ActivityProvider(errorDisplay, webServiceRequester);
+    ActivityProvider activityProvider = new ActivityProvider(errorDisplay, new ActivityRepositoryMock(), webServiceRequester);
     
-    activityProvider.fetchProjects(onProjectsFetched);
+    setUp(() {
+      activityProvider.fetchProjects(onProjectsFetched);
+    });
   
-    it('should call web service requester if no projects are already cached', () => expect(webServiceRequester.sendGetCalled).to.beTrue());
-    it('should not call the onProjectsFetchedCallback', () => expect(fetchedProjects.length).to.equal(0));
+    it('should call web service requester if no projects are already cached', () => expect(webServiceRequester.sendGetCalled, isTrue));
+    it('should not call the onProjectsFetchedCallback', () => expect(fetchedProjects.length, equals(0)));
     
     describe('after projects have been cached', () {
-      webServiceRequester.resetMock();
-      activityProvider.fetchedProjects = [new Project(null)];
-      activityProvider.fetchProjects(onProjectsFetched);
+      setUp(() {
+        webServiceRequester.resetMock();
+        activityProvider.fetchedProjects = [new Project(null)];
+        activityProvider.fetchProjects(onProjectsFetched);
+      });
       
-      it('should not call the web service requester', () => expect(webServiceRequester.sendGetCalled).to.beFalse());
-      it('should call the onProjectsFetchedCallback with the cached projects', () => expect(fetchedProjects).to.equal(activityProvider.fetchedProjects));
+      it('should not call the web service requester', () => expect(webServiceRequester.sendGetCalled, isFalse));
+      it('should call the onProjectsFetchedCallback with the cached projects', () => expect(fetchedProjects, equals(activityProvider.fetchedProjects)));
     });
 
   });
@@ -46,10 +62,10 @@ void activityProviderTests() {
     ActivityMock p2a2 = new ActivityMock(4, 'P2T2');
     ProjectMock p2 = new ProjectMock('P2', [p2a1, p2a2]);
 
-    ActivityProvider activityProvider = new ActivityProvider(null, null);
+    ActivityProvider activityProvider = new ActivityProvider(null, null, null);
     activityProvider.fetchedProjects = [p1, p2];
     
-    it('should return activity p2a1 for id 3', () => expect(activityProvider.activityWithId(3)).to.equal(p2a1));
-    it('should return project p1 for activity p1a2', () => expect(activityProvider.projectWithActivity(p1a2)).to.equal(p1));
+    it('should return activity p2a1 for id 3', () => expect(activityProvider.activityWithId(3), equals(p2a1)));
+    it('should return project p1 for activity p1a2', () => expect(activityProvider.projectWithActivity(p1a2), equals(p1)));
   }); 
 }

@@ -12,6 +12,7 @@
 #source('controller/month_display.dart');
 #source('controller/day_display.dart');
 #source('controller/time_entry_editor.dart');
+#source('controller/settings.dart');
 
 #source('model/user.dart');
 #source('model/month.dart');
@@ -24,6 +25,7 @@
 #source('service/web_service_requester.dart');
 #source('service/activity_provider.dart');
 #source('service/time_entry_provider.dart');
+#source('service/activity_repository.dart');
 
 #source('ui/expander.dart');
 #source('ui/dialog.dart');

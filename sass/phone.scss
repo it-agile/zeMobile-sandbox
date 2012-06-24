@@ -397,3 +397,78 @@ $dialogText-border-color:#000000;
 .modalified {
   overflow: hidden;
 }
+
+.settings {
+  margin: 5px;
+  padding: 5px;
+  display: block;
+  border: 1px solid #000000;
+  @include border-radius;
+  @include ze-background(#f5f5f5);
+}
+
+.settingsHeader {
+  padding: 5px;
+  font-weight: bold;
+}
+
+.settingsHeader .expander {
+  color: #000000;
+}
+
+.section {
+  margin: 5px;
+  margin-top: 15px;
+  padding: 5px;
+  display: block;
+  border: 1px solid #404040;
+  @include border-radius;
+}
+.sectionTitle {
+  display: block;
+  border: 1px solid #404040;
+  @include border-radius;
+  background-color: #e8e8e8;
+  width: 10em;
+  padding: 3px;
+  padding-left: 5px;
+  font-size: 80%;
+  margin-top: -15px;
+  margin-bottom: 5px;
+}
+
+.settingsButton {
+  display: block;
+  text-decoration: none;
+  text-align: center;
+  font-size: 14px;
+  color: #ffffff;
+  padding: 8px;
+  min-width: 5em;
+  @include border-radius;
+  border: solid 1px #000000;
+  margin: 5px;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+
+.reloadActivities {
+  @extend .settingsButton;
+  @include ze-background(#11c611);
+}
+
+.reloadTimeEntries {
+  @extend .settingsButton;
+  @include ze-background(#d4bf69);
+}
+
+.changeLogin {
+  @extend .settingsButton;
+  @include ze-background(#00aa00);
+}
+
+.versionInfo {
+  font-size: 80%;
+  font-weight: bold;
+  text-align: center;
+}
+

@@ -1,4 +1,7 @@
 void timeEntryProviderTests() {
+  var describe = group;
+  var it = test;
+  
   describe('time entry provider', () {
     ErrorDisplayMock errorDisplay = new ErrorDisplayMock();
     WebServiceRequesterMock webServiceRequester = new WebServiceRequesterMock();
@@ -53,7 +56,7 @@ void timeEntryProviderTests() {
     }        
 """;
     timeEntryProvider.fetchTimeEntries(4, 2012, onMonthFetched);
-    it('should return a month created from the JSON of the request response', () => expect(fetchedMonth.balance).to.equal(-131));
+    it('should return a month created from the JSON of the request response', () => expect(fetchedMonth.balance, equals(-131)));
     
   });
   

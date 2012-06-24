@@ -3,14 +3,25 @@ typedef void OnProjectFetched(List<Project> projects);
 class ActivityProvider {
   final ErrorDisplay errorDisplay;
   final WebServiceRequester requester;
+  final ActivityRepository repository;
   List<Project> fetchedProjects;
   
-  ActivityProvider(this.errorDisplay, this.requester);  
+  ActivityProvider(this.errorDisplay, this.repository, this.requester);
+
+  refetchProjects([OnProjectFetched onProjectsFetched]) {
+    requester.sendGet('/api/projekte/',
+      (String response) => _processFetchedProjects(response, onProjectsFetched),
+      (int statusCode, String response) => errorDisplay.showWebServiceError(statusCode, response));
+  }
+
   void fetchProjects([OnProjectFetched onProjectsFetched]) {
     if(fetchedProjects == null) {
-      requester.sendGet('/api/projekte/',
-        (String response) => _processFetchedProjects(response, onProjectsFetched), 
-        (int statusCode, String response) => errorDisplay.showWebServiceError(statusCode, response));
+      fetchedProjects = repository.loadProjects();
+      if (fetchedProjects == null) {
+        refetchProjects(onProjectsFetched);
+      } else {
+        onProjectsFetched(fetchedProjects);
+      }
     } else {
       onProjectsFetched(fetchedProjects);
     }
@@ -52,8 +63,8 @@ class ActivityProvider {
   }
   
   void _processFetchedProjects(String response, OnProjectFetched onProjectsFetched) {
-    List projectJSONs = JSON.parse(response);
-    fetchedProjects = new List.from(projectJSONs.map((Map<String, Dynamic> projectJSON) => new Project(projectJSON)));
+    repository.saveProjects(response);
+    fetchedProjects = repository.extractProjects(response);
     if(onProjectsFetched != null) {
       onProjectsFetched(fetchedProjects);
     }

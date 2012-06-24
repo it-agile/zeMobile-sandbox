@@ -13,7 +13,7 @@ then
 fi
 
 RELEASE_DIR=${RELEASE_BASEDIR}/Release${BUILD_NUMBER}
-echo "Installiere in $RELEASE_DIR mit $ZEITERFASSUNG_SETTINGS"
+echo "Installiere in $RELEASE_DIR"
 
 if [ -d $RELEASE_DIR ]
 then
@@ -30,6 +30,9 @@ cp cache.manifest $RELEASE_DIR
 cp zeMobile.dart.js $RELEASE_DIR
 
 cd ${RELEASE_DIR}
+
+sed -i "" "s|@@ZE_BUILD_TIME@@|$BUILD_ID|g" zeMobile.dart.js
+sed -i "" "s|@@ZE_BUILD_NUMBER@@|$BUILD_NUMBER|g" zeMobile.dart.js
 
 echo "Tausche den symbolischen Link 'current'"
 CURRENT=${RELEASE_BASEDIR}/current

@@ -3,3 +3,6 @@ dev/closureMobile
 dev/backbone-closure
 .idea/workspace.xml
 sass/.sass-cache/
+
+tests.dart.js
+packages/

@@ -1,4 +1,7 @@
 void projectTests() {
+  var describe = group;
+  var it = test;
+  
   describe('A project based on a JSON string', () {
     Project project = new Project(JSON.parse("""
       {
@@ -16,8 +19,8 @@ void projectTests() {
       }
     """));
     
-    it('should extract the name', () => expect(project.name).to.equal('P1'));
-    it('should extract two activities', () => expect(project.activities.length).to.equal(2));
+    it('should extract the name', () => expect(project.name, equals('P1')));
+    it('should extract two activities', () => expect(project.activities.length, equals(2)));
   });
   
 }
