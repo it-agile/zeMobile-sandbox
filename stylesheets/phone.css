@@ -100,7 +100,7 @@ body {
   border-radius: 5px;
   border: solid 1px #000000;
   margin-right: 5px;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0.2);
 }
 
 input, select, textarea, button {
@@ -122,7 +122,7 @@ input, select, textarea, button {
   background-image: -o-linear-gradient(top, #656565, #3a3a3a);
   background-image: -ms-linear-gradient(top, #656565, #3a3a3a);
   background-image: linear-gradient(top, #656565, #3a3a3a);
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0.2);
 }
 
 .monthName:after {
@@ -161,7 +161,7 @@ input, select, textarea, button {
   background-image: -o-linear-gradient(top, #3c8948, #224d28);
   background-image: -ms-linear-gradient(top, #3c8948, #224d28);
   background-image: linear-gradient(top, #3c8948, #224d28);
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0.2);
 }
 
 .dayHeader:active {
@@ -310,6 +310,7 @@ input:disabled, textarea:disabled, select:disabled {
   padding-right: 0;
   padding-top: 0;
   padding-bottom: 0;
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0.2);
 }
 
 .timeEntryActions {
@@ -625,7 +626,7 @@ input:disabled, textarea:disabled, select:disabled {
   border-radius: 5px;
   border: solid 1px #000000;
   margin: 5px;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0.2);
 }
 
 .reloadActivities {
@@ -638,6 +639,16 @@ input:disabled, textarea:disabled, select:disabled {
   background-image: linear-gradient(top, #11c611, #0a760a);
 }
 
+.reloadActivities:active {
+  background-color: #4df04d;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #4df04d), color-stop(100%, #12d412));
+  background-image: -webkit-linear-gradient(top, #4df04d, #12d412);
+  background-image: -moz-linear-gradient(top, #4df04d, #12d412);
+  background-image: -o-linear-gradient(top, #4df04d, #12d412);
+  background-image: -ms-linear-gradient(top, #4df04d, #12d412);
+  background-image: linear-gradient(top, #4df04d, #12d412);
+}
+
 .reloadTimeEntries {
   background-color: #d4bf69;
   background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #d4bf69), color-stop(100%, #b39a33));
@@ -648,6 +659,16 @@ input:disabled, textarea:disabled, select:disabled {
   background-image: linear-gradient(top, #d4bf69, #b39a33);
 }
 
+.reloadTimeEntries:active {
+  background-color: #ebe1b8;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ebe1b8), color-stop(100%, #d7c475));
+  background-image: -webkit-linear-gradient(top, #ebe1b8, #d7c475);
+  background-image: -moz-linear-gradient(top, #ebe1b8, #d7c475);
+  background-image: -o-linear-gradient(top, #ebe1b8, #d7c475);
+  background-image: -ms-linear-gradient(top, #ebe1b8, #d7c475);
+  background-image: linear-gradient(top, #ebe1b8, #d7c475);
+}
+
 .changeLogin {
   background-color: #00aa00;
   background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #00aa00), color-stop(100%, #005300));
@@ -656,6 +677,16 @@ input:disabled, textarea:disabled, select:disabled {
   background-image: -o-linear-gradient(top, #00aa00, #005300);
   background-image: -ms-linear-gradient(top, #00aa00, #005300);
   background-image: linear-gradient(top, #00aa00, #005300);
+}
+
+.changeLogin:active {
+  background-color: #11ff11;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #11ff11), color-stop(100%, #00b900));
+  background-image: -webkit-linear-gradient(top, #11ff11, #00b900);
+  background-image: -moz-linear-gradient(top, #11ff11, #00b900);
+  background-image: -o-linear-gradient(top, #11ff11, #00b900);
+  background-image: -ms-linear-gradient(top, #11ff11, #00b900);
+  background-image: linear-gradient(top, #11ff11, #00b900);
 }
 
 .versionInfo {

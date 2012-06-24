@@ -70,7 +70,7 @@ body {
   @include border-radius;
   border: solid 1px #000000;
   margin-right: 5px;
-  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  -webkit-tap-highlight-color: rgba(255,255,255,0.2);
 }
 
 input, select, textarea, button {
@@ -86,7 +86,7 @@ input, select, textarea, button {
   margin: 0;
   color: $monthHeader_text_color;
   @include ze-background($monthHeader_background_color);
-  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  -webkit-tap-highlight-color: rgba(255,255,255,0.2);
 }
 
 .monthName:after {
@@ -109,7 +109,7 @@ input, select, textarea, button {
   color: $dayHeader_text_color;
   @include border-radius;
   @include ze-background($dayHeader_background_color);
-  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  -webkit-tap-highlight-color: rgba(255,255,255,0.2);
 }
 
 .dayHeader:active {
@@ -230,6 +230,7 @@ input:disabled, textarea:disabled, select:disabled {
     top: 0;
     bottom: 0;
   }
+  -webkit-tap-highlight-color: rgba(255,255,255,0.2);
 }
 
 .timeEntryActions {
@@ -448,7 +449,7 @@ $dialogText-border-color:#000000;
   @include border-radius;
   border: solid 1px #000000;
   margin: 5px;
-  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  -webkit-tap-highlight-color: rgba(255,255,255,0.2);
 }
 
 .reloadActivities {
@@ -456,14 +457,26 @@ $dialogText-border-color:#000000;
   @include ze-background(#11c611);
 }
 
+.reloadActivities:active {
+  @include ze-background(lighten(#11c611, 20%));
+}
+
 .reloadTimeEntries {
   @extend .settingsButton;
   @include ze-background(#d4bf69);
 }
 
+.reloadTimeEntries:active {
+  @include ze-background(lighten(#d4bf69, 20%));
+}
+
 .changeLogin {
   @extend .settingsButton;
   @include ze-background(#00aa00);
+}
+
+.changeLogin:active {
+  @include ze-background(lighten(#00aa00, 20%));
 }
 
 .versionInfo {
