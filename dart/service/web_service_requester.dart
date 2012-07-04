@@ -45,8 +45,8 @@ class WebServiceRequester {
     if (data == null) return '';
     List<String> encodedData = new List<String>();
     data.forEach((String name, Object value) {
-      String encodedName = encodeURIComponent(name.replaceAll('+', ' '));
-      String encodedValue = encodeURIComponent(value.toString().replaceAll('+', ' '));
+      String encodedName = encodeUriComponent(name.replaceAll('+', ' '));
+      String encodedValue = encodeUriComponent(value.toString().replaceAll('+', ' '));
       encodedData.add('$encodedName=$encodedValue');    
     });
     return Strings.join(encodedData,'&');

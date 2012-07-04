@@ -2,8 +2,7 @@
 
 #import('dart:html');
 #import('dart:json');
-
-#import('util/EncodeDecode.dart');
+#import('dart:uri');
 
 #source('app_builder.dart');
 #source('app.dart');
