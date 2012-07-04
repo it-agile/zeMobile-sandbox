@@ -29,7 +29,6 @@
 
 #source('ui/expander.dart');
 #source('ui/dialog.dart');
-#source('ui/element_creator.dart');
 #source('ui/tags.dart');
 #source('ui/classes.dart');
 #source('ui/error_display.dart');

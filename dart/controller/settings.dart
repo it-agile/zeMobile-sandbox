@@ -28,7 +28,6 @@ class Settings {
 }
 
 class SettingsView {
-  ElementCreator elementCreator;
   Expander expander;
   Element containerElement;
   Element reloadActivitiesButton;
@@ -37,44 +36,80 @@ class SettingsView {
   InputElement passwordInput;
   Element changeLoginButton;
 
-  SettingsView(this.elementCreator, this.expander);
+  SettingsView(this.expander);
 
   createUI() {
-    containerElement = elementCreator.createElement(Tags.DIV, [Classes.SETTINGS, Classes.CONTAINER]);
+    containerElement = new DivElement();
+    containerElement.classes.addAll([Classes.SETTINGS, Classes.CONTAINER]);
 
-    var header = elementCreator.createElement(Tags.DIV, [Classes.SETTINGS_HEADER, Classes.HEADER], containerElement);
-    var title = elementCreator.createElement(Tags.SPAN, [Classes.SETTINGS_TITLE], header);
+    var header = new DivElement();
+    header.classes.addAll([Classes.SETTINGS_HEADER, Classes.HEADER]);
+    containerElement.nodes.add(header);
+
+    var title = new SpanElement();
+    title.classes.add(Classes.SETTINGS_TITLE);
     title.text = 'Einstellungen';
-    var floatRight = elementCreator.createElement(Tags.SPAN, [Classes.FLOAT_RIGHT], header);
-    var expanderElement = elementCreator.createElement(Tags.SPAN, [Classes.EXPANDER], floatRight);
+    header.nodes.add(title);
 
-    var content = elementCreator.createElement(Tags.DIV, [Classes.SETTINGS_CONTENT, Classes.CONTENT],
-      containerElement);
+    var floatRight = new SpanElement();
+    floatRight.classes.add(Classes.FLOAT_RIGHT);
+    header.nodes.add(floatRight);
 
-    var reloadSection = elementCreator.createElement(Tags.DIV, [Classes.RELOAD_SECTION, Classes.SECTION], content);
-    var reloadSectionTitle = elementCreator.createElement(Tags.SPAN, [Classes.SECTION_TITLE], reloadSection);
+    var expanderElement = new SpanElement();
+    expanderElement.classes.add(Classes.EXPANDER);
+    floatRight.nodes.add(expanderElement);
+
+    var content = new DivElement();
+    content.classes.addAll([Classes.SETTINGS_CONTENT, Classes.CONTENT]);
+    containerElement.nodes.add(content);
+
+    var reloadSection = new DivElement();
+    reloadSection.classes.addAll([Classes.RELOAD_SECTION, Classes.SECTION]);
+    content.nodes.add(reloadSection);
+
+    var reloadSectionTitle = new SpanElement();
+    reloadSectionTitle.classes.add(Classes.SECTION_TITLE);
+    reloadSection.nodes.add(reloadSectionTitle);
     reloadSectionTitle.text = 'Neu laden';
-    reloadActivitiesButton = elementCreator.createElement(Tags.A, [Classes.RELOAD_ACTIVITIES], reloadSection);
+
+    reloadActivitiesButton = new AnchorElement();
+    reloadActivitiesButton.classes.add(Classes.RELOAD_ACTIVITIES);
     reloadActivitiesButton.text = 'Tätigkeiten';
-    reloadTimeEntriesButton = elementCreator.createElement(Tags.A, [Classes.RELOAD_TIME_ENTRIES]);
+    reloadSection.nodes.add(reloadActivitiesButton);
+
+    reloadTimeEntriesButton = new AnchorElement();
+    reloadTimeEntriesButton.classes.add(Classes.RELOAD_TIME_ENTRIES);
     reloadTimeEntriesButton.text = 'Zeiten';
 
-    var loginSection = elementCreator.createElement(Tags.DIV, [Classes.LOGIN_SECTION, Classes.SECTION]);
-    var loginSectionTitle = elementCreator.createElement(Tags.SPAN, [Classes.SECTION_TITLE], loginSection);
+    var loginSection = new DivElement();
+    loginSection.classes.addAll([Classes.LOGIN_SECTION, Classes.SECTION]);
+
+    var loginSectionTitle = new SpanElement();
+    loginSectionTitle.classes.add(Classes.SECTION_TITLE);
     loginSectionTitle.text = 'Login ändern';
-    userNameInput = elementCreator.createElement(Tags.INPUT, [], loginSection);
+    loginSection.nodes.add(loginSectionTitle);
+
+    userNameInput = new InputElement();
     userNameInput.type = 'text';
     userNameInput.placeholder = 'Name';
     userNameInput.attributes['autocapitalize'] = 'off';
     userNameInput.attributes['autocorrect'] = 'off';
-    passwordInput = elementCreator.createElement(Tags.INPUT, [], loginSection);
+    loginSection.nodes.add(userNameInput);
+
+    passwordInput = new InputElement();
     passwordInput.type = 'password';
     passwordInput.placeholder = 'Passwort';
-    changeLoginButton = elementCreator.createElement(Tags.A, [Classes.CHANGE_LOGIN], loginSection);
+    loginSection.nodes.add(passwordInput);
+
+    changeLoginButton = new AnchorElement();
+    changeLoginButton.classes.add(Classes.CHANGE_LOGIN);
     changeLoginButton.text = 'Ändern';
-    
-    var versionInfo = elementCreator.createElement(Tags.DIV, [Classes.VERSION_INFO], content);
+    loginSection.nodes.add(changeLoginButton);
+
+    var versionInfo = new DivElement();
+    versionInfo.classes.add(Classes.VERSION_INFO);
     versionInfo.text = 'Build @@ZE_BUILD_NUMBER@@ / @@ZE_BUILD_TIME@@';
+    content.nodes.add(versionInfo);
 
     expander.connect(containerElement);
     expander.collapse(containerElement);

@@ -5,17 +5,15 @@ class ZeTime {
   ZeTime(this.hour, this.minutes);
   ZeTime.fromString(String timeString) {
     if (timeString == null) return;
-    RegExp timeReg = const RegExp(@'^(\d*):(\d*)(:(\d*))?$');
-    Iterable<Match> matches = timeReg.allMatches(timeString);
-    for(Match m in matches) {
+    var timeReg = const RegExp(@'^(\d*):(\d*)(:(\d*))?$');
+    for(Match m in timeReg.allMatches(timeString)) {
       hour = Math.parseInt(m.group(1));
       minutes = Math.parseInt(m.group(2));
     }
     
     if (hour == null && minutes == null) {
       timeReg = const RegExp(@'^(\d{1,2})(\d{2})$');
-      Iterable<Match> matches = timeReg.allMatches(timeString);
-      for(Match m in matches) {
+      for(Match m in timeReg.allMatches(timeString)) {
         hour = Math.parseInt(m.group(1));
         minutes = Math.parseInt(m.group(2));
       }

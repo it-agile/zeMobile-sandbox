@@ -8,8 +8,8 @@ class Project {
         List<Activity> get activities() {
     if (_activities == null) {
       List activityJSONs = _projectJSON['taetigkeiten'];
-      _activities = new List.from(activityJSONs.map((Map<String, Dynamic> activityJSON) => new Activity(activityJSON)));
-      _activities.sort((Activity a, Activity b) => a.name.compareTo(b.name));
+      _activities = new List.from(activityJSONs.map((activityJSON) => new Activity(activityJSON)));
+      _activities.sort((a, b) => a.name.compareTo(b.name));
     }
     return _activities;
   }

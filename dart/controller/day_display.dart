@@ -1,12 +1,11 @@
 class DayDisplayFactory {
-  final ElementCreator elementCreator;
   final Expander expander;
   final TimeEntryEditorFactory timeEntryEditorFactory;
 
-  DayDisplayFactory(this.elementCreator, this.expander, this.timeEntryEditorFactory);
+  DayDisplayFactory(this.expander, this.timeEntryEditorFactory);
   
   DayDisplay createDayDisplay(ZeDate day) {
-    DayDisplayView view = new DayDisplayView(elementCreator, expander);
+    var view = new DayDisplayView(expander);
     return new DayDisplay(day, view, timeEntryEditorFactory);
   }
 }
@@ -28,20 +27,19 @@ class DayDisplay {
   }
   
   TimeEntryEditor addTimeEntry(TimeEntry timeEntry) {
-    TimeEntryEditor editor = timeEntryEditorFactory.createTimeEntryEditor(timeEntry);
+    var editor = timeEntryEditorFactory.createTimeEntryEditor(timeEntry);
     view.timeEntriesElement.insertBefore(editor.createUI(), view.addEntrySection);
     return editor;
   }
   
   void addEntryButtonTouched(Event event) {
-    TimeEntry newEntry = new TimeEntry.fresh();
+    var newEntry = new TimeEntry.fresh();
     newEntry.date = day;
     addTimeEntry(newEntry).editEntry();
   }
 }
 
 class DayDisplayView {
-  final ElementCreator elementCreator;
   final Expander expander;
   Element containerElement;
   Element headerElement;
@@ -50,27 +48,37 @@ class DayDisplayView {
   Element addEntrySection;
   Element addEntryButton;
 
-  DayDisplayView(this.elementCreator, this.expander);
+  DayDisplayView(this.expander);
   void createUI() {
-    containerElement = elementCreator.createElement(Tags.DIV, [Classes.DAY, Classes.CONTAINER]);
+    containerElement = new DivElement();
+    containerElement.classes.addAll([Classes.DAY, Classes.CONTAINER]);
     
-    headerElement = elementCreator.createElement(Tags.DIV,[Classes.HEADER, Classes.DAY_HEADER]); 
+    headerElement = new DivElement();
+    headerElement.classes.addAll([Classes.HEADER, Classes.DAY_HEADER]);
     containerElement.nodes.add(headerElement);
     
-    dayDateElement = elementCreator.createElement(Tags.SPAN,[Classes.DAY_DATE]);
+    dayDateElement = new SpanElement();
+    dayDateElement.classes.add(Classes.DAY_DATE);
     headerElement.nodes.add(dayDateElement);
 
-    Element floatRight = elementCreator.createElement(Tags.SPAN,[Classes.FLOAT_RIGHT]);
+    var floatRight = new SpanElement();
+    floatRight.classes.add(Classes.FLOAT_RIGHT);
     headerElement.nodes.add(floatRight);
-    Element expanderElement = elementCreator.createElement(Tags.SPAN,[Classes.EXPANDER]);
+
+    var expanderElement = new SpanElement();
+    expanderElement.classes.add(Classes.EXPANDER);
     floatRight.nodes.add(expanderElement);
     
-    timeEntriesElement = elementCreator.createElement(Tags.DIV,[Classes.TIME_ENTRIES, Classes.CONTENT]);
+    timeEntriesElement = new DivElement();
+    timeEntriesElement.classes.addAll([Classes.TIME_ENTRIES, Classes.CONTENT]);
     containerElement.nodes.add(timeEntriesElement);
     
-    addEntrySection = elementCreator.createElement(Tags.DIV, [Classes.ADD_ENTRY_SECTION]);
+    addEntrySection = new DivElement();
+    addEntrySection.classes.add(Classes.ADD_ENTRY_SECTION);
     timeEntriesElement.nodes.add(addEntrySection);
-    addEntryButton = elementCreator.createElement(Tags.SPAN, [Classes.ADD_ENTRY_BUTTON]);
+
+    addEntryButton = new SpanElement();
+    addEntryButton.classes.add(Classes.ADD_ENTRY_BUTTON);
     addEntrySection.nodes.add(addEntryButton);
     
     expander.connect(containerElement);

@@ -1,14 +1,13 @@
 class TimeEntryEditorFactory {
   final ActivityProvider activityProvider;
   final TimeEntryProvider timeEntryProvider;
-  final ElementCreator elementCreator;
   final Expander expander;
 
-  TimeEntryEditorFactory(this.elementCreator, this.expander, this.activityProvider, this.timeEntryProvider);
+  TimeEntryEditorFactory(this.expander, this.activityProvider, this.timeEntryProvider);
   
   TimeEntryEditor createTimeEntryEditor(TimeEntry timeEntry) {
     TimeEntryEditorModel model = new TimeEntryEditorModel();
-    TimeEntryEditorView view = new TimeEntryEditorView(elementCreator);
+    TimeEntryEditorView view = new TimeEntryEditorView();
     return new TimeEntryEditor(timeEntry, activityProvider, timeEntryProvider, model, view);
   }
 }
@@ -33,11 +32,11 @@ class TimeEntryEditor {
     view.deleteButton.on.click.add(deleteTouched);
     view.projectSelect.on.change.add((Event event) => projectSelected());
 
-    view.projectSelect.on.focus.add((Event event) {
+    view.projectSelect.on.focus.add((event) {
       projectSelectIndex = view.projectSelect.selectedIndex;
       projectSelectinterval = document.window.setInterval(projectSelected, 100);
     });
-    view.projectSelect.on.blur.add((Event event) {document.window.clearInterval(projectSelectinterval);});
+    view.projectSelect.on.blur.add((event) {document.window.clearInterval(projectSelectinterval);});
     return view.editorElement;
   }
   
@@ -46,9 +45,9 @@ class TimeEntryEditor {
             
   void _updateTimeEntry(TimeEntry entry) {
     _timeEntry = entry;
-    List<Project> projects = activityProvider.fetchedProjects;
-    Activity activity = entry.activityId != null ? activityProvider.activityWithId(entry.activityId) : null;
-    Project project = activity != null ? activityProvider.projectWithActivity(activity) : projects[0];
+    var projects = activityProvider.fetchedProjects;
+    var activity = entry.activityId != null ? activityProvider.activityWithId(entry.activityId) : null;
+    var project = activity != null ? activityProvider.projectWithActivity(activity) : projects[0];
     if (activity == null) activity = project.activities[0];
     
     if(entry.activityId != null) {
@@ -102,8 +101,8 @@ class TimeEntryEditor {
   
   void projectSelected() {
     if (projectSelectIndex != view.projectSelect.selectedIndex) {
-      String projectName = view.projectSelect.value;
-      Project project = activityProvider.projectWithName(projectName);
+      var projectName = view.projectSelect.value;
+      var project = activityProvider.projectWithName(projectName);
       view.availableActivities = project.activities;
       projectSelectIndex = view.projectSelect.selectedIndex;
     }
@@ -115,7 +114,6 @@ class TimeEntryEditorModel {
 }
 
 class TimeEntryEditorView {
-  final ElementCreator elementCreator;
   Element editorElement;
   InputElement timeFromInput;
   InputElement timeToInput;
@@ -127,34 +125,60 @@ class TimeEntryEditorView {
   Element deleteButton;
   Element cancelButton;
   
-  TimeEntryEditorView(this.elementCreator);
-  
   void createUI() {
-    editorElement = elementCreator.createElement(Tags.DIV, [Classes.TIME_ENTRY,Classes.TIME_ENTRY_VIEW]);
-    timeFromInput = elementCreator.createElement(Tags.INPUT, [Classes.TIME, Classes.ENTRY_TIME_FROM], editorElement);
-    timeFromInput.type = 'time';
-    timeFromInput.disabled = true;
-    elementCreator.createElement(Tags.SPAN, [Classes.TIME_SEPARATOR], editorElement);
-    timeToInput = elementCreator.createElement(Tags.INPUT, [Classes.TIME, Classes.ENTRY_TIME_TO], editorElement);
-    timeToInput.type = 'time';
-    timeToInput.disabled = true;
-    projectSelect = elementCreator.createElement(Tags.SELECT, [Classes.PROJECT], editorElement);
-    projectSelect.disabled = true;
-    activitySelect = elementCreator.createElement(Tags.SELECT, [Classes.ACTIVITY], editorElement);
-    activitySelect.disabled = true;
-    commentTextArea = elementCreator.createElement(Tags.TEXTAREA, [Classes.COMMENT], editorElement);
+    editorElement = new DivElement();
+    editorElement.classes.add(Classes.TIME_ENTRY);
+
+    timeFromInput = new InputElement('time');
+    timeFromInput.classes.addAll([Classes.TIME, Classes.ENTRY_TIME_FROM]);
+    editorElement.nodes.add(timeFromInput);
+
+    var timeSeparator = new SpanElement();
+    timeSeparator.classes.add(Classes.TIME_SEPARATOR);
+    editorElement.nodes.add(timeSeparator);
+
+    timeToInput = new InputElement('time');
+    timeToInput.classes.addAll([Classes.TIME, Classes.ENTRY_TIME_TO]);
+    editorElement.nodes.add(timeToInput);
+
+    projectSelect = new Element.tag('select');
+    projectSelect.classes.add(Classes.PROJECT);
+    editorElement.nodes.add(projectSelect);
+
+    activitySelect = new Element.tag('select');
+    activitySelect.classes.add(Classes.ACTIVITY);
+    editorElement.nodes.add(activitySelect);
+
+    commentTextArea = new TextAreaElement();
+    commentTextArea.classes.add(Classes.COMMENT);
     commentTextArea.rows = 2;
-    commentTextArea.disabled = true;
-    
-    Element editorActionsElement = elementCreator.createElement(Tags.DIV, [Classes.TIME_ENTRY_ACTIONS], editorElement);
-    editButton = elementCreator.createElement(Tags.A, [Classes.TIME_ENTRY_EDIT], editorActionsElement);
+    editorElement.nodes.add(commentTextArea);
+
+    var editorActionsElement = new DivElement();
+    editorActionsElement.classes.add(Classes.TIME_ENTRY_ACTIONS);
+    editorElement.nodes.add(editorActionsElement);
+
+    editButton = new AnchorElement();
+    editButton.classes.add(Classes.TIME_ENTRY_EDIT);
     editButton.text = 'Editieren';
-    saveButton = elementCreator.createElement(Tags.A, [Classes.TIME_ENTRY_SAVE], editorActionsElement);
+    editorActionsElement.nodes.add(editButton);
+
+    saveButton = new AnchorElement();
+    saveButton.classes.add(Classes.TIME_ENTRY_SAVE);
     saveButton.text = 'Sichern';
-    deleteButton = elementCreator.createElement(Tags.A, [Classes.TIME_ENTRY_DELETE], editorActionsElement);
+    editorActionsElement.nodes.add(saveButton);
+
+    deleteButton = new AnchorElement();
+    deleteButton.classes.add(Classes.TIME_ENTRY_DELETE);
     deleteButton.text = 'Löschen';
-    cancelButton = elementCreator.createElement(Tags.A, [Classes.TIME_ENTRY_CANCEL], editorActionsElement);
+    editorActionsElement.nodes.add(deleteButton);
+
+    cancelButton = new AnchorElement();
+    cancelButton.classes.add(Classes.TIME_ENTRY_CANCEL);
     cancelButton.text = 'Abbrechen';
+    editorActionsElement.nodes.add(cancelButton);
+
+    enableEditing(false);
   }
   
   void enableEditing(bool enabled) {
@@ -191,9 +215,7 @@ class TimeEntryEditorView {
       select.nodes[0].remove();
     }
     objects.forEach((object) {
-      OptionElement option = new Element.tag(Tags.OPTION);
-      option.value = value(object);
-      option.text = text(object);
+      var option = new OptionElement(text(object), value(object));
       select.add(option, null);
     });
   }

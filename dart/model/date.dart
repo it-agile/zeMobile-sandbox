@@ -9,16 +9,14 @@ class ZeDate {
   
   factory ZeDate.fromGermanString(String dateString)  {
     RegExp dateReg = const RegExp(@'(\d*)\.(\d*)\.(\d*)');
-    Iterable<Match> matches = dateReg.allMatches(dateString);
-    for(Match m in matches) {
+    for(Match m in dateReg.allMatches(dateString)) {
       return new ZeDate(Math.parseInt(m.group(1)), Math.parseInt(m.group(2)), Math.parseInt(m.group(3)));
     }
   }
   
   factory ZeDate.fromString(String dateString)  {
     RegExp dateReg = const RegExp(@'(\d*)-(\d*)-(\d*)');
-    Iterable<Match> matches = dateReg.allMatches(dateString);
-    for(Match m in matches) {
+    for(Match m in dateReg.allMatches(dateString)) {
       return new ZeDate(Math.parseInt(m.group(3)), Math.parseInt(m.group(2)), Math.parseInt(m.group(1)));
     }
   }
@@ -32,7 +30,7 @@ class ZeDate {
   }
   
   ZeDate nextDay() {
-    Date thisDay = new Date(year, month, day);
+    var thisDay = new Date(year, month, day);
     return new ZeDate.fromDate(thisDay.add(DAY_DURATION));
   }
   
@@ -45,8 +43,8 @@ class ZeDate {
   }
   
   bool isWeekend() {
-    Date date = new Date(year, month, day);
-    int weekday = date.weekday;
+    var date = new Date(year, month, day);
+    var weekday = date.weekday;
     return weekday == Date.SAT || weekday == Date.SUN;
   }
   

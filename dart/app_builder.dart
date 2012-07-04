@@ -3,7 +3,6 @@ class AppBuilder {
   static App buildApp() {
     if (app == null) {
       ErrorDisplay errorDisplay = new ErrorDisplay();
-      ElementCreator elementCreator = new ElementCreator();
       Expander expander = new Expander();
 
       LoginModel loginModel = new LoginModel();
@@ -17,11 +16,11 @@ class AppBuilder {
       ActivityProvider activityProvider = new ActivityProvider(errorDisplay, activityRepository, webServiceRequester);
       TimeEntryProvider timeEntryProvider = new TimeEntryProvider(errorDisplay, webServiceRequester);
       
-      TimeEntryEditorFactory timeEntryEditorFactory = new TimeEntryEditorFactory(elementCreator, expander, activityProvider, timeEntryProvider);
-      DayDisplayFactory dayDisplayFactory = new DayDisplayFactory(elementCreator, expander, timeEntryEditorFactory);
-      MonthDisplayFactory monthDisplayFactory = new MonthDisplayFactory(elementCreator, expander, dayDisplayFactory);
+      TimeEntryEditorFactory timeEntryEditorFactory = new TimeEntryEditorFactory(expander, activityProvider, timeEntryProvider);
+      DayDisplayFactory dayDisplayFactory = new DayDisplayFactory(expander, timeEntryEditorFactory);
+      MonthDisplayFactory monthDisplayFactory = new MonthDisplayFactory(expander, dayDisplayFactory);
       
-      SettingsView settingsView = new SettingsView(elementCreator, expander);
+      SettingsView settingsView = new SettingsView(expander);
       Settings settings = new Settings(settingsView, activityProvider);
       
       app = new App(activityProvider, timeEntryProvider, monthDisplayFactory, settings, expander);

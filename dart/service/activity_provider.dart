@@ -10,8 +10,8 @@ class ActivityProvider {
 
   refetchProjects([OnProjectFetched onProjectsFetched]) {
     requester.sendGet('/api/projekte/',
-      (String response) => _processFetchedProjects(response, onProjectsFetched),
-      (int statusCode, String response) => errorDisplay.showWebServiceError(statusCode, response));
+      (response) => _processFetchedProjects(response, onProjectsFetched),
+      (statusCode, response) => errorDisplay.showWebServiceError(statusCode, response));
   }
 
   void fetchProjects([OnProjectFetched onProjectsFetched]) {
@@ -29,8 +29,8 @@ class ActivityProvider {
   
   Activity activityWithId(int id) {
     if (fetchedProjects != null) {
-      for(Project project in fetchedProjects) {
-        List<Activity> activities = project.activities;
+      for(var project in fetchedProjects) {
+        var activities = project.activities;
         if (activities != null) {
           for(Activity activity in activities) {
             if (activity.id == id) {
@@ -45,8 +45,8 @@ class ActivityProvider {
   
   Project projectWithActivity(Activity activity) {
     if(fetchedProjects != null) {
-      for(Project project in fetchedProjects) {
-        List<Activity> activities = project.activities;
+      for(var project in fetchedProjects) {
+        var activities = project.activities;
         if (activities != null && activities.indexOf(activity) >= 0) return project;
       }
     }
@@ -55,7 +55,7 @@ class ActivityProvider {
   
   Project projectWithName(String name) {
     if(fetchedProjects != null) {
-      for(Project project in fetchedProjects) {
+      for(var project in fetchedProjects) {
         if (project.name == name) return project;
       }
     }

@@ -1,12 +1,11 @@
 class MonthDisplayFactory {
-  final ElementCreator elementCreator;
   final Expander expander;
   final DayDisplayFactory dayDisplayFactory;
 
-  MonthDisplayFactory(this.elementCreator, this.expander, this.dayDisplayFactory);
+  MonthDisplayFactory(this.expander, this.dayDisplayFactory);
   
   MonthDisplay createMonthDisplay(Month month) {
-    MonthDisplayView view = new MonthDisplayView(elementCreator, expander);
+    var view = new MonthDisplayView(expander);
     return new MonthDisplay(month, view, dayDisplayFactory);
   }
 }
@@ -39,7 +38,6 @@ class MonthDisplay {
 }
 
 class MonthDisplayView {
-  final ElementCreator elementCreator;
   final Expander expander;
   Element containerElement;
   Element monthNameElement;
@@ -48,26 +46,33 @@ class MonthDisplayView {
   static final List<String> MONTH_NAMES = const ['Nullember','Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 
                                                 'August', 'September', 'Oktober', 'Dezember'];
   
-  MonthDisplayView(this.elementCreator, this.expander);
+  MonthDisplayView(this.expander);
   void createUI() {
-    containerElement = elementCreator.createElement(Tags.DIV, [Classes.MONTH, Classes.CONTAINER]);
-    
-    var header = elementCreator.createElement(Tags.DIV,[Classes.HEADER, Classes.MONTH_HEADER]);
+    containerElement = new DivElement();
+    containerElement.classes.addAll([Classes.MONTH, Classes.CONTAINER]);
+
+    var header = new DivElement();
+    header.classes.addAll([Classes.HEADER, Classes.MONTH_HEADER]);
     containerElement.nodes.add(header);
     
-    monthNameElement = elementCreator.createElement(Tags.SPAN,[Classes.MONTH_NAME]);
+    monthNameElement = new SpanElement();
+    monthNameElement.classes.add(Classes.MONTH_NAME);
     header.nodes.add(monthNameElement);
-    yearElement = elementCreator.createElement(Tags.SPAN,[Classes.YEAR]);
+    yearElement = new SpanElement();
+    yearElement.classes.add(Classes.YEAR);
     header.nodes.add(yearElement);
 
-    var floatRight = elementCreator.createElement(Tags.SPAN,[Classes.FLOAT_RIGHT]);
+    var floatRight = new SpanElement();
+    floatRight.classes.add(Classes.FLOAT_RIGHT);
     header.nodes.add(floatRight);
-    Element expanderElement = elementCreator.createElement(Tags.SPAN,[Classes.EXPANDER]);
+    Element expanderElement = new SpanElement();
+    expanderElement.classes.add(Classes.EXPANDER);
     floatRight.nodes.add(expanderElement);
 
-    daysElement = elementCreator.createElement(Tags.DIV,[Classes.DAYS, Classes.CONTENT]);
+    daysElement = new DivElement();
+    daysElement.classes.addAll([Classes.DAYS, Classes.CONTENT]);
     containerElement.nodes.add(daysElement);
-    
+
     expander.connect(containerElement);
     expander.expand(containerElement);
   }
