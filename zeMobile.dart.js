@@ -2168,21 +2168,21 @@ $$.Dialog = {"":
  show$1: function(dialogCallback) {
   var t1 = ({});
   t1.dialogCallback_1 = dialogCallback;
-  this.modalifier = $.Element$tag('div');
+  this.modalifier = $.DivElement();
   $.add$1(this.modalifier.get$classes(), 'modalifier');
-  this.dialogFrame = $.Element$tag('div');
+  this.dialogFrame = $.DivElement();
   $.add$1(this.dialogFrame.get$classes(), 'dialog');
-  var textDisplay = $.Element$tag('div');
+  var textDisplay = $.DivElement();
   $.add$1(textDisplay.get$classes(), 'dialogText');
   textDisplay.set$text(this.text);
   $.add$1(this.dialogFrame.get$nodes(), textDisplay);
   $.add$1(this.dialogFrame.get$nodes(), this.content);
-  var buttonBar = $.Element$tag('div');
+  var buttonBar = $.DivElement();
   $.add$1(buttonBar.get$classes(), 'dialogButtonBar');
   $.add$1(this.dialogFrame.get$nodes(), buttonBar);
   var t2 = this.cancelButtonText;
   if (!$.eqNullB(t2)) {
-    var cancelButton = $.Element$tag('a');
+    var cancelButton = $.AnchorElement(null);
     $.add$1(cancelButton.get$classes(), 'dialogCancelButton');
     cancelButton.set$text(t2);
     $.add$1(cancelButton.get$on().get$click(), new $.Closure5(this, t1));
@@ -2190,7 +2190,7 @@ $$.Dialog = {"":
   }
   t2 = this.okButtonText;
   if (!$.eqNullB(t2)) {
-    var okButton = $.Element$tag('a');
+    var okButton = $.AnchorElement(null);
     $.add$1(okButton.get$classes(), 'dialogOkButton');
     okButton.set$text(t2);
     $.add$1(okButton.get$on().get$click(), new $.Closure6(this, t1));
@@ -4782,6 +4782,10 @@ $.ObjectNotClosureException$0 = function() {
   return new $.ObjectNotClosureException();
 };
 
+$.add = function(a, b) {
+  return typeof a === 'number' && typeof b === 'number' ? (a + b) : $.add$slow(a, b);
+};
+
 $.window = function() {
   return window;;
 };
@@ -4803,10 +4807,6 @@ $.objectTypeName = function(object) {
   }
   var t1 = $.charCodeAt(name$, 0);
   return t1 === 36 ? $.substring$1(name$, 1) : name$;
-};
-
-$.add = function(a, b) {
-  return typeof a === 'number' && typeof b === 'number' ? (a + b) : $.add$slow(a, b);
 };
 
 $.regExpAttachGlobalNative = function(regExp) {
@@ -5072,8 +5072,26 @@ $.eqNullB = function(a) {
   return false;
 };
 
-$.Element$tag = function(tag) {
-  return document.createElement(tag);
+$.valueFromDecomposedDate = function(years, month, day, hours, minutes, seconds, milliseconds, isUtc) {
+  $.checkInt(years);
+  $.checkInt(month);
+  if ($.ltB(month, 1) || $.ltB(12, month)) throw $.captureStackTrace($.IllegalArgumentException$1(month));
+  $.checkInt(day);
+  if ($.ltB(day, 1) || $.ltB(31, day)) throw $.captureStackTrace($.IllegalArgumentException$1(day));
+  $.checkInt(hours);
+  if ($.ltB(hours, 0) || $.ltB(24, hours)) throw $.captureStackTrace($.IllegalArgumentException$1(hours));
+  $.checkInt(minutes);
+  if ($.ltB(minutes, 0) || $.ltB(59, minutes)) throw $.captureStackTrace($.IllegalArgumentException$1(minutes));
+  $.checkInt(seconds);
+  if ($.ltB(seconds, 0) || $.ltB(59, seconds)) throw $.captureStackTrace($.IllegalArgumentException$1(seconds));
+  $.checkInt(milliseconds);
+  if ($.ltB(milliseconds, 0) || $.ltB(999, milliseconds)) throw $.captureStackTrace($.IllegalArgumentException$1(milliseconds));
+  $.checkBool(isUtc);
+  var jsMonth = $.sub(month, 1);
+  var value = isUtc === true ? (Date.UTC(years, jsMonth, day, hours, minutes, seconds, milliseconds)) : (new Date(years, jsMonth, day, hours, minutes, seconds, milliseconds).valueOf());
+  if ($.isNaN(value) === true) throw $.captureStackTrace($.IllegalArgumentException$1(''));
+  if ($.leB(years, 0) || $.ltB(years, 100)) return $.patchUpY2K(value, years, isUtc);
+  return value;
 };
 
 $._FrameSetElementEventsImpl$1 = function(_ptr) {
@@ -5095,26 +5113,8 @@ $.List$from = function(other) {
   return result;
 };
 
-$.valueFromDecomposedDate = function(years, month, day, hours, minutes, seconds, milliseconds, isUtc) {
-  $.checkInt(years);
-  $.checkInt(month);
-  if ($.ltB(month, 1) || $.ltB(12, month)) throw $.captureStackTrace($.IllegalArgumentException$1(month));
-  $.checkInt(day);
-  if ($.ltB(day, 1) || $.ltB(31, day)) throw $.captureStackTrace($.IllegalArgumentException$1(day));
-  $.checkInt(hours);
-  if ($.ltB(hours, 0) || $.ltB(24, hours)) throw $.captureStackTrace($.IllegalArgumentException$1(hours));
-  $.checkInt(minutes);
-  if ($.ltB(minutes, 0) || $.ltB(59, minutes)) throw $.captureStackTrace($.IllegalArgumentException$1(minutes));
-  $.checkInt(seconds);
-  if ($.ltB(seconds, 0) || $.ltB(59, seconds)) throw $.captureStackTrace($.IllegalArgumentException$1(seconds));
-  $.checkInt(milliseconds);
-  if ($.ltB(milliseconds, 0) || $.ltB(999, milliseconds)) throw $.captureStackTrace($.IllegalArgumentException$1(milliseconds));
-  $.checkBool(isUtc);
-  var jsMonth = $.sub(month, 1);
-  var value = isUtc === true ? (Date.UTC(years, jsMonth, day, hours, minutes, seconds, milliseconds)) : (new Date(years, jsMonth, day, hours, minutes, seconds, milliseconds).valueOf());
-  if ($.isNaN(value) === true) throw $.captureStackTrace($.IllegalArgumentException$1(''));
-  if ($.leB(years, 0) || $.ltB(years, 100)) return $.patchUpY2K(value, years, isUtc);
-  return value;
+$.Element$tag = function(tag) {
+  return document.createElement(tag);
 };
 
 $.newList = function(length$) {
@@ -6030,6 +6030,14 @@ $.captureStackTrace = function(ex) {
   return jsError;
 };
 
+$.index = function(a, index) {
+  if (typeof a == "string" || a.constructor === Array) {
+    var key = (index >>> 0);
+    if (key === index && key < (a.length)) return a[key];
+  }
+  return $.index$slow(a, index);
+};
+
 $.indexOf$1 = function(receiver, element) {
   if ($.isJsArray(receiver) === true) return $.indexOf(receiver, element, 0, (receiver.length));
   if (typeof receiver === 'string') {
@@ -6040,12 +6048,10 @@ $.indexOf$1 = function(receiver, element) {
   return receiver.indexOf$1(element);
 };
 
-$.index = function(a, index) {
-  if (typeof a == "string" || a.constructor === Array) {
-    var key = (index >>> 0);
-    if (key === index && key < (a.length)) return a[key];
-  }
-  return $.index$slow(a, index);
+$.sort = function(receiver, compare) {
+  if ($.isJsArray(receiver) !== true) return receiver.sort$1(compare);
+  $.checkMutable(receiver, 'sort');
+  $.sort0(receiver, compare);
 };
 
 $.StackOverflowException$0 = function() {
@@ -6067,10 +6073,8 @@ $.HashMapImplementation$0 = function() {
   return t1;
 };
 
-$.sort = function(receiver, compare) {
-  if ($.isJsArray(receiver) !== true) return receiver.sort$1(compare);
-  $.checkMutable(receiver, 'sort');
-  $.sort0(receiver, compare);
+$.sort0 = function(a, compare) {
+  $._doSort(a, 0, $.sub($.get$length(a), 1), compare);
 };
 
 $.substring$1 = function(receiver, startIndex) {
@@ -6163,10 +6167,6 @@ $.join0 = function(strings, separator) {
   return $.stringJoinUnchecked($._toJsStringArray(strings), separator);
 };
 
-$.sort0 = function(a, compare) {
-  $._doSort(a, 0, $.sub($.get$length(a), 1), compare);
-};
-
 $._SharedWorkerContextEventsImpl$1 = function(_ptr) {
   return new $._SharedWorkerContextEventsImpl(_ptr);
 };
@@ -6197,21 +6197,6 @@ $.OptionElement = function(data, value, defaultSelected, selected) {
       ;
 };
 
-$.indexOf = function(a, element, startIndex, endIndex) {
-  if (typeof a !== 'string' && (typeof a !== 'object' || a === null || (a.constructor !== Array && !a.is$JavaScriptIndexingBehavior()))) return $.indexOf$bailout(1, a, element, startIndex, endIndex);
-  if (typeof endIndex !== 'number') return $.indexOf$bailout(1, a, element, startIndex, endIndex);
-  if ($.geB(startIndex, a.length)) return -1;
-  if ($.ltB(startIndex, 0)) startIndex = 0;
-  if (typeof startIndex !== 'number') return $.indexOf$bailout(2, a, element, startIndex, endIndex);
-  for (var i = startIndex; i < endIndex; ++i) {
-    if (i !== (i | 0)) throw $.iae(i);
-    var t1 = a.length;
-    if (i < 0 || i >= t1) throw $.ioore(i);
-    if ($.eqB(a[i], element)) return i;
-  }
-  return -1;
-};
-
 $.shl = function(a, b) {
   if ($.checkNumbers(a, b) === true) {
     a = (a);
@@ -6240,6 +6225,21 @@ $.ZeDate$fromString = function(dateString) {
 
 $.NoSuchMethodException$4 = function(_receiver, _functionName, _arguments, existingArgumentNames) {
   return new $.NoSuchMethodException(existingArgumentNames, _arguments, _functionName, _receiver);
+};
+
+$.indexOf = function(a, element, startIndex, endIndex) {
+  if (typeof a !== 'string' && (typeof a !== 'object' || a === null || (a.constructor !== Array && !a.is$JavaScriptIndexingBehavior()))) return $.indexOf$bailout(1, a, element, startIndex, endIndex);
+  if (typeof endIndex !== 'number') return $.indexOf$bailout(1, a, element, startIndex, endIndex);
+  if ($.geB(startIndex, a.length)) return -1;
+  if ($.ltB(startIndex, 0)) startIndex = 0;
+  if (typeof startIndex !== 'number') return $.indexOf$bailout(2, a, element, startIndex, endIndex);
+  for (var i = startIndex; i < endIndex; ++i) {
+    if (i !== (i | 0)) throw $.iae(i);
+    var t1 = a.length;
+    if (i < 0 || i >= t1) throw $.ioore(i);
+    if ($.eqB(a[i], element)) return i;
+  }
+  return -1;
 };
 
 $.lt = function(a, b) {
