@@ -5,7 +5,6 @@
 #import('../dart/ze_mobile_lib.dart');
 #import('../packages/unittest/unittest.dart');
 
-
 #source('suites/date_tests.dart');
 #source('suites/time_tests.dart');
 #source('suites/time_entry_tests.dart');
@@ -17,6 +16,7 @@
 #source('suites/web_service_requester_tests.dart');
 #source('suites/activity_provider_tests.dart');
 #source('suites/time_entry_provider_tests.dart');
+#source('suites/activity_repository_tests.dart');
 
 void testSuites() {
   dateTests();

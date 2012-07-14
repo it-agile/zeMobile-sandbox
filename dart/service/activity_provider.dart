@@ -8,23 +8,24 @@ class ActivityProvider {
   
   ActivityProvider(this.errorDisplay, this.repository, this.requester);
 
-  refetchProjects([OnProjectFetched onProjectsFetched]) {
-    requester.sendGet('/api/projekte/',
-      (response) => _processFetchedProjects(response, onProjectsFetched),
-      (statusCode, response) => errorDisplay.showWebServiceError(statusCode, response));
+  Future<List<Project>> refetchProjects() {
+    var result = requester.sendGet('/api/projekte/');
+    result.handleException(errorDisplay.showWebServiceError);
+    return result.transform(_processFetchedProjects);
   }
 
-  void fetchProjects([OnProjectFetched onProjectsFetched]) {
+  Future<List<Project>> fetchProjects() {
     if(fetchedProjects == null) {
       fetchedProjects = repository.loadProjects();
       if (fetchedProjects == null) {
-        refetchProjects(onProjectsFetched);
-      } else {
-        onProjectsFetched(fetchedProjects);
+        return refetchProjects();
       }
-    } else {
-      onProjectsFetched(fetchedProjects);
     }
+
+    var completer = new Completer();
+    completer.complete(fetchedProjects);
+
+    return completer.future;
   }
   
   Activity activityWithId(int id) {
@@ -62,11 +63,10 @@ class ActivityProvider {
     return null;
   }
   
-  void _processFetchedProjects(String response, OnProjectFetched onProjectsFetched) {
+  List<Project> _processFetchedProjects(String response) {
     repository.saveProjects(response);
     fetchedProjects = repository.extractProjects(response);
-    if(onProjectsFetched != null) {
-      onProjectsFetched(fetchedProjects);
-    }
+
+    return fetchedProjects;
   } 
 }

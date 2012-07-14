@@ -9,15 +9,22 @@ class App {
   
   void start() {
     document.body.nodes.add(settings.createUI());
-    activityProvider.fetchProjects((List<Project> projects) {
-      ZeDate currentDay = new ZeDate.currentDay();
-      timeEntryProvider.fetchTimeEntries(currentDay.month, currentDay.year, (Month month) {
-        MonthDisplay monthDisplay = monthDisplayFactory.createMonthDisplay(month);
-        document.body.nodes.add(monthDisplay.createUI());
-        Element currentDayElement = monthDisplay.view.containerElement.query('#day${currentDay.toString()}');
-        expander.expand(currentDayElement);
-        currentDayElement.scrollIntoView();
-      });
-    });
+    activityProvider.fetchProjects().chain(fetchCurrentMonthAfterFetchingProjects)
+                                    .then(displayCurrentDayInCurrentMonth);
   }
+
+  Future<Month> fetchCurrentMonthAfterFetchingProjects(List<Project> projects) {
+    ZeDate currentDay = new ZeDate.currentDay();
+    return timeEntryProvider.fetchTimeEntries(currentDay.month, currentDay.year);
+  }
+
+  void displayCurrentDayInCurrentMonth(Month month) {
+    ZeDate currentDay = new ZeDate.currentDay();
+    MonthDisplay monthDisplay = monthDisplayFactory.createMonthDisplay(month);
+    document.body.nodes.add(monthDisplay.createUI());
+    Element currentDayElement = monthDisplay.view.containerElement.query('#day${currentDay.toString()}');
+    expander.expand(currentDayElement);
+    currentDayElement.scrollIntoView();
+  }
+
 }

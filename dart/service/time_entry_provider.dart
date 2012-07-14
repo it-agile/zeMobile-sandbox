@@ -7,20 +7,18 @@ class TimeEntryProvider {
   
   TimeEntryProvider(this.errorDisplay, this.webServiceRequester);
   
-  void fetchTimeEntries(int month, int year, OnMonthFetched onMonthFetched) {
-    webServiceRequester.sendGet('/api/monat/$year/$month/${WebServiceRequester.USER_MARKER}/',
-      (response) => _processFetchedMonth(response, onMonthFetched), 
-      (int statusCode, String response) => errorDisplay.showWebServiceError(statusCode, response));  
+  Future<Month> fetchTimeEntries(int month, int year) {
+    var requestFuture = webServiceRequester.sendGet('/api/monat/$year/$month/${WebServiceRequester.USER_MARKER}/');
+    requestFuture.handleException(errorDisplay.showWebServiceError);
+    return requestFuture.transform(_processFetchedMonth);
   }
-  
-  void _processFetchedMonth(String response, OnMonthFetched onMonthFetched) {
+
+  Month _processFetchedMonth(String response) {
     Month month = new Month(JSON.parse(response));
-    if(onMonthFetched != null) {
-      onMonthFetched(month);
-    }
+    return month;
   }
-  
-  void save(TimeEntry timeEntry, OnActionSucceeded onSuccess) {
+
+  Future<String> save(TimeEntry timeEntry) {
     Map<String, Dynamic> parameters = 
       {'taetigkeit': timeEntry.activityId,
        'tag' : timeEntry.date.toGermanString(),
@@ -33,15 +31,18 @@ class TimeEntryProvider {
       url = '$url${timeEntry.id}/';
       method = 'PUT';
     }
-    webServiceRequester.sendRequest(method, url, parameters, 
-      (response) {print(response); onSuccess();}, 
-      (int statusCode, String response) => errorDisplay.showWebServiceError(statusCode, response));
-    
+
+    var requestFuture =  webServiceRequester.sendRequest(method, url, parameters);
+    requestFuture.handleException(errorDisplay.showWebServiceError);
+
+    return requestFuture;
   }
-  
-  void delete(TimeEntry timeEntry, OnActionSucceeded onSuccess) {
-    webServiceRequester.sendRequest('DELETE', '/api/zeiten/${timeEntry.date.year}/${timeEntry.date.month}/${WebServiceRequester.USER_MARKER}/${timeEntry.id}/', null, 
-      (response) {print(response); onSuccess();}, 
-      (int statusCode, String response) => errorDisplay.showWebServiceError(statusCode, response));
+
+  Future<String> delete(TimeEntry timeEntry, OnActionSucceeded onSuccess) {
+    var requestFuture =  webServiceRequester.sendRequest('DELETE',
+      '/api/zeiten/${timeEntry.date.year}/${timeEntry.date.month}/${WebServiceRequester.USER_MARKER}/${timeEntry.id}/');
+    requestFuture.handleException(errorDisplay.showWebServiceError);
+
+    return requestFuture;
   }
 }

@@ -1,43 +1,54 @@
-typedef OnUserLoggedIn(User user);
-
 class Login {
   final LoginView view;
   final LoginModel model;
   
   Login(this.model, this.view);
   
-  void loginUserIfNotAlreadyLoggedIn(OnUserLoggedIn onUserLoggedIn) {
+  Future<User> loginUserIfNotAlreadyLoggedIn() {
+    var completer = new Completer<User>();
+
     if (model.isUserLoggedIn()) {
-      onUserLoggedIn(model.user);
+      completer.complete(model.user);
     } else {
-      view.showLoginDialog((String userName, String password) {
-        model.loginUser(userName, password);
-        onUserLoggedIn(model.user);
+      view.showLoginDialog().then((loginSucceeded) {
+        model.loginUser(view.userName, view.password);
+        completer.complete(model.user);
       });
     }
+
+    return completer.future;
   }
 }
 
 typedef void OnLoginDialogFinished(String userName, String password);
 
 class LoginView {
-  void showLoginDialog(OnLoginDialogFinished onLoginDialogFinished) {
+  InputElement nameInput;
+  InputElement passwordInput;
+
+  String get userName() => nameInput.value;
+  String get password() => passwordInput.value;
+
+  Future<bool> showLoginDialog() {
     var loginDialogContent = new DivElement();
-    var nameInput = new InputElement();
+    nameInput = new InputElement();
     nameInput.type = 'text';
     nameInput.placeholder = 'Name';
     nameInput.attributes['autocapitalize'] = 'off';
     nameInput.attributes['autocorrect'] = 'off';
     loginDialogContent.nodes.add(nameInput);
-    var passwordInput = new InputElement();
+    passwordInput = new InputElement();
     passwordInput.type = 'password';
     passwordInput.placeholder = 'Passwort';
     loginDialogContent.nodes.add(passwordInput);
     var loginDialog = new Dialog('Log Dich in ze ein.', loginDialogContent, 'Einloggen', null);
+
+    var completer = new Completer();
     loginDialog.show((String pressedButtonText) {
       loginDialog.dispose();
-      onLoginDialogFinished(nameInput.value, passwordInput.value);
+      completer.complete(true);
     });
+    return completer.future;
   }
 }
 

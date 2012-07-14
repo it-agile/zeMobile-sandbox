@@ -3,7 +3,7 @@ void projectTests() {
   var it = test;
   
   describe('A project based on a JSON string', () {
-    Project project = new Project(JSON.parse("""
+    var project = new Project(JSON.parse("""
       {
           "taetigkeiten": [
               {

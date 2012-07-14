@@ -82,7 +82,7 @@ class TimeEntryEditor {
     timeEntry.activityId = Math.parseInt(view.activitySelect.value);
     timeEntry.comment = view.comment;
     
-    timeEntryProvider.save(timeEntry, () => view.enableEditing(false));
+    timeEntryProvider.save(timeEntry).then((response) => view.enableEditing(false));
     event.preventDefault();
   }
   
@@ -90,7 +90,7 @@ class TimeEntryEditor {
     if (timeEntry.id == null) {
       removeEditor();
     } else {
-      timeEntryProvider.delete(timeEntry, removeEditor);
+      timeEntryProvider.delete(timeEntry).then((response) => removeEditor());
     }
     event.preventDefault();
   }

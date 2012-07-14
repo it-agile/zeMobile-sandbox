@@ -1,18 +1,5 @@
-class LoginModelMock extends LoginModel {
-  bool loginUserCalled = false;
-
-  void loginUser(String userName, String password) {
-    loginUserCalled = true;
-    super.loginUser(userName, password);
-  }
-}
-
-class LoginViewMock extends LoginView {
-  bool showLoginDialogCalled = false;
-  void showLoginDialog(OnLoginDialogFinished callback) {
-    showLoginDialogCalled = true;
-  }
-}
+class LoginModelMock extends Mock implements LoginModel {}
+class LoginViewMock extends Mock implements LoginView {}
 
 
 
@@ -41,32 +28,42 @@ void loginTests() {
   });
   
   describe('login', () {
-    LoginModelMock modelMock = new LoginModelMock();
-    LoginViewMock viewMock = new LoginViewMock();
-    Login login = new Login(modelMock, viewMock);
-    bool callbackCalled = false;
-    User loggedInUser;
-    OnUserLoggedIn callback = (User user) {loggedInUser = user; callbackCalled = true;};
-    
+    var modelMock = new LoginModelMock();
+    var viewMock = new LoginViewMock();
+    var login = new Login(modelMock, viewMock);
+    var userFuture = null;
+
+    resetMocks() {
+      document.window.localStorage.clear();
+      modelMock.log.logs.clear();
+      viewMock.log.logs.clear();
+    }
+
     describe('with no logged in user', () {
       setUp(() {
-        document.window.localStorage.clear();
-        login.loginUserIfNotAlreadyLoggedIn(callback);
+        resetMocks();
+        modelMock.when(callsTo('isUserLoggedIn')).thenReturn(false);
+        viewMock.when(callsTo('showLoginDialog')).thenReturn(new Future.immediate(true));
+        viewMock.when(callsTo('get userName')).thenReturn('bob');
+        viewMock.when(callsTo('get password')).thenReturn('test');
+        userFuture = login.loginUserIfNotAlreadyLoggedIn();
       });
 
-      it('should not call the callback', () => expect(callbackCalled, isFalse));
-      it('should show the login dialog', () => expect(viewMock.showLoginDialogCalled, isTrue));
+      it('should login the user with the specified name and password', () =>
+        modelMock.getLogs(callsTo('loginUser', 'bob', 'test')).verify(happenedOnce));
+      it('should get the logged in user from the model', () =>
+        modelMock.getLogs(callsTo('get user')).verify(happenedOnce));
     });
     describe('with a logged in user', () {
       setUp(() {
-        document.window.localStorage.clear();
-        viewMock.showLoginDialogCalled = false;
-        modelMock.user = new User('u', 'p');
-        login.loginUserIfNotAlreadyLoggedIn(callback);
+        resetMocks();
+        modelMock.when(callsTo('isUserLoggedIn')).thenReturn(true);
+        modelMock.when(callsTo('get user')).thenReturn(new User('u', 'p'));
+        userFuture = login.loginUserIfNotAlreadyLoggedIn();
       });
       
-      it('should call the callback', () => expect(callbackCalled, isTrue));
-      it('should not show the login dialog', () => expect(viewMock.showLoginDialogCalled, isFalse));
+      it('should not show the login dialog', () => viewMock.getLogs(callsTo('showLoginDialog')).verify(neverHappened));
+      it('should return a Future containing the logged in user', () => expect(userFuture.value.name, equals('u')));
     });
     
   });

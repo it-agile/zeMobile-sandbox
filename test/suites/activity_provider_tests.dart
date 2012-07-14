@@ -10,46 +10,47 @@ class ActivityMock implements Activity {
   ActivityMock(this.id, this.name);
 }
 
-class ActivityRepositoryMock extends ActivityRepository {
-  List<Project> loadProjects() {
-    return null; 
-  }
-
-  void saveProjects(String projectsJSON) { 
-  }
-}
-
-
 void activityProviderTests() {
   var describe = group;
   var it = test;
   
-  List<Project> fetchedProjects = [];
-  void onProjectsFetched(List<Project> projects) {
-    fetchedProjects = projects;
-  }
-  
   describe('activity provider', () {
-    ErrorDisplayMock errorDisplay = new ErrorDisplayMock();
-    WebServiceRequesterMock webServiceRequester = new WebServiceRequesterMock();
-    ActivityProvider activityProvider = new ActivityProvider(errorDisplay, new ActivityRepositoryMock(), webServiceRequester);
-    
+    var errorDisplay = new ErrorDisplayMock();
+    var webServiceRequester = new WebServiceRequesterMock();
+    var activityRespository = new ActivityRepositoryMock();
+    var activityProvider = new ActivityProvider(errorDisplay, activityRespository, webServiceRequester);
+    var fetchedProjectsFuture = null;
+
+    resetMocks() {
+      webServiceRequester.log.logs.clear();
+      activityRespository.log.logs.clear();
+    }
+
     setUp(() {
-      activityProvider.fetchProjects(onProjectsFetched);
+      resetMocks();
+      webServiceRequester.when(callsTo('sendGet')).thenReturn(new Future.immediate('testProjects'));
+      activityRespository.when(callsTo('loadProjects')).thenReturn(null);
+
+      fetchedProjectsFuture = activityProvider.fetchProjects();
     });
   
-    it('should call web service requester if no projects are already cached', () => expect(webServiceRequester.sendGetCalled, isTrue));
-    it('should not call the onProjectsFetchedCallback', () => expect(fetchedProjects.length, equals(0)));
-    
+    it('should call web service requester if no projects are already cached', () =>
+      webServiceRequester.getLogs(callsTo('sendGet')).verify(happenedOnce));
+    it('should save the fetched projects JSON in the repository ', () =>
+      activityRespository.getLogs(callsTo('saveProjects', 'testProjects')).verify(happenedOnce));
+    it('should extract the projects from the fetched JSON via the repository ', () =>
+      activityRespository.getLogs(callsTo('extractProjects', 'testProjects')).verify(happenedOnce));
+
     describe('after projects have been cached', () {
       setUp(() {
-        webServiceRequester.resetMock();
+        resetMocks();
         activityProvider.fetchedProjects = [new Project(null)];
-        activityProvider.fetchProjects(onProjectsFetched);
+        fetchedProjectsFuture = activityProvider.fetchProjects();
       });
       
-      it('should not call the web service requester', () => expect(webServiceRequester.sendGetCalled, isFalse));
-      it('should call the onProjectsFetchedCallback with the cached projects', () => expect(fetchedProjects, equals(activityProvider.fetchedProjects)));
+      it('should not call the web service requester', () => webServiceRequester.getLogs(callsTo('sendGet')).verify(neverHappened));
+      it('should return a Future containing the cached projects', () => expect(fetchedProjectsFuture.value,
+        equals(activityProvider.fetchedProjects)));
     });
 
   });
