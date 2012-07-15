@@ -1,16 +1,21 @@
 class Project {
-  Map<String, Dynamic> _projectJSON;
-  List<Activity> _activities;
-  
-  Project(this._projectJSON);
-  
-                String get name() => _projectJSON['name'];
-        List<Activity> get activities() {
-    if (_activities == null) {
-      List activityJSONs = _projectJSON['taetigkeiten'];
-      _activities = new List.from(activityJSONs.map((activityJSON) => new Activity(activityJSON)));
-      _activities.sort((a, b) => a.name.compareTo(b.name));
+  String name;
+  List<Activity> activities;
+
+  Project(this.name, this.activities);
+  operator ==(Project other) {
+    if (other == null) return false;
+    if (this === other) return true;
+    if (name != other.name) return false;
+    if (activities == null) return other.activities == null;
+    if (activities.length != other.activities.length) return false;
+
+    for(int i=0; i<activities.length; i++) {
+      if (activities[i] != other.activities[i]) return false;
     }
-    return _activities;
+
+    return true;
   }
+
+  String toString() => '($name, $activities)';
 }

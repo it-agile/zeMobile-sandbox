@@ -64,8 +64,8 @@ class ActivityProvider {
   }
   
   List<Project> _processFetchedProjects(String response) {
-    repository.saveProjects(response);
-    fetchedProjects = repository.extractProjects(response);
+    repository.importProjectsFromJSON(response);
+    fetchedProjects = repository.loadProjects();
 
     return fetchedProjects;
   } 

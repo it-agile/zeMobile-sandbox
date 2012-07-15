@@ -1,8 +1,9 @@
 class Activity {
-  Map<String, Dynamic> _activityJSON;
-  
-  Activity(this._activityJSON);
-  
-     int get id() => _activityJSON['id'];
-  String get name() => _activityJSON['name'];
+  int id;
+  String name;
+
+  Activity(this.id, this.name);
+  operator ==(Activity other) => other != null && (this === other || id == other.id && name == other.name);
+
+  String toString() => '($id, $name)';
 }

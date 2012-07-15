@@ -1,17 +1,14 @@
 void activityTests() {
-  var describe = group;
-  var it = test;
-  
-  describe('An activity based on a JSON string', () {
-    Activity activity = new Activity(JSON.parse("""
-      {
-          "name": "P1T1",
-          "id": 1
-      }
-    """));
-    
-    it('should extract the name', () => expect(activity.name, equals('P1T1')));
-    it('should extract the id', () => expect(activity.id, equals(1)));
+
+  group('An activity', () {
+    var a1 = new Activity(1, 'A1');
+    var a1n = new Activity(1, 'A1');
+    var a2 = new Activity(2, 'A2');
+
+    test('should equal itself', () => expect(a1 == a1, isTrue));
+    test('should equal an activity with the same properties', () => expect(a1 == a1n, isTrue));
+    test('should not equal null', () => expect(a1 == null, isFalse));
+    test('should not equal a different activity', () => expect(a1 == a2, isFalse));
   });
   
 }

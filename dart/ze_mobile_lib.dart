@@ -25,6 +25,7 @@
 #source('service/activity_provider.dart');
 #source('service/time_entry_provider.dart');
 #source('service/activity_repository.dart');
+#source('service/user_repository.dart');
 
 #source('ui/expander.dart');
 #source('ui/dialog.dart');

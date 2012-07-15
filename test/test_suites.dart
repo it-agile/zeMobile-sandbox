@@ -17,16 +17,19 @@
 #source('suites/activity_provider_tests.dart');
 #source('suites/time_entry_provider_tests.dart');
 #source('suites/activity_repository_tests.dart');
+#source('suites/user_repository_tests.dart');
 
 void testSuites() {
   dateTests();
   timeTests();
-  timeEntryTests();
   projectTests();
-  monthTests();
   activityTests();
+  monthTests();
+  timeEntryTests();
+  webServiceRequesterTests();
+  loginTests();
   activityProviderTests();
   timeEntryProviderTests();
-  loginTests();
-  webServiceRequesterTests();
+  userRepositoryTests();
+  activityRepositoryTests();
 }
