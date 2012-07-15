@@ -17,5 +17,5 @@ class Project {
     return true;
   }
 
-  String toString() => '($name, $activities)';
+  String toString() => 'Project($name, $activities)';
 }

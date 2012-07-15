@@ -7,11 +7,11 @@
 #source('app_builder.dart');
 #source('app.dart');
 
-#source('controller/login.dart');
-#source('controller/month_display.dart');
-#source('controller/day_display.dart');
-#source('controller/time_entry_editor.dart');
-#source('controller/settings.dart');
+#source('component/login.dart');
+#source('component/month_display.dart');
+#source('component/day_display.dart');
+#source('component/time_entry_editor.dart');
+#source('component/settings.dart');
 
 #source('model/user.dart');
 #source('model/month.dart');

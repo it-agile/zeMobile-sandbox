@@ -1,24 +1,31 @@
 class LoginModelMock extends Mock implements LoginModel {}
 class LoginViewMock extends Mock implements LoginView {}
+class UserRepositoryMock extends Mock implements UserRepository {}
 
 void loginTests() {
   group('login model', () {
-    var model = new LoginModel();
-    setUp(() => document.window.localStorage.clear());
+    var user = new User('u', 'p');
+    var userRepository = new UserRepositoryMock();
+    var model = new LoginModel(userRepository);
+    setUp(() {
+      userRepository.log.logs.clear();
+    });
     
     test('should initially have no logged in user', () => expect(model.isUserLoggedIn(), isFalse));
     test('should return null if asked for the user before a user is logged in', () => expect(model.user, isNull));
+    test('should save the user after a user logs in', () {
+      model.loginUser('u', 'p');
+      userRepository.getLogs(callsTo('saveUser', equals(user))).verify(happenedOnce);
+    });
     
     group('after logging in a user', () {
       setUp(() {
-        document.window.localStorage.clear();
-        model.loginUser('user', 'passwd');
+        userRepository.log.logs.clear();
+        userRepository.when(callsTo('loadUser')).thenReturn(user);
       });
 
       test('should have a logged in user', () => expect(model.isUserLoggedIn(), isTrue));
-      test('should return a user if asked for it', () => expect(model.user, isNotNull));
-      test('should return a user with the correct name', () => expect(model.user.name, equals('user')));
-      test('should return a user with the correct password', () => expect(model.user.password, equals('passwd')));
+      test('should return the user loaded from the repository', () => expect(model.user, equals(user)));
     });
   });
   

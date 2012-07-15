@@ -5,4 +5,6 @@ class User {
 
   operator ==(User otherUser) =>
     (otherUser != null && (this === otherUser || name == otherUser.name &&  password == otherUser.password));
+
+  String toString() => 'User($name, $password)';
 }

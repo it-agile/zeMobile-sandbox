@@ -54,23 +54,18 @@ class LoginView {
 
 class LoginModel {
   User user;
+  UserRepository userRepository;
+
+  LoginModel(this.userRepository);
 
   bool isUserLoggedIn() {
     if (user == null) {
-      var userName = document.window.localStorage[USER_KEY];
-      var password = document.window.localStorage[PASSWORD_KEY];
-      if (userName != null && password != null) {
-        user = new User(userName, password);
-      }
+      user = userRepository.loadUser();
     }
     return user != null;
   }
   void loginUser(String userName, String password) {
     user = new User(userName, password);
-    document.window.localStorage[USER_KEY] = userName;
-    document.window.localStorage[PASSWORD_KEY] = password;
+    userRepository.saveUser(user);
   }
-  
-  static final String USER_KEY = 'user';
-  static final String PASSWORD_KEY = 'password';
 }

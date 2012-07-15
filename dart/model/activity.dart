@@ -5,5 +5,5 @@ class Activity {
   Activity(this.id, this.name);
   operator ==(Activity other) => other != null && (this === other || id == other.id && name == other.name);
 
-  String toString() => '($id, $name)';
+  String toString() => 'Activity($id, $name)';
 }

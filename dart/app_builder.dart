@@ -2,26 +2,28 @@ class AppBuilder {
   static App app = null;
   static App buildApp() {
     if (app == null) {
-      ErrorDisplay errorDisplay = new ErrorDisplay();
-      Expander expander = new Expander();
+      var errorDisplay = new ErrorDisplay();
+      var expander = new Expander();
 
-      LoginModel loginModel = new LoginModel();
-      LoginView loginView = new LoginView();
+      var userRepository = new UserRepository();
+
+      var loginModel = new LoginModel(userRepository);
+      var loginView = new LoginView();
       Login login = new Login(loginModel, loginView);
       
-      WebServiceRequester webServiceRequester = new WebServiceRequester(login);
+      var webServiceRequester = new WebServiceRequester(login);
 
-      ActivityRepository activityRepository = new ActivityRepository();
+      var activityRepository = new ActivityRepository();
       
-      ActivityProvider activityProvider = new ActivityProvider(errorDisplay, activityRepository, webServiceRequester);
-      TimeEntryProvider timeEntryProvider = new TimeEntryProvider(errorDisplay, webServiceRequester);
+      var activityProvider = new ActivityProvider(errorDisplay, activityRepository, webServiceRequester);
+      var timeEntryProvider = new TimeEntryProvider(errorDisplay, webServiceRequester);
       
-      TimeEntryEditorFactory timeEntryEditorFactory = new TimeEntryEditorFactory(expander, activityProvider, timeEntryProvider);
-      DayDisplayFactory dayDisplayFactory = new DayDisplayFactory(expander, timeEntryEditorFactory);
-      MonthDisplayFactory monthDisplayFactory = new MonthDisplayFactory(expander, dayDisplayFactory);
+      var timeEntryEditorFactory = new TimeEntryEditorFactory(expander, activityProvider, timeEntryProvider);
+      var dayDisplayFactory = new DayDisplayFactory(expander, timeEntryEditorFactory);
+      var monthDisplayFactory = new MonthDisplayFactory(expander, dayDisplayFactory);
       
-      SettingsView settingsView = new SettingsView(expander);
-      Settings settings = new Settings(settingsView, activityProvider);
+      var settingsView = new SettingsView(expander);
+      var settings = new Settings(settingsView, activityProvider);
       
       app = new App(activityProvider, timeEntryProvider, monthDisplayFactory, settings, expander);
     }
