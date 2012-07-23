@@ -778,13 +778,13 @@ $$._DoubleLinkedQueueEntrySentinel = {"":
  ["_lib1_element", "_next", "_previous"],
  super: "DoubleLinkedQueueEntry",
  get$element: function() {
-  throw $.captureStackTrace($.CTC11);
+  throw $.captureStackTrace($.CTC8);
  },
  _asNonSentinelEntry$0: function() {
   return;
  },
  remove$0: function() {
-  throw $.captureStackTrace($.CTC11);
+  throw $.captureStackTrace($.CTC8);
  },
  _DoubleLinkedQueueEntrySentinel$0: function() {
   this._link$2(this, this);
@@ -993,7 +993,7 @@ $$.JSSyntaxRegExp = {"":
 };
 
 $$.MatchImplementation = {"":
- ["_groups", "_lib1_end", "_lib1_start", "str", "pattern?"],
+ ["_groups", "_end", "_lib1_start", "str", "pattern?"],
  super: "Object",
  operator$index$1: function(index) {
   return this.group$1(index);
@@ -1002,7 +1002,7 @@ $$.MatchImplementation = {"":
   return $.index(this._groups, index);
  },
  end$0: function() {
-  return this._lib1_end;
+  return this._end;
  },
  get$end: function() { return new $.BoundClosure(this, 'end$0'); },
  start$0: function() {
@@ -1462,6 +1462,19 @@ $$.Login = {"":
  }
 };
 
+$$.LoginModel = {"":
+ ["userRepository", "user?"],
+ super: "Object",
+ loginUser$2: function(userName, password) {
+  this.user = $.User$(userName, password);
+  this.userRepository.saveUser$1(this.user);
+ },
+ isUserLoggedIn$0: function() {
+  if (this.user == null) this.user = this.userRepository.loadUser$0();
+  return !(this.user == null);
+ }
+};
+
 $$.LoginView = {"":
  ["passwordInput", "nameInput"],
  super: "Object",
@@ -1487,19 +1500,6 @@ $$.LoginView = {"":
  },
  get$userName: function() {
   return this.nameInput.get$value();
- }
-};
-
-$$.LoginModel = {"":
- ["userRepository", "user?"],
- super: "Object",
- loginUser$2: function(userName, password) {
-  this.user = $.User$(userName, password);
-  this.userRepository.saveUser$1(this.user);
- },
- isUserLoggedIn$0: function() {
-  if (this.user == null) this.user = this.userRepository.loadUser$0();
-  return !(this.user == null);
  }
 };
 
@@ -1538,7 +1538,7 @@ $$.MonthDisplayView = {"":
  setMonth$2: function(month, year) {
   if (month !== (month | 0)) throw $.iae(month);
   if (month < 0 || month >= 12) throw $.ioore(month);
-  var t1 = $.CTC12[month];
+  var t1 = $.CTC11[month];
   this.monthNameElement.set$text(t1);
   t1 = $.S(year);
   this.yearElement.set$text(t1);
@@ -1574,34 +1574,45 @@ $$.DayDisplayFactory = {"":
  ["timeEntryEditorFactory", "expander"],
  super: "Object",
  createDayDisplay$1: function(day) {
-  return $.DayDisplay$(day, $.DayDisplayView$(this.expander), this.timeEntryEditorFactory);
+  return $.DayDisplay$($.DayDisplayModel$(day), $.DayDisplayView$(this.expander), this.timeEntryEditorFactory);
  }
 };
 
 $$.DayDisplay = {"":
- ["view?", "timeEntryEditorFactory", "day?"],
+ ["timeEntryEditorFactory", "view?", "model?"],
  super: "Object",
- addEntryButtonTouched$1: function(event$) {
-  var newEntry = $.TimeEntry$fresh();
-  newEntry.set$date(this.day);
-  this.addTimeEntry$1(newEntry).editEntry$0();
- },
- get$addEntryButtonTouched: function() { return new $.BoundClosure0(this, 'addEntryButtonTouched$1'); },
  addTimeEntry$1: function(timeEntry) {
   var editor = this.timeEntryEditorFactory.createTimeEntryEditor$1(timeEntry);
   var t1 = this.view;
   t1.get$timeEntriesElement().insertBefore$2(editor.createUI$0(), t1.get$addEntrySection());
   return editor;
  },
+ addEntryButtonTouched$1: function(event$) {
+  this.addTimeEntry$1(this.model.createNewEntry$0()).editEntry$0();
+ },
+ get$addEntryButtonTouched: function() { return new $.BoundClosure0(this, 'addEntryButtonTouched$1'); },
  createUI$0: function() {
   var t1 = this.view;
   t1.createUI$0();
-  var t2 = this.day;
-  t1.set$dayDate(t2);
-  var t3 = 'day' + $.S($.toString(t2));
-  t1.get$containerElement().set$id(t3);
+  var t2 = this.model;
+  t1.set$dayDate(t2.get$day());
+  t2 = t2.get$dayContainerId();
+  t1.get$containerElement().set$id(t2);
   $.add$1(t1.get$addEntryButton().get$on().get$click(), this.get$addEntryButtonTouched());
   return t1.get$containerElement();
+ }
+};
+
+$$.DayDisplayModel = {"":
+ ["day?"],
+ super: "Object",
+ createNewEntry$0: function() {
+  var newEntry = $.TimeEntry$(null, null, null, null, null, null);
+  newEntry.date = this.day;
+  return newEntry;
+ },
+ get$dayContainerId: function() {
+  return 'day' + $.S($.toString(this.day));
  }
 };
 
@@ -1784,7 +1795,7 @@ $$.TimeEntryEditorView = {"":
   return comment;
  },
  get$timeTo: function() {
-  return $.ZeTime$fromString(this.timeToInput.get$value());
+  return $.ZeTime_ZeTime$fromString(this.timeToInput.get$value());
  },
  set$timeTo: function(time) {
   var t1 = $.toString(time);
@@ -1792,7 +1803,7 @@ $$.TimeEntryEditorView = {"":
   return t1;
  },
  get$timeFrom: function() {
-  return $.ZeTime$fromString(this.timeFromInput.get$value());
+  return $.ZeTime_ZeTime$fromString(this.timeFromInput.get$value());
  },
  set$timeFrom: function(time) {
   var t1 = $.toString(time);
@@ -1969,76 +1980,40 @@ $$.User = {"":
 };
 
 $$.Month = {"":
- ["monthJSON"],
+ ["timeEntries?", "hoursToWork?", "hoursWorked?", "vacation?", "balance?", "month?", "year?"],
  super: "Object",
+ toString$0: function() {
+  return 'Month(' + $.S(this.year) + ', ' + $.S(this.month) + ', ' + $.S(this.balance) + ', ' + $.S(this.vacation) + ', ' + $.S(this.hoursWorked) + ', ' + $.S(this.hoursToWork) + ', ' + $.S(this.timeEntries) + ')';
+ },
+ operator$eq$1: function(other) {
+  if (other == null) return false;
+  if (other === this) return true;
+  if (!$.eqB(other.get$year(), this.year) || (!$.eqB(other.get$month(), this.month) || (!$.eqB(other.get$balance(), this.balance) || (!$.eqB(other.get$vacation(), this.vacation) || (!$.eqB(other.get$hoursToWork(), this.hoursToWork) || !$.eqB(other.get$hoursWorked(), this.hoursWorked)))))) return false;
+  if (this.timeEntries == null) return other.get$timeEntries() == null;
+  if (other.get$timeEntries() == null) return false;
+  if (!$.eqB($.get$length(this.timeEntries), $.get$length(other.get$timeEntries()))) return false;
+  for (var i = 0; $.ltB(i, $.get$length(this.timeEntries)); ++i) {
+    if (!$.eqB($.index(this.timeEntries, i), $.index(other.get$timeEntries(), i))) return false;
+  }
+  return true;
+ },
  timeEntriesFor$1: function(day) {
-  return $.filter(this.get$timeEntries(), new $.Month_timeEntriesFor_anon(day));
- },
- get$timeEntries: function() {
-  return $.map($.index(this.monthJSON, 'zeiten'), new $.Month_timeEntries_anon());
- },
- get$month: function() {
-  return $.index(this.monthJSON, 'monat');
- },
- get$year: function() {
-  return $.index(this.monthJSON, 'jahr');
+  return $.ListFactory_List$from($.filter(this.timeEntries, new $.Month_timeEntriesFor_anon(day)));
  }
 };
 
 $$.TimeEntry = {"":
- ["timeEntryJSON"],
+ ["comment=", "end=", "start=", "date?", "activityId=", "id="],
  super: "Object",
- set$comment: function(aComment) {
-  $.indexSet(this.timeEntryJSON, 'kommentar', aComment);
-  return aComment;
+ toString$0: function() {
+  return 'TimeEntry(' + $.S(this.id) + ', ' + $.S(this.activityId) + ', ' + $.S(this.date) + ', ' + $.S(this.start) + ', ' + $.S(this.end) + ', ' + $.S(this.comment) + ')';
  },
- get$comment: function() {
-  return $.index(this.timeEntryJSON, 'kommentar');
+ operator$eq$1: function(other) {
+  if (other == null) return false;
+  if (other === this) return true;
+  return $.eqB(this.id, other.get$id()) && ($.eqB(this.activityId, other.get$activityId()) && ($.eqB(this.date, other.get$date()) && ($.eqB(this.start, other.get$start()) && ($.eqB(this.end, other.get$end()) && $.eqB(this.comment, other.get$comment())))));
  },
- set$end: function(time) {
-  var t1 = this.timeEntryJSON;
-  var t2 = $.toString(time);
-  $.indexSet(t1, 'ende', t2);
-  return t2;
- },
- get$end: function() {
-  return $.ZeTime$fromString($.index(this.timeEntryJSON, 'ende'));
- },
- set$start: function(time) {
-  var t1 = this.timeEntryJSON;
-  var t2 = $.toString(time);
-  $.indexSet(t1, 'start', t2);
-  return t2;
- },
- get$start: function() {
-  return $.ZeTime$fromString($.index(this.timeEntryJSON, 'start'));
- },
- start$0: function() { return this.get$start().$call$0(); },
- set$date: function(aDate) {
-  var t1 = this.timeEntryJSON;
-  var t2 = $.toString(aDate);
-  $.indexSet(t1, 'tag', t2);
-  return t2;
- },
- get$date: function() {
-  return $.ZeDate_ZeDate$fromString($.index(this.timeEntryJSON, 'tag'));
- },
- set$activityId: function(activityId) {
-  var t1 = this.timeEntryJSON;
-  if ($.index(t1, 'taetigkeit') == null) $.indexSet(t1, 'taetigkeit', $.HashMapImplementation$());
-  $.indexSet($.index(t1, 'taetigkeit'), 'id', activityId);
- },
- get$activityId: function() {
-  var t1 = this.timeEntryJSON;
-  return !($.index(t1, 'taetigkeit') == null) ? $.index($.index(t1, 'taetigkeit'), 'id') : null;
- },
- set$id: function(id) {
-  $.indexSet(this.timeEntryJSON, 'id', id);
-  return id;
- },
- get$id: function() {
-  return $.index(this.timeEntryJSON, 'id');
- }
+ start$0: function() { return this.start.$call$0(); }
 };
 
 $$.Project = {"":
@@ -2053,6 +2028,7 @@ $$.Project = {"":
   if (!$.eqB(this.name, other.get$name())) return false;
   var t1 = this.activities;
   if (typeof t1 !== 'string' && (typeof t1 !== 'object' || t1 === null || (t1.constructor !== Array && !t1.is$JavaScriptIndexingBehavior()))) return this.operator$eq$1$bailout(1, other, t1);
+  if (other.get$activities() == null) return false;
   if (!(t1.length === $.get$length(other.get$activities()))) return false;
   for (var i = 0; t2 = t1.length, i < t2; ++i) {
     if (i < 0 || i >= t2) throw $.ioore(i);
@@ -2063,6 +2039,7 @@ $$.Project = {"":
  },
  operator$eq$1$bailout: function(state, other, t1) {
   if (t1 == null) return other.get$activities() == null;
+  if (other.get$activities() == null) return false;
   if (!$.eqB($.get$length(t1), $.get$length(other.get$activities()))) return false;
   for (var i = 0; $.ltB(i, $.get$length(t1)); ++i) {
     if (!$.eqB($.index(t1, i), $.index(other.get$activities(), i))) return false;
@@ -2128,21 +2105,6 @@ $$.ZeTime = {"":
  },
  operator$eq$1: function(other) {
   return !(other == null) && this.equals$1(other) === true;
- },
- ZeTime$fromString$1: function(timeString) {
-  if (timeString == null) return;
-  for (var t1 = $.iterator($.CTC7.allMatches$1(timeString)); t1.hasNext$0() === true; ) {
-    var t2 = t1.next$0();
-    this.hour = $.Math_parseInt(t2.group$1(1));
-    this.minutes = $.Math_parseInt(t2.group$1(2));
-  }
-  if (this.hour == null && this.minutes == null) {
-    for (t1 = $.iterator($.CTC8.allMatches$1(timeString)); t1.hasNext$0() === true; ) {
-      t2 = t1.next$0();
-      this.hour = $.Math_parseInt(t2.group$1(1));
-      this.minutes = $.Math_parseInt(t2.group$1(2));
-    }
-  }
  }
 };
 
@@ -2236,8 +2198,13 @@ $$.ActivityProvider = {"":
 };
 
 $$.TimeEntryProvider = {"":
- ["webServiceRequester", "errorDisplay"],
+ ["fetchedYear", "fetchedMonth", "repository", "webServiceRequester", "errorDisplay"],
  super: "Object",
+ delete$1: function(timeEntry) {
+  var requestFuture = this.webServiceRequester.sendRequest$2('DELETE', '/api/zeiten/' + $.S(timeEntry.get$date().get$year()) + '/' + $.S(timeEntry.get$date().get$month()) + '/' + '@@USER@@' + '/' + $.S(timeEntry.get$id()) + '/');
+  requestFuture.handleException$1(this.errorDisplay.get$showWebServiceError());
+  return requestFuture;
+ },
  save$1: function(timeEntry) {
   var parameters = $.makeLiteralMap(['taetigkeit', timeEntry.get$activityId(), 'tag', timeEntry.get$date().toGermanString$0(), 'start', $.toString(timeEntry.get$start()), 'ende', $.toString(timeEntry.get$end()), 'kommentar', timeEntry.get$comment()]);
   var url = '/api/zeiten/' + $.S(timeEntry.get$date().get$year()) + '/' + $.S(timeEntry.get$date().get$month()) + '/' + '@@USER@@' + '/';
@@ -2251,10 +2218,14 @@ $$.TimeEntryProvider = {"":
   return requestFuture;
  },
  _processFetchedMonth$1: function(response) {
-  return $.Month$($.JSON_parse(response));
+  var t1 = this.repository;
+  t1.importMonthFromJSON$1(response);
+  return t1.loadMonth$2(this.fetchedYear, this.fetchedMonth);
  },
  get$_processFetchedMonth: function() { return new $.BoundClosure0(this, '_processFetchedMonth$1'); },
  fetchTimeEntries$2: function(month, year) {
+  this.fetchedMonth = month;
+  this.fetchedYear = year;
   var requestFuture = this.webServiceRequester.sendGet$1('/api/monat/' + $.S(year) + '/' + $.S(month) + '/' + '@@USER@@' + '/');
   requestFuture.handleException$1(this.errorDisplay.get$showWebServiceError());
   return requestFuture.transform$1(this.get$_processFetchedMonth());
@@ -2301,6 +2272,48 @@ $$.UserRepository = {"":
   var password = $.index($.document().get$window().get$localStorage(), 'password');
   if (!(userName == null) && !(password == null)) return $.User$(userName, password);
   return;
+ }
+};
+
+$$.TimeEntryRepository = {"":
+ [],
+ super: "Object",
+ convertToDoubleFromGermanFormat$1: function(doubleString) {
+  return $.Math_parseDouble($.replaceAll(doubleString, ',', '.'));
+ },
+ extractTimeEntry$1: function(timeEntryJSON) {
+  if (timeEntryJSON == null) return;
+  var entry = $.TimeEntry$(null, null, null, null, null, null);
+  entry.id = $.index(timeEntryJSON, 'id');
+  entry.activityId = !($.index(timeEntryJSON, 'taetigkeit') == null) ? $.index($.index(timeEntryJSON, 'taetigkeit'), 'id') : null;
+  entry.date = $.ZeDate_ZeDate$fromString($.index(timeEntryJSON, 'tag'));
+  entry.start = $.ZeTime_ZeTime$fromString($.index(timeEntryJSON, 'start'));
+  entry.end = $.ZeTime_ZeTime$fromString($.index(timeEntryJSON, 'ende'));
+  entry.comment = $.index(timeEntryJSON, 'kommentar');
+  return entry;
+ },
+ get$extractTimeEntry: function() { return new $.BoundClosure0(this, 'extractTimeEntry$1'); },
+ extractMonth$1: function(monthJSON) {
+  if (monthJSON == null) return;
+  var month = $.Month$(null, null, null, null, null, null, null);
+  month.year = $.index(monthJSON, 'jahr');
+  month.month = $.index(monthJSON, 'monat');
+  month.balance = this.convertToDoubleFromGermanFormat$1($.index(monthJSON, 'saldo'));
+  month.vacation = this.convertToDoubleFromGermanFormat$1($.index(monthJSON, 'urlaub'));
+  month.hoursWorked = this.convertToDoubleFromGermanFormat$1($.index(monthJSON, 'ist_arbeitszeit'));
+  month.hoursToWork = this.convertToDoubleFromGermanFormat$1($.index(monthJSON, 'soll_arbeitszeit'));
+  month.timeEntries = $.ListFactory_List$from($.map($.index(monthJSON, 'zeiten'), this.get$extractTimeEntry()));
+  return month;
+ },
+ importMonthFromJSON$1: function(monthJSON) {
+  var monthMap = $.JSON_parse(monthJSON);
+  var year = $.index(monthMap, 'jahr');
+  var month = $.index(monthMap, 'monat');
+  $.indexSet($.document().get$window().get$localStorage(), 'month' + $.S(year) + $.S(month), monthJSON);
+ },
+ loadMonth$2: function(year, month) {
+  var monthJSONString = $.index($.document().get$window().get$localStorage(), 'month' + $.S(year) + $.S(month));
+  return this.extractMonth$1(!(monthJSONString == null) ? $.JSON_parse(monthJSONString) : null);
  }
 };
 
@@ -3770,7 +3783,7 @@ $$._ListRange = {"":
 };
 
 $$._ListRangeIteratorImpl = {"":
- ["_end", "_offset", "_source"],
+ ["_lib2_end", "_offset", "_source"],
  super: "Object",
  next$0: function() {
   var t1 = this._source;
@@ -3808,7 +3821,7 @@ $$._ListRangeIteratorImpl = {"":
  hasNext$0: function() {
   var t1 = this._offset;
   if (typeof t1 !== 'number') return this.hasNext$0$bailout(1, t1, 0);
-  var t2 = this._end;
+  var t2 = this._lib2_end;
   if (typeof t2 !== 'number') return this.hasNext$0$bailout(2, t1, t2);
   return t1 < t2;
  },
@@ -3827,7 +3840,7 @@ $$._ListRangeIteratorImpl = {"":
       var t1 = this._offset;
     case 1:
       state = 0;
-      var t2 = this._end;
+      var t2 = this._lib2_end;
     case 2:
       state = 0;
       return $.lt(t1, t2);
@@ -4325,14 +4338,6 @@ $$.TimeEntryEditor_deleteTouched_anon = {"":
  }
 };
 
-$$.TimeEntryEditor_saveTouched_anon = {"":
- ["this_0"],
- super: "Closure",
- $call$1: function(response) {
-  return this.this_0.get$view().enableEditing$1(false);
- }
-};
-
 $$.WebServiceRequester_sendRequest_anon = {"":
  ["url_4", "method_3", "completer_2", "parameters_1", "this_0"],
  super: "Closure",
@@ -4469,6 +4474,14 @@ $$._uriEncode_anon = {"":
  }
 };
 
+$$.TimeEntryEditor_saveTouched_anon = {"":
+ ["this_0"],
+ super: "Closure",
+ $call$1: function(response) {
+  return this.this_0.get$view().enableEditing$1(false);
+ }
+};
+
 $$.DoubleLinkedQueue_length__ = {"":
  ["box_0"],
  super: "Closure",
@@ -4554,27 +4567,19 @@ $$.FutureImpl_transform_anon0 = {"":
  }
 };
 
-$$.Month_timeEntriesFor_anon = {"":
- ["day_0"],
- super: "Closure",
- $call$1: function(entry) {
-  return $.eq(entry.get$date(), this.day_0);
- }
-};
-
-$$.Month_timeEntries_anon = {"":
- [],
- super: "Closure",
- $call$1: function(timeEntryJSON) {
-  return $.TimeEntry$(timeEntryJSON);
- }
-};
-
 $$.HashSetImplementation_map__ = {"":
  ["result_1", "f_0"],
  super: "Closure",
  $call$2: function(key, value) {
   $.add$1(this.result_1, this.f_0.$call$1(key));
+ }
+};
+
+$$.Month_timeEntriesFor_anon = {"":
+ ["day_0"],
+ super: "Closure",
+ $call$1: function(entry) {
+  return $.eq(entry.get$date(), this.day_0);
  }
 };
 
@@ -5066,7 +5071,7 @@ $.stringReplaceAllUnchecked = function(receiver, from, to) {
       }
       return result.toString$0();
     }
-    return $.stringReplaceJS(receiver, $.regExpMakeNative($.JSSyntaxRegExp$((from.replace($.regExpMakeNative($.CTC9, true), "\\$&")), false, false), true), to);
+    return $.stringReplaceJS(receiver, $.regExpMakeNative($.JSSyntaxRegExp$((from.replace($.regExpMakeNative($.CTC7, true), "\\$&")), false, false), true), to);
   }
   if (typeof from === 'object' && from !== null && !!from.is$JSSyntaxRegExp) return $.stringReplaceJS(receiver, $.regExpMakeNative(from, true), to);
   $.checkNull(from);
@@ -5453,10 +5458,6 @@ $.StringMatch$ = function(_start, str, pattern) {
   return new $.StringMatch(pattern, str, _start);
 };
 
-$.TimeEntry$fresh = function() {
-  return new $.TimeEntry($.HashMapImplementation$());
-};
-
 $.invokeClosure = function(closure, isolate, numberOfArguments, arg1, arg2) {
   if ($.eqB(numberOfArguments, 0)) return $._callInIsolate(isolate, new $.invokeClosure_anon(closure));
   if ($.eqB(numberOfArguments, 1)) return $._callInIsolate(isolate, new $.invokeClosure_anon0(closure, arg1));
@@ -5559,6 +5560,10 @@ $._NotificationEventsImpl$ = function(_ptr) {
   return new $._NotificationEventsImpl(_ptr);
 };
 
+$.TimeEntryRepository$ = function() {
+  return new $.TimeEntryRepository();
+};
+
 $._browserPrefix = function() {
   if ($._cachedBrowserPrefix == null) {
     if ($._Device_isFirefox() === true) $._cachedBrowserPrefix = '-moz-';
@@ -5598,10 +5603,9 @@ $.checkMutable = function(list, reason) {
   if (!!(list.immutable$list)) throw $.captureStackTrace($.UnsupportedOperationException$(reason));
 };
 
-$.ZeTime$fromString = function(timeString) {
-  var t1 = new $.ZeTime(null, null);
-  t1.ZeTime$fromString$1(timeString);
-  return t1;
+$.ZeTime_ZeTime$fromString = function(timeString) {
+  var result = $.ZeTime_ZeTime$_fromStringWithColon(timeString);
+  return result == null ? $.ZeTime_ZeTime$_fromStringWithoutColon(timeString) : result;
 };
 
 $.sub$slow = function(a, b) {
@@ -5639,12 +5643,23 @@ $.regExpTest = function(regExp, str) {
   return $.regExpGetNative(regExp).test(str);
 };
 
-$.Month$ = function(monthJSON) {
-  return new $.Month(monthJSON);
+$.Month$ = function(year, month, balance, vacation, hoursWorked, hoursToWork, timeEntries) {
+  return new $.Month(timeEntries, hoursToWork, hoursWorked, vacation, balance, month, year);
 };
 
 $.Primitives_getDay = function(receiver) {
   return receiver.get$isUtc() === true ? ($.Primitives_lazyAsJsDate(receiver).getUTCDate()) : ($.Primitives_lazyAsJsDate(receiver).getDate());
+};
+
+$.ZeTime_ZeTime$_fromStringWithColon = function(timeString) {
+  if (timeString == null) return;
+  for (var t1 = $.iterator($.CTC10.allMatches$1(timeString)), parsedMinutes = null, parsedHour = null; t1.hasNext$0() === true; ) {
+    var t2 = t1.next$0();
+    parsedHour = $.Math_parseInt(t2.group$1(1));
+    parsedMinutes = $.Math_parseInt(t2.group$1(2));
+  }
+  if (parsedHour == null || parsedMinutes == null) return;
+  return $.ZeTime$(parsedHour, parsedMinutes);
 };
 
 $.Activity$ = function(id, name$) {
@@ -5655,8 +5670,8 @@ $._EventsImpl$ = function(_ptr) {
   return new $._EventsImpl(_ptr);
 };
 
-$.TimeEntryProvider$ = function(errorDisplay, webServiceRequester) {
-  return new $.TimeEntryProvider(webServiceRequester, errorDisplay);
+$.TimeEntryProvider$ = function(errorDisplay, repository, webServiceRequester) {
+  return new $.TimeEntryProvider(null, null, repository, webServiceRequester, errorDisplay);
 };
 
 $.HashSetImplementation$ = function() {
@@ -5776,7 +5791,7 @@ $.AppBuilder_buildApp = function() {
     var expander = $.Expander$();
     var webServiceRequester = $.WebServiceRequester$($.Login$($.LoginModel$($.UserRepository$()), $.LoginView$()));
     var activityProvider = $.ActivityProvider$(errorDisplay, $.ActivityRepository$(), webServiceRequester);
-    var timeEntryProvider = $.TimeEntryProvider$(errorDisplay, webServiceRequester);
+    var timeEntryProvider = $.TimeEntryProvider$(errorDisplay, $.TimeEntryRepository$(), webServiceRequester);
     $.AppBuilder_app = $.App$(activityProvider, timeEntryProvider, $.MonthDisplayFactory$(expander, $.DayDisplayFactory$(expander, $.TimeEntryEditorFactory$(expander, activityProvider, timeEntryProvider))), $.Settings$($.SettingsView$(expander), activityProvider), expander);
   }
   return $.AppBuilder_app;
@@ -5790,12 +5805,12 @@ $.ObjectNotClosureException$ = function() {
   return new $.ObjectNotClosureException();
 };
 
-$.ErrorDisplay$ = function() {
-  return new $.ErrorDisplay();
-};
-
 $.window = function() {
   return window;;
+};
+
+$.ErrorDisplay$ = function() {
+  return new $.ErrorDisplay();
 };
 
 $.abs = function(receiver) {
@@ -5970,25 +5985,6 @@ $._Elements_InputElement = function(type) {
   return _e;
 };
 
-$.Primitives_patchUpY2K = function(value, years, isUtc) {
-  var date = (new Date(value));
-  if (isUtc === true) date.setUTCFullYear(years);
-  else date.setFullYear(years);
-  return date.valueOf();
-};
-
-$.MatchImplementation$ = function(pattern, str, _start, _end, _groups) {
-  return new $.MatchImplementation(_groups, _end, _start, str, pattern);
-};
-
-$.stringReplaceJS = function(receiver, replacer, to) {
-  return receiver.replace(replacer, to.replace('$', '$$$$'));
-};
-
-$.UnsupportedOperationException$ = function(_message) {
-  return new $.UnsupportedOperationException(_message);
-};
-
 $.compareTo = function(a, b) {
   if ($.checkNumbers(a, b) === true) {
     if ($.ltB(a, b)) return -1;
@@ -6017,6 +6013,25 @@ $.compareTo = function(a, b) {
     return t1;
   }
   return a.compareTo$1(b);
+};
+
+$.Primitives_patchUpY2K = function(value, years, isUtc) {
+  var date = (new Date(value));
+  if (isUtc === true) date.setUTCFullYear(years);
+  else date.setFullYear(years);
+  return date.valueOf();
+};
+
+$.MatchImplementation$ = function(pattern, str, _start, _end, _groups) {
+  return new $.MatchImplementation(_groups, _end, _start, str, pattern);
+};
+
+$.stringReplaceJS = function(receiver, replacer, to) {
+  return receiver.replace(replacer, to.replace('$', '$$$$'));
+};
+
+$.UnsupportedOperationException$ = function(_message) {
+  return new $.UnsupportedOperationException(_message);
 };
 
 $._Elements_AnchorElement = function(href) {
@@ -6392,6 +6407,17 @@ $._InputElementEventsImpl$ = function(_ptr) {
   return new $._InputElementEventsImpl(_ptr);
 };
 
+$.ZeTime_ZeTime$_fromStringWithoutColon = function(timeString) {
+  if (timeString == null) return;
+  for (var t1 = $.iterator($.CTC9.allMatches$1(timeString)), parsedMinutes = null, parsedHour = null; t1.hasNext$0() === true; ) {
+    var t2 = t1.next$0();
+    parsedHour = $.Math_parseInt(t2.group$1(1));
+    parsedMinutes = $.Math_parseInt(t2.group$1(2));
+  }
+  if (parsedHour == null || parsedMinutes == null) return;
+  return $.ZeTime$(parsedHour, parsedMinutes);
+};
+
 $._DoubleLinkedQueueIterator$ = function(_sentinel) {
   var t1 = new $._DoubleLinkedQueueIterator(null, _sentinel);
   t1._DoubleLinkedQueueIterator$1(_sentinel);
@@ -6441,8 +6467,8 @@ $._PendingSendPortFinder$ = function() {
   return t1;
 };
 
-$.DayDisplay$ = function(day, view, timeEntryEditorFactory) {
-  return new $.DayDisplay(view, timeEntryEditorFactory, day);
+$.DayDisplay$ = function(model, view, timeEntryEditorFactory) {
+  return new $.DayDisplay(timeEntryEditorFactory, view, model);
 };
 
 $.regExpGetNative = function(regExp) {
@@ -6693,10 +6719,6 @@ $._BatteryManagerEventsImpl$ = function(_ptr) {
   return new $._BatteryManagerEventsImpl(_ptr);
 };
 
-$._MediaStreamTrackListEventsImpl$ = function(_ptr) {
-  return new $._MediaStreamTrackListEventsImpl(_ptr);
-};
-
 $.toString = function(value) {
   if (typeof value == "object" && value !== null) {
     if ($.isJsArray(value) === true) return $.Collections_collectionToString(value);
@@ -6706,6 +6728,10 @@ $.toString = function(value) {
   if (value == null) return 'null';
   if (typeof value == "function") return 'Closure';
   return String(value);
+};
+
+$._MediaStreamTrackListEventsImpl$ = function(_ptr) {
+  return new $._MediaStreamTrackListEventsImpl(_ptr);
 };
 
 $.DayDisplayFactory$ = function(expander, timeEntryEditorFactory) {
@@ -6781,8 +6807,8 @@ $.checkString = function(value) {
   return value;
 };
 
-$.TimeEntry$ = function(timeEntryJSON) {
-  return new $.TimeEntry(timeEntryJSON);
+$.TimeEntry$ = function(id, activityId, date, start, end, comment) {
+  return new $.TimeEntry(comment, end, start, date, activityId, id);
 };
 
 $._callInIsolate = function(isolate, function$) {
@@ -6804,6 +6830,10 @@ $.DateImplementation$fromMillisecondsSinceEpoch = function(millisecondsSinceEpoc
   return t1;
 };
 
+$.DayDisplayModel$ = function(day) {
+  return new $.DayDisplayModel(day);
+};
+
 $.Settings$ = function(view, activityProvider) {
   return new $.Settings(activityProvider, view);
 };
@@ -6822,20 +6852,20 @@ $.addAll = function(receiver, collection) {
   }
 };
 
-$.Primitives_stringFromCharCodes = function(charCodes) {
-  for (var t1 = $.iterator(charCodes); t1.hasNext$0() === true; ) {
-    var t2 = t1.next$0();
-    if (!((typeof t2 === 'number') && (t2 === (t2 | 0)))) throw $.captureStackTrace($.IllegalArgumentException$(t2));
-  }
-  return String.fromCharCode.apply(null, charCodes);
-};
-
 $.checkInt = function(value) {
   if (!((typeof value === 'number') && (value === (value | 0)))) {
     $.checkNull(value);
     throw $.captureStackTrace($.IllegalArgumentException$(value));
   }
   return value;
+};
+
+$.Primitives_stringFromCharCodes = function(charCodes) {
+  for (var t1 = $.iterator(charCodes); t1.hasNext$0() === true; ) {
+    var t2 = t1.next$0();
+    if (!((typeof t2 === 'number') && (t2 === (t2 | 0)))) throw $.captureStackTrace($.IllegalArgumentException$(t2));
+  }
+  return String.fromCharCode.apply(null, charCodes);
 };
 
 $.Primitives_objectToString = function(object) {
@@ -6939,6 +6969,10 @@ $.typeNameInFirefox = function(obj) {
   if ($.eqB(name$, 'XMLDocument')) return 'Document';
   if ($.eqB(name$, 'WorkerMessageEvent')) return 'MessageEvent';
   return name$;
+};
+
+$.ZeTime$ = function(hour, minutes) {
+  return new $.ZeTime(minutes, hour);
 };
 
 $.hashCode = function(receiver) {
@@ -7324,7 +7358,7 @@ $._FileWriterEventsImpl$ = function(_ptr) {
 };
 
 $.ZeDate_ZeDate$fromString = function(dateString) {
-  for (var t1 = $.iterator($.CTC10.allMatches$1(dateString)); t1.hasNext$0() === true; ) {
+  for (var t1 = $.iterator($.CTC12.allMatches$1(dateString)); t1.hasNext$0() === true; ) {
     var t2 = t1.next$0();
     return $.ZeDate$($.Math_parseInt(t2.group$1(3)), $.Math_parseInt(t2.group$1(2)), $.Math_parseInt(t2.group$1(1)));
   }
@@ -7481,7 +7515,7 @@ $.stringReplaceAllUnchecked$bailout = function(state, receiver, from, to) {
       }
       return result.toString$0();
     }
-    return $.stringReplaceJS(receiver, $.regExpMakeNative($.JSSyntaxRegExp$((from.replace($.regExpMakeNative($.CTC9, true), "\\$&")), false, false), true), to);
+    return $.stringReplaceJS(receiver, $.regExpMakeNative($.JSSyntaxRegExp$((from.replace($.regExpMakeNative($.CTC7, true), "\\$&")), false, false), true), to);
   }
   if (typeof from === 'object' && from !== null && !!from.is$JSSyntaxRegExp) return $.stringReplaceJS(receiver, $.regExpMakeNative(from, true), to);
   $.checkNull(from);
@@ -8001,19 +8035,19 @@ Isolate.makeConstantList = function(list) {
 $.CTC = Isolate.makeConstantList([]);
 $.CTC3 = new Isolate.$isolateProperties.ConstantMap(Isolate.$isolateProperties.CTC, {}, 0);
 $.CTC6 = new Isolate.$isolateProperties.DurationImplementation(86400000);
-$.CTC7 = new Isolate.$isolateProperties.JSSyntaxRegExp(false, false, '^(\\d*):(\\d*)(:(\\d*))?$');
-$.CTC12 = Isolate.makeConstantList(['Nullember', 'Januar', 'Februar', 'M\xe4rz', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'Dezember']);
+$.CTC10 = new Isolate.$isolateProperties.JSSyntaxRegExp(false, false, '^(\\d*):(\\d*)(:(\\d*))?$');
+$.CTC11 = Isolate.makeConstantList(['Nullember', 'Januar', 'Februar', 'M\xe4rz', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'Dezember']);
 $.CTC2 = new Isolate.$isolateProperties._DeletedKeySentinel();
 $.CTC13 = new Isolate.$isolateProperties.JSSyntaxRegExp(false, false, 'Chrome|DumpRenderTree');
 $.CTC14 = new Isolate.$isolateProperties.Object();
-$.CTC8 = new Isolate.$isolateProperties.JSSyntaxRegExp(false, false, '^(\\d{1,2})(\\d{2})$');
+$.CTC9 = new Isolate.$isolateProperties.JSSyntaxRegExp(false, false, '^(\\d{1,2})(\\d{2})$');
 $.CTC4 = new Isolate.$isolateProperties.IllegalAccessException();
 $.CTC5 = new Isolate.$isolateProperties.JSSyntaxRegExp(false, false, '^#[_a-zA-Z]\\w*$');
-$.CTC10 = new Isolate.$isolateProperties.JSSyntaxRegExp(false, false, '(\\d*)-(\\d*)-(\\d*)');
+$.CTC12 = new Isolate.$isolateProperties.JSSyntaxRegExp(false, false, '(\\d*)-(\\d*)-(\\d*)');
 $.CTC0 = new Isolate.$isolateProperties.NullPointerException(Isolate.$isolateProperties.CTC, null);
-$.CTC9 = new Isolate.$isolateProperties.JSSyntaxRegExp(false, false, '[-[\\]{}()*+?.,\\\\^$|#\\s]');
+$.CTC7 = new Isolate.$isolateProperties.JSSyntaxRegExp(false, false, '[-[\\]{}()*+?.,\\\\^$|#\\s]');
 $.CTC1 = new Isolate.$isolateProperties.NoMoreElementsException();
-$.CTC11 = new Isolate.$isolateProperties.EmptyQueueException();
+$.CTC8 = new Isolate.$isolateProperties.EmptyQueueException();
 $._getTypeNameOf = null;
 $.AppBuilder_app = null;
 $._cachedBrowserPrefix = null;

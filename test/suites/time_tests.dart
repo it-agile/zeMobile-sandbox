@@ -18,5 +18,11 @@ void timeTests() {
     
     test('should equal the same time created from 3 ints', () => expect(time, equals(new ZeTime(9, 34))));
   });
-  
+
+  group('a ze time based on an unparsable string', () {
+    var time = new ZeTime.fromString('error');
+
+    test('should be null', () => expect(time, isNull));
+  });
+
 }

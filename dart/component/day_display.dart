@@ -5,37 +5,50 @@ class DayDisplayFactory {
   DayDisplayFactory(this.expander, this.timeEntryEditorFactory);
   
   DayDisplay createDayDisplay(ZeDate day) {
+    var model = new DayDisplayModel(day);
     var view = new DayDisplayView(expander);
-    return new DayDisplay(day, view, timeEntryEditorFactory);
+    return new DayDisplay(model, view, timeEntryEditorFactory);
   }
 }
 
 class DayDisplay {
-  final ZeDate day;
-  final TimeEntryEditorFactory timeEntryEditorFactory;
+  final DayDisplayModel model;
   final DayDisplayView view;
-  DayDisplay(this.day, this.view, this.timeEntryEditorFactory);
+  final TimeEntryEditorFactory timeEntryEditorFactory;
+  DayDisplay(this.model, this.view, this.timeEntryEditorFactory);
  
   Element createUI() {
     view.createUI();
-    view.dayDate = day;
-    view.containerElement.id = 'day${day.toString()}';
+    view.dayDate = model.day;
+    view.containerElement.id = model.dayContainerId;
     
     view.addEntryButton.on.click.add(addEntryButtonTouched);
     
     return view.containerElement;
   }
-  
+
+  void addEntryButtonTouched(Event event) {
+    addTimeEntry(model.createNewEntry()).editEntry();
+  }
+
   TimeEntryEditor addTimeEntry(TimeEntry timeEntry) {
     var editor = timeEntryEditorFactory.createTimeEntryEditor(timeEntry);
     view.timeEntriesElement.insertBefore(editor.createUI(), view.addEntrySection);
     return editor;
   }
-  
-  void addEntryButtonTouched(Event event) {
-    var newEntry = new TimeEntry.fresh();
+}
+
+class DayDisplayModel {
+  final ZeDate day;
+
+  DayDisplayModel(this.day);
+
+  String get dayContainerId() => 'day${day.toString()}';
+
+  TimeEntry createNewEntry() {
+    var newEntry = new TimeEntry();
     newEntry.date = day;
-    addTimeEntry(newEntry).editEntry();
+    return newEntry;
   }
 }
 

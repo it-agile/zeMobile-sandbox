@@ -1,20 +1,23 @@
-typedef void OnMonthFetched(Month fetchedMonth);
-typedef void OnActionSucceeded();
-
 class TimeEntryProvider {
-  ErrorDisplay errorDisplay;
-  WebServiceRequester webServiceRequester;
+  final ErrorDisplay errorDisplay;
+  final WebServiceRequester webServiceRequester;
+  final TimeEntryRepository repository;
+  int fetchedMonth;
+  int fetchedYear;
   
-  TimeEntryProvider(this.errorDisplay, this.webServiceRequester);
+  TimeEntryProvider(this.errorDisplay, this.repository, this.webServiceRequester);
   
   Future<Month> fetchTimeEntries(int month, int year) {
+    fetchedMonth = month;
+    fetchedYear = year;
     var requestFuture = webServiceRequester.sendGet('/api/monat/$year/$month/${WebServiceRequester.USER_MARKER}/');
     requestFuture.handleException(errorDisplay.showWebServiceError);
     return requestFuture.transform(_processFetchedMonth);
   }
 
   Month _processFetchedMonth(String response) {
-    Month month = new Month(JSON.parse(response));
+    repository.importMonthFromJSON(response);
+    Month month = repository.loadMonth(fetchedYear, fetchedMonth);
     return month;
   }
 
@@ -38,7 +41,7 @@ class TimeEntryProvider {
     return requestFuture;
   }
 
-  Future<String> delete(TimeEntry timeEntry, OnActionSucceeded onSuccess) {
+  Future<String> delete(TimeEntry timeEntry) {
     var requestFuture =  webServiceRequester.sendRequest('DELETE',
       '/api/zeiten/${timeEntry.date.year}/${timeEntry.date.month}/${WebServiceRequester.USER_MARKER}/${timeEntry.id}/');
     requestFuture.handleException(errorDisplay.showWebServiceError);

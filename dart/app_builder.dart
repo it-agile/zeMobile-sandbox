@@ -16,7 +16,9 @@ class AppBuilder {
       var activityRepository = new ActivityRepository();
       
       var activityProvider = new ActivityProvider(errorDisplay, activityRepository, webServiceRequester);
-      var timeEntryProvider = new TimeEntryProvider(errorDisplay, webServiceRequester);
+
+      var timeEntryRespository = new TimeEntryRepository();
+      var timeEntryProvider = new TimeEntryProvider(errorDisplay, timeEntryRespository, webServiceRequester);
       
       var timeEntryEditorFactory = new TimeEntryEditorFactory(expander, activityProvider, timeEntryProvider);
       var dayDisplayFactory = new DayDisplayFactory(expander, timeEntryEditorFactory);

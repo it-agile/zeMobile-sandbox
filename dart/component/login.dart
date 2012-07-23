@@ -20,7 +20,23 @@ class Login {
   }
 }
 
-typedef void OnLoginDialogFinished(String userName, String password);
+class LoginModel {
+  User user;
+  UserRepository userRepository;
+
+  LoginModel(this.userRepository);
+
+  bool isUserLoggedIn() {
+    if (user == null) {
+      user = userRepository.loadUser();
+    }
+    return user != null;
+  }
+  void loginUser(String userName, String password) {
+    user = new User(userName, password);
+    userRepository.saveUser(user);
+  }
+}
 
 class LoginView {
   InputElement nameInput;
@@ -49,23 +65,5 @@ class LoginView {
       completer.complete(true);
     });
     return completer.future;
-  }
-}
-
-class LoginModel {
-  User user;
-  UserRepository userRepository;
-
-  LoginModel(this.userRepository);
-
-  bool isUserLoggedIn() {
-    if (user == null) {
-      user = userRepository.loadUser();
-    }
-    return user != null;
-  }
-  void loginUser(String userName, String password) {
-    user = new User(userName, password);
-    userRepository.saveUser(user);
   }
 }

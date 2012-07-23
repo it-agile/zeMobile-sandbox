@@ -1,22 +1,29 @@
 void timeEntryTests() {
-  group('A time entry based on a JSON string', () {
-    var timeEntry = new TimeEntry(JSON.parse("""
-          {
-              "taetigkeit": {
-                  "id": 3
-              }, 
-              "start": "09:00:00",
-              "tag": "2012-02-08", 
-              "ende": "12:00:00", 
-              "id": 1, 
-              "kommentar": "bla"
-          }"""));
+  group('A time entry', () {
+    final date1 = const ZeDate(1,2,2010);
+    final date2 = const ZeDate(4,2,2010);
+    final time1 = const ZeTime(9, 0);
+    final time2 = const ZeTime(12, 15);
+    final comment1 = 'c1';
+    final comment2 = 'c2';
+    final timeEntry = new TimeEntry(1, 2, date1, time1, time2, comment1);
     
-    test('should extract the id of the time entry', () => expect(timeEntry.id, equals(1)));
-    test('should extract the id of the activity', () => expect(timeEntry.activityId, equals(3)));
-    test('should extract the date of the time entry', () => expect(timeEntry.date, equals(new ZeDate(8,2, 2012))));
-    test('should extract the start of time worked on the activity', () => expect(timeEntry.start, equals(new ZeTime(9, 0))));
-    test('should extract the end of time worked on the activity', () => expect(timeEntry.end, equals(new ZeTime(12, 0))));
-    test('should extract the comment of the time entry', () => expect(timeEntry.comment, equals("bla")));
-  });  
+    test('should equal itself', () => expect(timeEntry == timeEntry, isTrue));
+    test('should equal a time entry containing the same properties', () =>
+      expect(timeEntry == new TimeEntry(1, 2, date1, time1, time2, comment1), isTrue));
+    test('should not equal null', () =>
+      expect(timeEntry == null, isFalse));
+    test('should not equal a time entry with a different id', () =>
+      expect(timeEntry == new TimeEntry(2, 2, date1, time1, time2, comment1), isFalse));
+    test('should not equal a time entry with a different activityId', () =>
+      expect(timeEntry == new TimeEntry(1, 3, date1, time1, time2, comment1), isFalse));
+    test('should not equal a time entry with a different date', () =>
+      expect(timeEntry == new TimeEntry(1, 2, date2, time1, time2, comment1), isFalse));
+    test('should not equal a time entry with a different start', () =>
+      expect(timeEntry == new TimeEntry(1, 2, date1, time2, time2, comment1), isFalse));
+    test('should not equal a time entry with a different end', () =>
+      expect(timeEntry == new TimeEntry(1, 2, date1, time1, time1, comment1), isFalse));
+    test('should not equal a time entry with a different comment', () =>
+      expect(timeEntry == new TimeEntry(1, 2, date1, time1, time2, comment2), isFalse));
+  });
 }

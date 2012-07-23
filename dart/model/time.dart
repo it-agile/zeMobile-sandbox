@@ -1,24 +1,54 @@
 class ZeTime {
-  int hour;
-  int minutes;
+  final int hour;
+  final int minutes;
   
-  ZeTime(this.hour, this.minutes);
-  ZeTime.fromString(String timeString) {
+  const ZeTime(this.hour, this.minutes);
+
+  factory ZeTime.fromString(String timeString) {
+    var result = new ZeTime._fromStringWithColon(timeString);
+
+    if (result == null) {
+      result = new ZeTime._fromStringWithoutColon(timeString);
+    }
+
+    return result;
+  }
+
+  factory ZeTime._fromStringWithColon(String timeString) {
     if (timeString == null) return;
+
+    var parsedHour = null;
+    var parsedMinutes = null;
+
     var timeReg = const RegExp(@'^(\d*):(\d*)(:(\d*))?$');
     for(Match m in timeReg.allMatches(timeString)) {
-      hour = Math.parseInt(m.group(1));
-      minutes = Math.parseInt(m.group(2));
+      parsedHour = Math.parseInt(m.group(1));
+      parsedMinutes = Math.parseInt(m.group(2));
     }
-    
-    if (hour == null && minutes == null) {
-      timeReg = const RegExp(@'^(\d{1,2})(\d{2})$');
-      for(Match m in timeReg.allMatches(timeString)) {
-        hour = Math.parseInt(m.group(1));
-        minutes = Math.parseInt(m.group(2));
-      }
-    }
+
+    if (parsedHour == null || parsedMinutes == null) return null;
+
+    return new ZeTime(parsedHour, parsedMinutes);
   }
+
+  factory ZeTime._fromStringWithoutColon(String timeString) {
+    if (timeString == null) return;
+
+    var parsedHour = null;
+    var parsedMinutes = null;
+
+    var timeReg = const RegExp(@'^(\d{1,2})(\d{2})$');
+    for(Match m in timeReg.allMatches(timeString)) {
+      parsedHour = Math.parseInt(m.group(1));
+      parsedMinutes = Math.parseInt(m.group(2));
+    }
+
+    if (parsedHour == null || parsedMinutes == null) return null;
+
+    return new ZeTime(parsedHour, parsedMinutes);
+  }
+
+
   
   bool operator ==(ZeTime other) => !(other == null) && equals(other);
   bool equals(ZeTime other) => (hour == other.hour) 

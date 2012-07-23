@@ -13,6 +13,6 @@ class UserRepository {
     document.window.localStorage[PASSWORD_KEY] = user.password;
   }
 
-  static final String USER_KEY = 'user';
-  static final String PASSWORD_KEY = 'password';
+  static final USER_KEY = 'user';
+  static final PASSWORD_KEY = 'password';
 }

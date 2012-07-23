@@ -1,6 +1,4 @@
 class ActivityRepository {
-    static final String PROJECTS_KEY = 'projects';
-    
   List<Project> loadProjects() {
       var projectsJSON = document.window.localStorage[PROJECTS_KEY];
       if (projectsJSON != null) {
@@ -30,4 +28,6 @@ class ActivityRepository {
   Activity extractActivity(Map<String, Dynamic> activityJSON) {
     return new Activity(activityJSON['id'], activityJSON['name']);
   }
+
+  static final PROJECTS_KEY = 'projects';
 }
