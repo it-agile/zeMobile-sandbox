@@ -1,7 +1,7 @@
 void activityRepositoryTests() {
   var storage = document.window.localStorage;
 
-  group('an activity repository', () {
+  group('An activity repository', () {
     var activityRepository = new ActivityRepository();
 
     setUp(() {

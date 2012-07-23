@@ -17,19 +17,19 @@ class TimeEntryProvider {
 
   Month _processFetchedMonth(String response) {
     repository.importMonthFromJSON(response);
-    Month month = repository.loadMonth(fetchedYear, fetchedMonth);
+    var month = repository.loadMonth(fetchedYear, fetchedMonth);
     return month;
   }
 
   Future<String> save(TimeEntry timeEntry) {
-    Map<String, Dynamic> parameters = 
+    var parameters =
       {'taetigkeit': timeEntry.activityId,
        'tag' : timeEntry.date.toGermanString(),
        'start': timeEntry.start.toString(),
        'ende': timeEntry.end.toString(),
        'kommentar': timeEntry.comment};
-    String url = '/api/zeiten/${timeEntry.date.year}/${timeEntry.date.month}/${WebServiceRequester.USER_MARKER}/';
-    String method = 'POST';
+    var url = '/api/zeiten/${timeEntry.date.year}/${timeEntry.date.month}/${WebServiceRequester.USER_MARKER}/';
+    var method = 'POST';
     if (timeEntry.id != null) {
       url = '$url${timeEntry.id}/';
       method = 'PUT';

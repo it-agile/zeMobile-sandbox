@@ -31,7 +31,7 @@ void monthTests() {
       expect(month.timeEntriesFor(new ZeDate(1,2,2012)), contains(timeEntry1)));
   });
 
-  group('a month when asked for the time entries on a specified date', () {
+  group('A month when asked for the time entries on a specified date', () {
     final month = new Month(2012, 2, 10.5, 12, 108, 40, [timeEntry1, timeEntry2]);
     test('should return a list containing all time entries  on that date', () =>
       expect(month.timeEntriesFor(new ZeDate(1,2,2012)), contains(timeEntry1)));

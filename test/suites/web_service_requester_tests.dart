@@ -1,5 +1,5 @@
 void webServiceRequesterTests() {
-  group('web service requester', () {
+  group('A web service requester', () {
     var user = new User('u', 'p');
     var requester = new WebServiceRequester(null);
     test('should leave urls without a user marker alone', () => expect(requester.equipWithUser('/some/url', user), equals('/some/url')));

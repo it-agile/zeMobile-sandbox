@@ -1,7 +1,7 @@
 void userRepositoryTests() {
   var storage = document.window.localStorage;
 
-  group('a user repository', () {
+  group('A user repository', () {
     var userRepository = new UserRepository();
     setUp(() {
       storage.clear();

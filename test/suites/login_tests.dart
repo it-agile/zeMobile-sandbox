@@ -3,7 +3,7 @@ class LoginViewMock extends Mock implements LoginView {}
 class UserRepositoryMock extends Mock implements UserRepository {}
 
 void loginTests() {
-  group('login model', () {
+  group('A login model', () {
     var user = new User('u', 'p');
     var userRepository = new UserRepositoryMock();
     var model = new LoginModel(userRepository);
@@ -29,7 +29,7 @@ void loginTests() {
     });
   });
   
-  group('login', () {
+  group('A login', () {
     var modelMock = new LoginModelMock();
     var viewMock = new LoginViewMock();
     var login = new Login(modelMock, viewMock);

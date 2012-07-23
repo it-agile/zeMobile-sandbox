@@ -1,5 +1,5 @@
 void timeTests() {
-  group('a ze time based on a string with the format hh:mm', () {
+  group('A ze time based on a string with the format hh:mm', () {
     var time = new ZeTime.fromString('09:34');
     
     test('should extract the hour from the string', () => expect(time.hour, equals(9)));
@@ -7,19 +7,19 @@ void timeTests() {
     test('should equal the same time created from 3 ints', () => expect(time, equals(new ZeTime(9, 34))));
   });
   
-  group('a ze time based on a string with the format hhmm', () {
+  group('A ze time based on a string with the format hhmm', () {
     var time = new ZeTime.fromString('0934');
     
     test('should equal the same time created from 3 ints', () => expect(time, equals(new ZeTime(9, 34))));
   });
   
-  group('a ze time based on a string with the format hmm', () {
+  group('A ze time based on a string with the format hmm', () {
     var time = new ZeTime.fromString('934');
     
     test('should equal the same time created from 3 ints', () => expect(time, equals(new ZeTime(9, 34))));
   });
 
-  group('a ze time based on an unparsable string', () {
+  group('A ze time based on an unparsable string', () {
     var time = new ZeTime.fromString('error');
 
     test('should be null', () => expect(time, isNull));

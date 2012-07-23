@@ -1,5 +1,5 @@
 void activityProviderTests() {
-  group('activity provider', () {
+  group('An activity provider', () {
     var errorDisplay = new ErrorDisplayMock();
     var webServiceRequester = new WebServiceRequesterMock();
     var activityRespository = new ActivityRepositoryMock();
@@ -39,7 +39,7 @@ void activityProviderTests() {
 
   });
   
-  group('activity provider with fetched projects', () {
+  group('An activity provider with fetched projects', () {
     var p1a1 = new Activity(1, 'P1T1');
     var p1a2 = new Activity(2, 'P1T2');
     var p1 = new Project('P1', [p1a1, p1a2]);

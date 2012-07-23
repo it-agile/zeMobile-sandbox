@@ -1,5 +1,5 @@
 void dayDisplayTests() {
-  group('a day display model', () {
+  group('A day display model', () {
     var day = const ZeDate(11, 10, 2011);
     var model = new DayDisplayModel(day);
 

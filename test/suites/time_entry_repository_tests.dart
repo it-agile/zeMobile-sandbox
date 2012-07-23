@@ -1,7 +1,7 @@
 void timeEntryRepositoryTests() {
   var storage = document.window.localStorage;
 
-  group('a time entry repository', () {
+  group('A time entry repository', () {
     var timeEntryRespository = new TimeEntryRepository();
 
     setUp(() => storage.clear());
