@@ -6,34 +6,46 @@ class MonthDisplayFactory {
   
   MonthDisplay createMonthDisplay(Month month) {
     var view = new MonthDisplayView(expander);
-    return new MonthDisplay(month, view, dayDisplayFactory);
+    var model = new MonthDisplayModel(month);
+    return new MonthDisplay(model, view, dayDisplayFactory);
   }
 }
 
 class MonthDisplay {
   final MonthDisplayView view;
-  final Month month;
+  final MonthDisplayModel model;
   final DayDisplayFactory dayDisplayFactory;
   
-  MonthDisplay(this.month, this.view, this.dayDisplayFactory);
+  MonthDisplay(this.model, this.view, this.dayDisplayFactory);
   
   Element createUI() {
     view.createUI();
-    view.setMonth(month.month, month.year);
+    view.setMonth(model.month.month, model.month.year);
     
-    var currentDay = new ZeDate(1, month.month, month.year);
+    var currentDay = model.firstDayInMonth;
     
-    while (currentDay.month == month.month) {
+    while (currentDay != null) {
       DayDisplay dayDisplay = dayDisplayFactory.createDayDisplay(currentDay);
       view.daysElement.nodes.add(dayDisplay.createUI());
-      Collection<TimeEntry> timeEntries = month.timeEntriesFor(currentDay);
+      Collection<TimeEntry> timeEntries = model.month.timeEntriesFor(currentDay);
       for(TimeEntry timeEntry in timeEntries) {
         dayDisplay.addTimeEntry(timeEntry);
       }
-      currentDay = currentDay.nextDay();
+      currentDay = model.nextDayInMonth(currentDay);
     }
     
     return view.containerElement;
+  }
+}
+
+class MonthDisplayModel {
+  final Month month;
+
+  MonthDisplayModel(this.month);
+  ZeDate get firstDayInMonth() => new ZeDate(1, month.month, month.year);
+  ZeDate nextDayInMonth(ZeDate currentDay) {
+    ZeDate nextDay = currentDay.nextDay();
+    return nextDay.month == month.month ? nextDay : null;
   }
 }
 

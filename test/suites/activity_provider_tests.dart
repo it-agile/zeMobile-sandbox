@@ -6,13 +6,8 @@ void activityProviderTests() {
     var activityProvider = new ActivityProvider(errorDisplay, activityRespository, webServiceRequester);
     var fetchedProjectsFuture = null;
 
-    resetMocks() {
-      webServiceRequester.log.logs.clear();
-      activityRespository.log.logs.clear();
-    }
-
     setUp(() {
-      resetMocks();
+      clearMocks([errorDisplay, webServiceRequester, activityRespository]);
       webServiceRequester.when(callsTo('sendGet')).thenReturn(new Future.immediate('testProjects'));
 
       fetchedProjectsFuture = activityProvider.fetchProjects();
@@ -27,7 +22,7 @@ void activityProviderTests() {
 
     group('after projects have been cached', () {
       setUp(() {
-        resetMocks();
+        clearMocks([errorDisplay, webServiceRequester, activityRespository]);
         activityProvider.fetchedProjects = [new Project(null, null)];
         fetchedProjectsFuture = activityProvider.fetchProjects();
       });

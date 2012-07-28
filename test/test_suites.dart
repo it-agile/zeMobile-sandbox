@@ -23,14 +23,7 @@
 
 #source('suites/login_tests.dart');
 #source('suites/day_display_tests.dart');
-
-class Bla {
-  bla(void blub(int kak)) {
-    blub(42);
-  }
-}
-
-class BlaMock extends Mock implements Bla {}
+#source('suites/month_display_tests.dart');
 
 void testSuites() {
   dateTests();
@@ -48,5 +41,6 @@ void testSuites() {
   timeEntryProviderTests();
 
   loginTests();
+  monthDisplayTests();
   dayDisplayTests();
 }

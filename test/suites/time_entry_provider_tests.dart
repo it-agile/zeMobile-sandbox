@@ -5,7 +5,10 @@ void timeEntryProviderTests() {
   var timeEntryProvider = new TimeEntryProvider(errorDisplay, timeEntryRepository, webServiceRequester);
   group('A time entry provider fetching a month', () {
 
-    setUp(() => webServiceRequester.when(callsTo('sendGet')).thenReturn(new Future.immediate('resultJSON')));
+    setUp(() {
+      clearMocks([errorDisplay, webServiceRequester, timeEntryRepository]);
+      webServiceRequester.when(callsTo('sendGet')).thenReturn(new Future.immediate('resultJSON'));
+    });
 
     test('should import the JSON into the repository', () {
       timeEntryProvider.fetchTimeEntries(4, 2012);
@@ -29,6 +32,7 @@ void timeEntryProviderTests() {
        'ende': '12:00',
        'kommentar': 'test'};
     setUp(() {
+      clearMocks([errorDisplay, webServiceRequester, timeEntryRepository]);
       timeEntry = new TimeEntry(1, 3, new ZeDate(2,10,2012), new ZeTime(9,0), new ZeTime(12,0), 'test');
       webServiceRequester.when(callsTo('sendRequest')).thenReturn(new Future.immediate('test'));
     });

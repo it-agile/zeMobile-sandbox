@@ -15,7 +15,9 @@ void dayDisplayTests() {
     var timeEntryEditorFactory = new TimeEntryEditorFactoryMock();
     var dayDisplay = new DayDisplay(model, view, timeEntryEditorFactory);
 
-    test('should create a time entry editor for a new entry when the add entry button is touched', () {
+    setUp(() => clearMocks([timeEntryEditorFactory]));
+
+    test('should create a time entry editor for a new entry when the "add entry button" is touched', () {
       var timeEntry = new TimeEntry();
       model.when(callsTo('createNewEntry')).thenReturn(timeEntry);
       var timeEntryEditor = new TimeEntryEditorMock();

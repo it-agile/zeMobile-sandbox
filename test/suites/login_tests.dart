@@ -7,9 +7,7 @@ void loginTests() {
     var user = new User('u', 'p');
     var userRepository = new UserRepositoryMock();
     var model = new LoginModel(userRepository);
-    setUp(() {
-      userRepository.log.logs.clear();
-    });
+    setUp(() => clearMocks([userRepository]));
     
     test('should initially have no logged in user', () => expect(model.isUserLoggedIn(), isFalse));
     test('should return null if asked for the user before a user is logged in', () => expect(model.user, isNull));
@@ -37,8 +35,7 @@ void loginTests() {
 
     resetMocks() {
       document.window.localStorage.clear();
-      modelMock.log.logs.clear();
-      viewMock.log.logs.clear();
+      clearMocks([modelMock, viewMock]);
     }
 
     group('with no logged in user', () {
