@@ -11,6 +11,8 @@
 #source('component/month_display.dart');
 #source('component/day_display.dart');
 #source('component/time_entry_editor.dart');
+#source('component/time_entry_editor_model.dart');
+#source('component/time_entry_editor_view.dart');
 #source('component/settings.dart');
 
 #source('model/user.dart');

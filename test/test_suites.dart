@@ -24,6 +24,7 @@
 #source('suites/login_tests.dart');
 #source('suites/day_display_tests.dart');
 #source('suites/month_display_tests.dart');
+#source('suites/time_entry_editor_tests.dart');
 
 void testSuites() {
   dateTests();
@@ -43,4 +44,5 @@ void testSuites() {
   loginTests();
   monthDisplayTests();
   dayDisplayTests();
+  timeEntryEditorTests();
 }
