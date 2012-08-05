@@ -39,9 +39,6 @@ void monthDisplayTests() {
       monthDisplay.createUI();
     });
 
-    test('should set the month on the view while creating the UI', () {
-      view.getLogs(callsTo('setMonth', 7, 2012)).verify(happenedOnce);
-    });
     test('should create day displays for all days of the month', () {
       expect(daysElementNodes.length, equals(1));
       expect(daysElementNodes, contains(dayDisplayUI));

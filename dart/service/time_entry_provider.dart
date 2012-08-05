@@ -2,14 +2,19 @@ class TimeEntryProvider {
   final ErrorDisplay errorDisplay;
   final WebServiceRequester webServiceRequester;
   final TimeEntryRepository repository;
-  int fetchedMonth;
-  int fetchedYear;
-  
+  Month cachedMonth = null;
+
   TimeEntryProvider(this.errorDisplay, this.repository, this.webServiceRequester);
   
   Future<Month> fetchTimeEntries(int month, int year) {
-    fetchedMonth = month;
-    fetchedYear = year;
+    if (repository.hasMonth(month, year)) {
+      return new Future.immediate(cachedMonth != null ? cachedMonth : repository.loadMonth());
+    } else {
+      return refetchTimeEntries(month, year);
+    }
+  }
+
+  Future<Month> refetchTimeEntries(int month, int year) {
     var requestFuture = webServiceRequester.sendGet('/api/monat/$year/$month/${WebServiceRequester.USER_MARKER}/');
     requestFuture.handleException(errorDisplay.showWebServiceError);
     return requestFuture.transform(_processFetchedMonth);
@@ -17,7 +22,8 @@ class TimeEntryProvider {
 
   Month _processFetchedMonth(String response) {
     repository.importMonthFromJSON(response);
-    var month = repository.loadMonth(fetchedYear, fetchedMonth);
+    var month = repository.loadMonth();
+    cachedMonth = month;
     return month;
   }
 

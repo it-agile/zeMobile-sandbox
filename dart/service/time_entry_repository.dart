@@ -1,15 +1,20 @@
 class TimeEntryRepository {
-  Month loadMonth(int year, int month) {
-    var monthJSONString = document.window.localStorage['$MONTH_KEY_PREFIX$year$month'];
+  Month loadMonth() {
+    var monthJSONString = document.window.localStorage[MONTH_KEY];
     var monthJSON = monthJSONString != null ? JSON.parse(monthJSONString) : null;
     return extractMonth(monthJSON);
+  }
+
+  bool hasMonth(int month, int year) {
+    return window.localStorage[MONTH_DESC_KEY] == '$year$month';
   }
 
   void importMonthFromJSON(String monthJSON) {
     var monthMap = JSON.parse(monthJSON);
     var year = monthMap['jahr'];
     var month = monthMap['monat'];
-    document.window.localStorage['$MONTH_KEY_PREFIX$year$month'] = monthJSON;
+    document.window.localStorage[MONTH_KEY] = monthJSON;
+    document.window.localStorage[MONTH_DESC_KEY] = '$year$month';
   }
 
   Month extractMonth(Map<String, Dynamic> monthJSON) {
@@ -45,7 +50,9 @@ class TimeEntryRepository {
   num convertToDoubleFromGermanFormat(String doubleString) => Math.parseDouble(doubleString.replaceAll(',', '.'));
 
 
-  static final MONTH_KEY_PREFIX = 'month';
+  static final MONTH_KEY = 'month';
+  static final MONTH_DESC_KEY = 'monthDesc';
+
   static final MONTH_YEAR_KEY = 'jahr';
   static final MONTH_MONTH_KEY = 'monat';
 

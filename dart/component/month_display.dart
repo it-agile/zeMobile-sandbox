@@ -20,8 +20,7 @@ class MonthDisplay {
   
   Element createUI() {
     view.createUI();
-    view.setMonth(model.month.month, model.month.year);
-    
+
     var currentDay = model.firstDayInMonth;
     
     while (currentDay != null) {
@@ -63,34 +62,8 @@ class MonthDisplayView {
     containerElement = new DivElement();
     containerElement.classes.addAll([Classes.MONTH, Classes.CONTAINER]);
 
-    var header = new DivElement();
-    header.classes.addAll([Classes.HEADER, Classes.MONTH_HEADER]);
-    containerElement.nodes.add(header);
-    
-    monthNameElement = new SpanElement();
-    monthNameElement.classes.add(Classes.MONTH_NAME);
-    header.nodes.add(monthNameElement);
-    yearElement = new SpanElement();
-    yearElement.classes.add(Classes.YEAR);
-    header.nodes.add(yearElement);
-
-    var floatRight = new SpanElement();
-    floatRight.classes.add(Classes.FLOAT_RIGHT);
-    header.nodes.add(floatRight);
-    Element expanderElement = new SpanElement();
-    expanderElement.classes.add(Classes.EXPANDER);
-    floatRight.nodes.add(expanderElement);
-
     daysElement = new DivElement();
     daysElement.classes.addAll([Classes.DAYS, Classes.CONTENT]);
     containerElement.nodes.add(daysElement);
-
-    expander.connect(containerElement);
-    expander.expand(containerElement);
-  }
-  
-  void setMonth(int month, int year) {
-    monthNameElement.text = MONTH_NAMES[month];
-    yearElement.text = '$year';
   }
 }

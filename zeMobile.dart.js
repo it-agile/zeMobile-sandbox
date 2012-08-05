@@ -1445,6 +1445,11 @@ $$.Object = {"":
       ? this.noSuchMethod$2('scrollIntoView', [])
       : $.Object.prototype.noSuchMethod$2.call(this, 'scrollIntoView', [])
 },
+ refetchTimeEntries$2: function (arg0, arg1) {
+  return this.noSuchMethod$2
+      ? this.noSuchMethod$2('refetchTimeEntries', [arg0, arg1])
+      : $.Object.prototype.noSuchMethod$2.call(this, 'refetchTimeEntries', [arg0, arg1])
+},
  visitList$1: function (arg0) {
   return this.noSuchMethod$2
       ? this.noSuchMethod$2('visitList', [arg0])
@@ -1579,6 +1584,11 @@ $$.Object = {"":
   return this.noSuchMethod$2
       ? this.noSuchMethod$2('_ensureCapacity', [])
       : $.Object.prototype.noSuchMethod$2.call(this, '_ensureCapacity', [])
+},
+ hasMonth$2: function (arg0, arg1) {
+  return this.noSuchMethod$2
+      ? this.noSuchMethod$2('hasMonth', [arg0, arg1])
+      : $.Object.prototype.noSuchMethod$2.call(this, 'hasMonth', [arg0, arg1])
 },
  timeEntriesFor$1: function (arg0) {
   return this.noSuchMethod$2
@@ -2200,11 +2210,6 @@ $$.Object = {"":
       ? this.noSuchMethod$2('dispose', [])
       : $.Object.prototype.noSuchMethod$2.call(this, 'dispose', [])
 },
- setMonth$2: function (arg0, arg1) {
-  return this.noSuchMethod$2
-      ? this.noSuchMethod$2('setMonth', [arg0, arg1])
-      : $.Object.prototype.noSuchMethod$2.call(this, 'setMonth', [arg0, arg1])
-},
  sendRequest$2: function (arg0, arg1) {
   return this.noSuchMethod$2
       ? this.noSuchMethod$2('sendRequest', [arg0, arg1])
@@ -2215,10 +2220,10 @@ $$.Object = {"":
       ? this.noSuchMethod$2('sendRequest', [arg0, arg1, arg2])
       : $.Object.prototype.noSuchMethod$2.call(this, 'sendRequest', [arg0, arg1, arg2])
 },
- loadMonth$2: function (arg0, arg1) {
+ loadMonth$0: function () {
   return this.noSuchMethod$2
-      ? this.noSuchMethod$2('loadMonth', [arg0, arg1])
-      : $.Object.prototype.noSuchMethod$2.call(this, 'loadMonth', [arg0, arg1])
+      ? this.noSuchMethod$2('loadMonth', [])
+      : $.Object.prototype.noSuchMethod$2.call(this, 'loadMonth', [])
 },
  _lib2_serializeList$1: function (arg0) {
   return this.noSuchMethod$2
@@ -8231,7 +8236,6 @@ $$.MonthDisplay = {"":
   var t1 = this.view;
   t1.createUI$0();
   var t2 = this.model;
-  t1.setMonth$2(t2.get$month().get$month(), t2.get$month().get$year());
   var currentDay = t2.get$firstDayInMonth();
   for (var t3 = this.dayDisplayFactory; !(currentDay == null); ) {
     var dayDisplay = t3.createDayDisplay$1(currentDay);
@@ -8261,38 +8265,12 @@ $$.MonthDisplayModel = {"":
 $$.MonthDisplayView = {"":
  ["daysElement?", "yearElement", "monthNameElement", "containerElement?", "expander"],
  super: "Object",
- setMonth$2: function(month, year) {
-  if (month !== (month | 0)) throw $.iae(month);
-  if (month < 0 || month >= 12) throw $.ioore(month);
-  var t1 = $.CTC11[month];
-  this.monthNameElement.set$text(t1);
-  t1 = $.S(year);
-  this.yearElement.set$text(t1);
- },
  createUI$0: function() {
   this.containerElement = $._Elements_DivElement();
   $.addAll(this.containerElement.get$classes(), ['month', 'container']);
-  var header = $._Elements_DivElement();
-  $.addAll(header.get$classes(), ['header', 'monthHeader']);
-  $.add$1(this.containerElement.get$nodes(), header);
-  this.monthNameElement = $._Elements_SpanElement();
-  $.add$1(this.monthNameElement.get$classes(), 'monthName');
-  $.add$1(header.get$nodes(), this.monthNameElement);
-  this.yearElement = $._Elements_SpanElement();
-  $.add$1(this.yearElement.get$classes(), 'year');
-  $.add$1(header.get$nodes(), this.yearElement);
-  var floatRight = $._Elements_SpanElement();
-  $.add$1(floatRight.get$classes(), 'floatRight');
-  $.add$1(header.get$nodes(), floatRight);
-  var expanderElement = $._Elements_SpanElement();
-  $.add$1(expanderElement.get$classes(), 'expander');
-  $.add$1(floatRight.get$nodes(), expanderElement);
   this.daysElement = $._Elements_DivElement();
   $.addAll(this.daysElement.get$classes(), ['days', 'content']);
   $.add$1(this.containerElement.get$nodes(), this.daysElement);
-  var t1 = this.expander;
-  t1.connect$1(this.containerElement);
-  t1.expand$1(this.containerElement);
  }
 };
 
@@ -8961,7 +8939,7 @@ $$.ActivityProvider = {"":
 };
 
 $$.TimeEntryProvider = {"":
- ["fetchedYear", "fetchedMonth", "repository", "webServiceRequester", "errorDisplay"],
+ ["repository", "webServiceRequester", "errorDisplay"],
  super: "Object",
  delete$1: function(timeEntry) {
   var requestFuture = this.webServiceRequester.sendRequest$2('DELETE', '/api/zeiten/' + $.S(timeEntry.get$date().get$year()) + '/' + $.S(timeEntry.get$date().get$month()) + '/' + '@@USER@@' + '/' + $.S(timeEntry.get$id()) + '/');
@@ -8983,15 +8961,18 @@ $$.TimeEntryProvider = {"":
  _processFetchedMonth$1: function(response) {
   var t1 = this.repository;
   t1.importMonthFromJSON$1(response);
-  return t1.loadMonth$2(this.fetchedYear, this.fetchedMonth);
+  return t1.loadMonth$0();
  },
  get$_processFetchedMonth: function() { return new $.BoundClosure0(this, '_processFetchedMonth$1'); },
- fetchTimeEntries$2: function(month, year) {
-  this.fetchedMonth = month;
-  this.fetchedYear = year;
+ refetchTimeEntries$2: function(month, year) {
   var requestFuture = this.webServiceRequester.sendGet$1('/api/monat/' + $.S(year) + '/' + $.S(month) + '/' + '@@USER@@' + '/');
   requestFuture.handleException$1(this.errorDisplay.get$showWebServiceError());
   return requestFuture.transform$1(this.get$_processFetchedMonth());
+ },
+ fetchTimeEntries$2: function(month, year) {
+  var t1 = this.repository;
+  if (t1.hasMonth$2(month, year) === true) return $.FutureImpl_FutureImpl$immediate(t1.loadMonth$0());
+  return this.refetchTimeEntries$2(month, year);
  }
 };
 
@@ -9072,10 +9053,14 @@ $$.TimeEntryRepository = {"":
   var monthMap = $.JSON_parse(monthJSON);
   var year = $.index(monthMap, 'jahr');
   var month = $.index(monthMap, 'monat');
-  $.indexSet($.document().get$window().get$localStorage(), 'month' + $.S(year) + $.S(month), monthJSON);
+  $.indexSet($.document().get$window().get$localStorage(), 'month', monthJSON);
+  $.indexSet($.document().get$window().get$localStorage(), 'monthDesc', $.S(year) + $.S(month));
  },
- loadMonth$2: function(year, month) {
-  var monthJSONString = $.index($.document().get$window().get$localStorage(), 'month' + $.S(year) + $.S(month));
+ hasMonth$2: function(month, year) {
+  return $.eq($.index($.window().get$localStorage(), 'monthDesc'), $.S(year) + $.S(month));
+ },
+ loadMonth$0: function() {
+  var monthJSONString = $.index($.document().get$window().get$localStorage(), 'month');
   return this.extractMonth$1(!(monthJSONString == null) ? $.JSON_parse(monthJSONString) : null);
  }
 };
@@ -12449,7 +12434,7 @@ $._EventsImpl$ = function(_ptr) {
 };
 
 $.TimeEntryProvider$ = function(errorDisplay, repository, webServiceRequester) {
-  return new $.TimeEntryProvider(null, null, repository, webServiceRequester, errorDisplay);
+  return new $.TimeEntryProvider(repository, webServiceRequester, errorDisplay);
 };
 
 $.HashSetImplementation$ = function() {
@@ -12583,12 +12568,12 @@ $.window = function() {
   return window;;
 };
 
-$.Primitives_getMinutes = function(receiver) {
-  return receiver.get$isUtc() === true ? ($.Primitives_lazyAsJsDate(receiver).getUTCMinutes()) : ($.Primitives_lazyAsJsDate(receiver).getMinutes());
-};
-
 $.ErrorDisplay$ = function() {
   return new $.ErrorDisplay();
+};
+
+$.Primitives_getMinutes = function(receiver) {
+  return receiver.get$isUtc() === true ? ($.Primitives_lazyAsJsDate(receiver).getUTCMinutes()) : ($.Primitives_lazyAsJsDate(receiver).getMinutes());
 };
 
 $.abs = function(receiver) {
@@ -13565,7 +13550,7 @@ $.dynamicFunction = function(name$) {
   var f = (Object.prototype[name$]);
   if (!(f == null) && (!!f.methods)) return f.methods;
   var methods = ({});
-  var dartMethod = (Object.getPrototypeOf($.CTC14)[name$]);
+  var dartMethod = (Object.getPrototypeOf($.CTC13)[name$]);
   !(dartMethod == null) && (methods['Object'] = dartMethod);
   var bind = (function() {return $.dynamicBind.$call$4(this, name$, methods, Array.prototype.slice.call(arguments));});
   bind.methods = methods;
@@ -13630,20 +13615,20 @@ $.DateImplementation$fromMillisecondsSinceEpoch = function(millisecondsSinceEpoc
   return t1;
 };
 
-$.checkInt = function(value) {
-  if (!((typeof value === 'number') && (value === (value | 0)))) {
-    $.checkNull(value);
-    throw $.captureStackTrace($.IllegalArgumentException$(value));
-  }
-  return value;
-};
-
 $.Primitives_stringFromCharCodes = function(charCodes) {
   for (var t1 = $.iterator(charCodes); t1.hasNext$0() === true; ) {
     var t2 = t1.next$0();
     if (!((typeof t2 === 'number') && (t2 === (t2 | 0)))) throw $.captureStackTrace($.IllegalArgumentException$(t2));
   }
   return String.fromCharCode.apply(null, charCodes);
+};
+
+$.checkInt = function(value) {
+  if (!((typeof value === 'number') && (value === (value | 0)))) {
+    $.checkNull(value);
+    throw $.captureStackTrace($.IllegalArgumentException$(value));
+  }
+  return value;
 };
 
 $.Primitives_objectToString = function(object) {
@@ -13852,7 +13837,7 @@ $._document = function() {
 $.getFunctionForTypeNameOf = function() {
   if (!((typeof(navigator)) === 'object')) return $.typeNameInChrome;
   var userAgent = (navigator.userAgent);
-  if ($.contains$1(userAgent, $.CTC13) === true) return $.typeNameInChrome;
+  if ($.contains$1(userAgent, $.CTC12) === true) return $.typeNameInChrome;
   if ($.contains$1(userAgent, 'Firefox') === true) return $.typeNameInFirefox;
   if ($.contains$1(userAgent, 'MSIE') === true) return $.typeNameInIE;
   if ($.contains$1(userAgent, 'Opera') === true) return $.typeNameInOpera;
@@ -14141,7 +14126,7 @@ $._FileWriterEventsImpl$ = function(_ptr) {
 };
 
 $.ZeDate_ZeDate$fromString = function(dateString) {
-  for (var t1 = $.iterator($.CTC12.allMatches$1(dateString)); t1.hasNext$0() === true; ) {
+  for (var t1 = $.iterator($.CTC11.allMatches$1(dateString)); t1.hasNext$0() === true; ) {
     var t2 = t1.next$0();
     return $.ZeDate$($.Math_parseInt(t2.group$1(3)), $.Math_parseInt(t2.group$1(2)), $.Math_parseInt(t2.group$1(1)));
   }
@@ -14787,14 +14772,13 @@ $.CTC = Isolate.makeConstantList([]);
 $.CTC3 = new Isolate.$isolateProperties.ConstantMap(Isolate.$isolateProperties.CTC, {}, 0);
 $.CTC10 = new Isolate.$isolateProperties.DurationImplementation(86400000);
 $.CTC9 = new Isolate.$isolateProperties.JSSyntaxRegExp(false, false, '^(\\d*):(\\d*)(:(\\d*))?$');
-$.CTC11 = Isolate.makeConstantList(['Nullember', 'Januar', 'Februar', 'M\xe4rz', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'Dezember']);
 $.CTC2 = new Isolate.$isolateProperties._DeletedKeySentinel();
-$.CTC13 = new Isolate.$isolateProperties.JSSyntaxRegExp(false, false, 'Chrome|DumpRenderTree');
-$.CTC14 = new Isolate.$isolateProperties.Object();
+$.CTC12 = new Isolate.$isolateProperties.JSSyntaxRegExp(false, false, 'Chrome|DumpRenderTree');
+$.CTC13 = new Isolate.$isolateProperties.Object();
 $.CTC8 = new Isolate.$isolateProperties.JSSyntaxRegExp(false, false, '^(\\d{1,2})(\\d{2})$');
 $.CTC4 = new Isolate.$isolateProperties.IllegalAccessException();
 $.CTC5 = new Isolate.$isolateProperties.JSSyntaxRegExp(false, false, '^#[_a-zA-Z]\\w*$');
-$.CTC12 = new Isolate.$isolateProperties.JSSyntaxRegExp(false, false, '(\\d*)-(\\d*)-(\\d*)');
+$.CTC11 = new Isolate.$isolateProperties.JSSyntaxRegExp(false, false, '(\\d*)-(\\d*)-(\\d*)');
 $.CTC0 = new Isolate.$isolateProperties.NullPointerException(Isolate.$isolateProperties.CTC, null);
 $.CTC6 = new Isolate.$isolateProperties.JSSyntaxRegExp(false, false, '[-[\\]{}()*+?.,\\\\^$|#\\s]');
 $.CTC1 = new Isolate.$isolateProperties.NoMoreElementsException();

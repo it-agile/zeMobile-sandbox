@@ -3,10 +3,11 @@ void timeEntryProviderTests() {
   var webServiceRequester = new WebServiceRequesterMock();
   var timeEntryRepository = new TimeEntryRepositoryMock();
   var timeEntryProvider = new TimeEntryProvider(errorDisplay, timeEntryRepository, webServiceRequester);
-  group('A time entry provider fetching a month', () {
+  group('A time entry provider fetching a new month', () {
 
     setUp(() {
       clearMocks([errorDisplay, webServiceRequester, timeEntryRepository]);
+      timeEntryRepository.when(callsTo('hasMonth', 4, 2012)).thenReturn(false);
       webServiceRequester.when(callsTo('sendGet')).thenReturn(new Future.immediate('resultJSON'));
     });
 
@@ -17,10 +18,33 @@ void timeEntryProviderTests() {
 
     test('should return the month loaded from the repository', () {
       var month = new Month();
-      timeEntryRepository.when(callsTo('loadMonth', 2012, 4)).thenReturn(month);
+      timeEntryRepository.when(callsTo('loadMonth')).thenReturn(month);
       var timeEntryFuture = timeEntryProvider.fetchTimeEntries(4, 2012);
       expect(timeEntryFuture.value, same(month));
     });
+  });
+
+  group('A time entry provider fetching an existing month', () {
+    setUp(() {
+      clearMocks([errorDisplay, webServiceRequester, timeEntryRepository]);
+      timeEntryRepository.when(callsTo('hasMonth', 4, 2012)).thenReturn(true);
+    });
+
+    test('should return the month loaded from the repository if it is not already cached', () {
+      var month = new Month();
+      timeEntryProvider.cachedMonth = null;
+      timeEntryRepository.when(callsTo('loadMonth')).thenReturn(month);
+      var timeEntryFuture = timeEntryProvider.fetchTimeEntries(4, 2012);
+      expect(timeEntryFuture.value, same(month));
+    });
+
+    test('should return the cached month if it exists', () {
+      var month = new Month();
+      timeEntryProvider.cachedMonth = month;
+      var timeEntryFuture = timeEntryProvider.fetchTimeEntries(4, 2012);
+      expect(timeEntryFuture.value, same(month));
+    });
+
   });
 
   group('A time entry provider', () {
