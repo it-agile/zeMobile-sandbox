@@ -1,6 +1,10 @@
 class TimeEntryRepository {
+  final Storage storage;
+
+  TimeEntryRepository(): storage = document.window.localStorage;
+
   Month loadMonth() {
-    var monthJSONString = document.window.localStorage[MONTH_KEY];
+    var monthJSONString = storage[MONTH_KEY];
     var monthJSON = monthJSONString != null ? JSON.parse(monthJSONString) : null;
     return extractMonth(monthJSON);
   }
@@ -13,8 +17,49 @@ class TimeEntryRepository {
     var monthMap = JSON.parse(monthJSON);
     var year = monthMap['jahr'];
     var month = monthMap['monat'];
-    document.window.localStorage[MONTH_KEY] = monthJSON;
-    document.window.localStorage[MONTH_DESC_KEY] = '$year$month';
+    storage[MONTH_KEY] = monthJSON;
+    storage[MONTH_DESC_KEY] = '$year$month';
+  }
+
+  void rememberTimeEntryInEditing(TimeEntry entry) {
+    storage[findNextFreeSlot(entry.date)] = serializeTimeEntry(entry);
+  }
+
+  List<TimeEntry> rememberedTimeEntries(ZeDate date) {
+    var slot = 1;
+    var results = [];
+    while(storage['$date-$slot'] != null) {
+      results.add(deserializeTimeEntry(storage['$date-$slot']));
+      slot++;
+    }
+    return results;
+  }
+
+  String findNextFreeSlot(ZeDate date) {
+    var slot = 1;
+    while (storage['$date-$slot'] != null) slot++;
+    return '$date-$slot';
+  }
+
+  String serializeTimeEntry(TimeEntry entry) {
+    var jsonMap = {};
+
+    var activityMap = {};
+    activityMap[TIME_ENTRY_ID_KEY] = entry.activityId;
+
+    jsonMap[TIME_ENTRY_ACTIVITY_KEY] = activityMap;
+    jsonMap[TIME_ENTRY_ID_KEY] = entry.id;
+    jsonMap[TIME_ENTRY_COMMENT_KEY] = entry.comment;
+    jsonMap[TIME_ENTRY_START_KEY] = entry.start != null ? entry.start.toString() : null;
+    jsonMap[TIME_ENTRY_END_KEY] = entry.end != null ? entry.end.toString() : null;
+    jsonMap[TIME_ENTRY_DAY_KEY] = entry.date.toString();
+
+    return JSON.stringify(jsonMap);
+  }
+
+  TimeEntry deserializeTimeEntry(String timeEntryString) {
+    var jsonMap = JSON.parse(timeEntryString);
+    return extractTimeEntry(jsonMap);
   }
 
   Month extractMonth(Map<String, Dynamic> monthJSON) {

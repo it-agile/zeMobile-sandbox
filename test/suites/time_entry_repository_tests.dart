@@ -58,4 +58,26 @@ void timeEntryRepositoryTests() {
     });
   });
 
+  group('A time entry repository remembering changed time entries', () {
+    var timeEntryRespository = new TimeEntryRepository();
+    var timeEntry = new TimeEntry(42, 3, new ZeDate(2,2,2012),
+      new ZeTime(9,30), new ZeTime(12,40), 'comment');
+
+    setUp(() => storage.clear());
+
+    test('should serialize a time entry into a string and deserialize it from the string', () {
+      var serializedTimeEntry = timeEntryRespository.serializeTimeEntry(timeEntry);
+      var deserializedTimeEntry = timeEntryRespository.deserializeTimeEntry(serializedTimeEntry);
+      expect(deserializedTimeEntry, equals(timeEntry));
+    });
+    test('should remember a changed time entry in a free slot for the day of the time entry', () {
+      storage['2012-02-02-1'] = 'some other entry';
+      timeEntryRespository.rememberTimeEntryInEditing(timeEntry);
+      expect(storage['2012-02-02-2'], isNotNull);
+    });
+    test('should return the previously remembered time entry', () {
+      timeEntryRespository.rememberTimeEntryInEditing(timeEntry);
+      expect(timeEntryRespository.rememberedTimeEntries(timeEntry.date), contains(timeEntry));
+    });
+  });
 }
