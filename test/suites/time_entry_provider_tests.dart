@@ -32,19 +32,10 @@ void timeEntryProviderTests() {
 
     test('should return the month loaded from the repository if it is not already cached', () {
       var month = new Month();
-      timeEntryProvider.cachedMonth = null;
       timeEntryRepository.when(callsTo('loadMonth')).thenReturn(month);
       var timeEntryFuture = timeEntryProvider.fetchTimeEntries(4, 2012);
       expect(timeEntryFuture.value, same(month));
     });
-
-    test('should return the cached month if it exists', () {
-      var month = new Month();
-      timeEntryProvider.cachedMonth = month;
-      var timeEntryFuture = timeEntryProvider.fetchTimeEntries(4, 2012);
-      expect(timeEntryFuture.value, same(month));
-    });
-
   });
 
   group('A time entry provider', () {
@@ -55,6 +46,7 @@ void timeEntryProviderTests() {
        'start': '09:00',
        'ende': '12:00',
        'kommentar': 'test'};
+
     setUp(() {
       clearMocks([errorDisplay, webServiceRequester, timeEntryRepository]);
       timeEntry = new TimeEntry(1, 3, new ZeDate(2,10,2012), new ZeTime(9,0), new ZeTime(12,0), 'test');
@@ -81,6 +73,27 @@ void timeEntryProviderTests() {
 
       var expectedUrl = '/api/zeiten/2012/10/${WebServiceRequester.USER_MARKER}/1/';
       webServiceRequester.getLogs(callsTo('sendRequest', 'DELETE', expectedUrl)).verify(happenedOnce);
+    });
+  });
+
+  group('A time entry provider', () {
+    var timeEntry = null;
+    setUp(() {
+      clearMocks([errorDisplay, webServiceRequester, timeEntryRepository]);
+      timeEntry = new TimeEntry(1, 3, new ZeDate(2,10,2012), new ZeTime(9,0), new ZeTime(12,0), 'test', true);
+    });
+
+    test('should pass a changed time entry to be remembered to the repository', () {
+      timeEntryProvider.rememberChangedTimeEntry(timeEntry);
+      timeEntryRepository.getLogs(callsTo('rememberChangedTimeEntry', timeEntry)).verify(happenedOnce);
+    });
+    test('should substitute fetched entries with changed entries where available', () {
+      timeEntryRepository.when(callsTo('hasMonth', 10, 2012)).thenReturn(true);
+      timeEntryRepository.when(callsTo('loadMonth')).thenReturn(new Month(timeEntries: [timeEntry]));
+      TimeEntry changedTimeEntry = new TimeEntry(1, 8, new ZeDate(2,10,2012), new ZeTime(9,0), new ZeTime(12,0), 'test', true);
+      timeEntryRepository.when(callsTo('changedTimeEntriesForMonth', 10, 2012)).thenReturn([changedTimeEntry]);
+      var month = timeEntryProvider.fetchTimeEntries(10,2012).value;
+      expect(month.timeEntries, equals([changedTimeEntry]));
     });
 
   });

@@ -2,13 +2,21 @@ class TimeEntryProvider {
   final ErrorDisplay errorDisplay;
   final WebServiceRequester webServiceRequester;
   final TimeEntryRepository repository;
-  Month cachedMonth = null;
 
   TimeEntryProvider(this.errorDisplay, this.repository, this.webServiceRequester);
   
   Future<Month> fetchTimeEntries(int month, int year) {
     if (repository.hasMonth(month, year)) {
-      return new Future.immediate(cachedMonth != null ? cachedMonth : repository.loadMonth());
+      var loadedMonth = repository.loadMonth();
+      var changedTimeEntries = repository.changedTimeEntriesForMonth(month, year);
+      var timeEntries = loadedMonth.timeEntries != null ? loadedMonth.timeEntries : [];
+      timeEntries.forEach((entry) {
+        var changedEntries = changedTimeEntries.filter((changedEntry) => changedEntry.id == entry.id);
+        if (!changedTimeEntries.isEmpty()) {
+          entry.assimilate(changedTimeEntries[0]);
+        }
+      });
+      return new Future.immediate(loadedMonth);
     } else {
       return refetchTimeEntries(month, year);
     }
@@ -23,8 +31,11 @@ class TimeEntryProvider {
   Month _processFetchedMonth(String response) {
     repository.importMonthFromJSON(response);
     var month = repository.loadMonth();
-    cachedMonth = month;
     return month;
+  }
+
+  void rememberChangedTimeEntry(TimeEntry entry) {
+    repository.rememberChangedTimeEntry(entry);
   }
 
   Future<String> save(TimeEntry timeEntry) {

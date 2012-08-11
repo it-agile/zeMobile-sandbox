@@ -60,10 +60,13 @@ void timeEntryRepositoryTests() {
 
   group('A time entry repository remembering changed time entries', () {
     var timeEntryRespository = new TimeEntryRepository();
-    var timeEntry = new TimeEntry(42, 3, new ZeDate(2,2,2012),
-      new ZeTime(9,30), new ZeTime(12,40), 'comment');
+    var timeEntry = null;
 
-    setUp(() => storage.clear());
+    setUp(() {
+      storage.clear();
+      timeEntry = new TimeEntry(42, 3, new ZeDate(2,2,2012),
+        new ZeTime(9,30), new ZeTime(12,40), 'comment', true);
+    });
 
     test('should serialize a time entry into a string and deserialize it from the string', () {
       var serializedTimeEntry = timeEntryRespository.serializeTimeEntry(timeEntry);
@@ -72,12 +75,31 @@ void timeEntryRepositoryTests() {
     });
     test('should remember a changed time entry in a free slot for the day of the time entry', () {
       storage['2012-02-02-1'] = 'some other entry';
-      timeEntryRespository.rememberTimeEntryInEditing(timeEntry);
+      timeEntryRespository.rememberChangedTimeEntry(timeEntry);
       expect(storage['2012-02-02-2'], isNotNull);
     });
-    test('should return the previously remembered time entry', () {
-      timeEntryRespository.rememberTimeEntryInEditing(timeEntry);
-      expect(timeEntryRespository.rememberedTimeEntries(timeEntry.date), contains(timeEntry));
+    test('should return the previously remembered time entry for the given day', () {
+      timeEntryRespository.rememberChangedTimeEntry(timeEntry);
+      expect(timeEntryRespository.changedTimeEntries(timeEntry.date), contains(timeEntry));
+    });
+    test('should return the previously remembered time entry for the given month', () {
+      timeEntryRespository.rememberChangedTimeEntry(timeEntry);
+      expect(timeEntryRespository.changedTimeEntriesForMonth(2, 2012), contains(timeEntry));
+    });
+    test('should set the id of the change slot on a remembered time entry', () {
+      timeEntryRespository.rememberChangedTimeEntry(timeEntry);
+      expect(timeEntryRespository.changedTimeEntries(timeEntry.date)[0].changeSlot, equals(1));
+    });
+    test('should remember a the time entry at the change slot of the time entry if one is defined', () {
+      timeEntry.changeSlot = 7;
+      timeEntryRespository.rememberChangedTimeEntry(timeEntry);
+      expect(storage['2012-02-02-7'], isNotNull);
+    });
+    test('should remove the serialized time entry from the storage upon when told to remove it', () {
+      storage['2012-02-02-7'] = 'some entry';
+      timeEntry.changeSlot = 7;
+      timeEntryRespository.removeChangedTimeEntry(timeEntry);
+      expect(storage['2012-02-02-7'], isNull);
     });
   });
 }

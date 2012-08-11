@@ -25,9 +25,33 @@ void dateTests() {
   });
   
   group('Calling nextDay() on a ze date', () {
-    test('should return 2012-02-29 for 2012-02-28', () => expect(new ZeDate.fromString('2012-02-28').nextDay().toString(), equals('2012-02-29')));
-    test('should return 2011-03-01 for 2011-02-28', () => expect(new ZeDate.fromString('2011-02-28').nextDay().toString(), equals('2011-03-01')));
-    test('should return 2011-03-02 for 2011-03-01', () => expect(new ZeDate.fromString('2011-03-01').nextDay().toString(), equals('2011-03-02')));
+    test('should return 2012-02-29 for 2012-02-28', () =>
+      expect(new ZeDate.fromString('2012-02-28').nextDay().toString(), equals('2012-02-29')));
+    test('should return 2011-03-01 for 2011-02-28', () =>
+      expect(new ZeDate.fromString('2011-02-28').nextDay().toString(), equals('2011-03-01')));
+    test('should return 2011-03-02 for 2011-03-01', () =>
+      expect(new ZeDate.fromString('2011-03-01').nextDay().toString(), equals('2011-03-02')));
+  });
+
+  group('A ze date', () {
+    var date = new ZeDate(14,2,2012);
+
+    test('should return the first day of its month', () => expect(date.firstOfMonth(), equals(new ZeDate(1,2,2012))));
+    test('should return the first day of the month before its month', () =>
+      expect(date.firstOfPreviousMonth(), equals(new ZeDate(1,1,2012))));
+    test('should return the next day', () =>
+      expect(date.nextDay(), equals(new ZeDate(15,2,2012))));
+    test('should return true for isWeekend() if the day is on a weekend', () =>
+      expect(new ZeDate(18,2,2012).isWeekend(), isTrue));
+    test('should return false for isWeekend() if the day is not on a weekend', () =>
+      expect(new ZeDate(15,2,2012).isWeekend(), isFalse));
+    test('should iterate over all days of the month of the day', () {
+      var iterResult = new StringBuffer();
+      date.forEachDayOfMonth((day) => iterResult.add(day.day));
+      expect(iterResult.toString(), equals('1234567891011121314151617181920212223242526272829'));
+    });
+
+
   });
   
 }

@@ -21,25 +21,41 @@ class TimeEntryRepository {
     storage[MONTH_DESC_KEY] = '$year$month';
   }
 
-  void rememberTimeEntryInEditing(TimeEntry entry) {
-    storage[findNextFreeSlot(entry.date)] = serializeTimeEntry(entry);
+  void rememberChangedTimeEntry(TimeEntry entry) {
+    var slot = entry.changeSlot != null ? createSlotKeyFromTimeEntry(entry) : findNextFreeSlot(entry.date);
+    storage[slot] = serializeTimeEntry(entry);
   }
 
-  List<TimeEntry> rememberedTimeEntries(ZeDate date) {
+  List<TimeEntry> changedTimeEntriesForMonth(int month, int year) {
+    var result = [];
+    new ZeDate(1, month, year).forEachDayOfMonth((day) => result.addAll(changedTimeEntries(day)));
+    return result;
+  }
+
+  List<TimeEntry> changedTimeEntries(ZeDate date) {
     var slot = 1;
     var results = [];
     while(storage['$date-$slot'] != null) {
-      results.add(deserializeTimeEntry(storage['$date-$slot']));
+      var timeEntry = deserializeTimeEntry(storage[createSlotKey(date, slot)]);
+      timeEntry.changeSlot = slot;
+      results.add(timeEntry);
       slot++;
     }
     return results;
   }
 
+  void removeChangedTimeEntry(TimeEntry entry) {
+    storage.remove(createSlotKeyFromTimeEntry(entry));
+  }
+
   String findNextFreeSlot(ZeDate date) {
     var slot = 1;
-    while (storage['$date-$slot'] != null) slot++;
+    while (storage[createSlotKey(date, slot)] != null) slot++;
     return '$date-$slot';
   }
+
+  String createSlotKeyFromTimeEntry(TimeEntry entry) => createSlotKey(entry.date, entry.changeSlot);
+  String createSlotKey(ZeDate date, int slot) => '$date-$slot';
 
   String serializeTimeEntry(TimeEntry entry) {
     var jsonMap = {};
@@ -53,6 +69,7 @@ class TimeEntryRepository {
     jsonMap[TIME_ENTRY_START_KEY] = entry.start != null ? entry.start.toString() : null;
     jsonMap[TIME_ENTRY_END_KEY] = entry.end != null ? entry.end.toString() : null;
     jsonMap[TIME_ENTRY_DAY_KEY] = entry.date.toString();
+    jsonMap[TIME_ENTRY_CURRENTLY_BEING_EDITED_KEY] = entry.currentlyBeingEdited;
 
     return JSON.stringify(jsonMap);
   }
@@ -88,6 +105,7 @@ class TimeEntryRepository {
     entry.start = new ZeTime.fromString(timeEntryJSON[TIME_ENTRY_START_KEY]);
     entry.end = new ZeTime.fromString(timeEntryJSON[TIME_ENTRY_END_KEY]);
     entry.comment = timeEntryJSON[TIME_ENTRY_COMMENT_KEY];
+    entry.currentlyBeingEdited = timeEntryJSON[TIME_ENTRY_CURRENTLY_BEING_EDITED_KEY];
 
     return entry;
   }
@@ -112,4 +130,5 @@ class TimeEntryRepository {
   static final TIME_ENTRY_END_KEY = 'ende';
   static final TIME_ENTRY_COMMENT_KEY = 'kommentar';
   static final TIME_ENTRY_ID_KEY = 'id';
+  static final TIME_ENTRY_CURRENTLY_BEING_EDITED_KEY = 'currentlyBeingEdited';
 }

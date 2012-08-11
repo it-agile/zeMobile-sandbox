@@ -47,9 +47,15 @@ class ZeDate {
     var weekday = date.weekday;
     return weekday == Date.SAT || weekday == Date.SUN;
   }
-  
-  
-  
+
+  void forEachDayOfMonth(void each(ZeDate day)) {
+    var date = firstOfMonth();
+    while(date.month == month) {
+      each(date);
+      date = date.nextDay();
+    }
+  }
+
   bool operator ==(ZeDate other) => !(other == null) && equals(other);
   bool equals(ZeDate other) => (day == other.day) && (month == other.month) && (year == other.year);
   

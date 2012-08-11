@@ -25,5 +25,12 @@ void timeEntryTests() {
       expect(timeEntry == new TimeEntry(1, 2, date1, time1, time1, comment1), isFalse));
     test('should not equal a time entry with a different comment', () =>
       expect(timeEntry == new TimeEntry(1, 2, date1, time1, time2, comment2), isFalse));
+    test('should assimilate all data from another time entry except the id', () {
+      var assimilator = new TimeEntry(3, 7, date2, time2, time1, comment2, true);
+      assimilator.assimilate(timeEntry);
+      expect(assimilator.id, equals(3));
+      assimilator.id = 1;
+      expect(assimilator, equals(timeEntry));
+    });
   });
 }
