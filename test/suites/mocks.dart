@@ -17,5 +17,5 @@ class MonthDisplayModelMock extends Mock implements MonthDisplayModel {}
 class MonthDisplayViewMock extends Mock implements MonthDisplayView {}
 class EventMock extends Mock implements Event {}
 
-void clearMocks(List<Mock> mocks) => mocks.forEach((mock) => mock.log.logs.clear());
+void clearMocks(List<Mock> mocks) => mocks.forEach((mock) => mock.reset());
 
