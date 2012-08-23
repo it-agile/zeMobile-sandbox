@@ -41,7 +41,7 @@ class MonthDisplayModel {
   final Month month;
 
   MonthDisplayModel(this.month);
-  ZeDate get firstDayInMonth() => new ZeDate(1, month.month, month.year);
+  ZeDate get firstDayInMonth => new ZeDate(1, month.month, month.year);
   ZeDate nextDayInMonth(ZeDate currentDay) {
     ZeDate nextDay = currentDay.nextDay();
     return nextDay.month == month.month ? nextDay : null;

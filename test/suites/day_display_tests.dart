@@ -6,7 +6,7 @@ void dayDisplayTests() {
     test('should have the day passed to the constructor', () => expect(model.day, same(day)));
     test('should have a container id based on the day', () => expect(model.dayContainerId, equals('day2011-10-11')));
     test('should create new time entries based on the day', () =>
-      expect(model.createNewEntry(), equals(new TimeEntry(null, null, day, null, null, null))));
+      expect(model.createNewEntry(), equals(new TimeEntry(date: day, currentlyBeingEdited: true))));
   });
 
   group('A day display', () {

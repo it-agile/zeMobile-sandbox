@@ -10,7 +10,7 @@ class TimeEntryRepository {
   }
 
   bool hasMonth(int month, int year) {
-    return window.localStorage[MONTH_DESC_KEY] == '$year$month';
+    return document.window.localStorage[MONTH_DESC_KEY] == '$year$month';
   }
 
   void importMonthFromJSON(String monthJSON) {

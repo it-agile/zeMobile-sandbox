@@ -42,8 +42,8 @@ class LoginView {
   InputElement nameInput;
   InputElement passwordInput;
 
-  String get userName() => nameInput.value;
-  String get password() => passwordInput.value;
+  String get userName => nameInput.value;
+  String get password => passwordInput.value;
 
   Future<bool> showLoginDialog() {
     var loginDialogContent = new DivElement();

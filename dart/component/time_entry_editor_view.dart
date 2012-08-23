@@ -89,16 +89,16 @@ class TimeEntryEditorView {
   }
 
          set timeFrom(ZeTime time) => timeFromInput.value = time != null ? time.toString() : '';
-  ZeTime get timeFrom() => new ZeTime.fromString(timeFromInput.value);
+  ZeTime get timeFrom => new ZeTime.fromString(timeFromInput.value);
          set timeTo(ZeTime time) => timeToInput.value = time != null ? time.toString() : '';
-  ZeTime get timeTo() => new ZeTime.fromString(timeToInput.value);
+  ZeTime get timeTo => new ZeTime.fromString(timeToInput.value);
          set comment(String comment) => commentTextArea.value = comment;
-  String get comment() => commentTextArea.value;
+  String get comment => commentTextArea.value;
          set availableProjects(List<Project> projectList) => _replaceOptions(projectSelect, projectList, (p) => p.name, (p) => p.name);
          set availableActivities(List<Activity> activityList) => _replaceOptions(activitySelect, activityList, (a) => '${a.id}', (a) => a.name);
          set project(Project project) {if(project != null) _selectOption(projectSelect, project.name);}
          set activity(Activity activity) {if(activity != null) _selectOption(activitySelect, '${activity.id}');}
-  String get selectedActivityId() => activitySelect.value;
+  String get selectedActivityId => activitySelect.value;
 
   void _replaceOptions(SelectElement select, List objects, String value(object), String text(object)) {
     while(select.nodes.length > 0) {

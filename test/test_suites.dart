@@ -1,9 +1,10 @@
 #library('zeMobile test suites');
 
 #import('dart:json');
-#import('dart:html');
-#import('../dart/ze_mobile_lib.dart');
-#import('../packages/unittest/unittest.dart');
+#import('../darthtmltest/html.dart');
+
+#import('ze_mobile_test_lib.dart');
+#import('packages/unittest/unittest.dart');
 
 #source('suites/mocks.dart');
 

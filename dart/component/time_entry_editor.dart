@@ -22,11 +22,18 @@ class TimeEntryEditor {
     view.createUI();
     view.activitiesDeterminer = model.activitiesForProject;
     overwriteViewDataWithTimeEntry();
+    view.enableEditing(model.currentlyBeingEdited);
 
     view.editButton.on.click.add(editTouched);
     view.cancelButton.on.click.add(cancelTouched);
     view.saveButton.on.click.add(saveTouched);
     view.deleteButton.on.click.add(deleteTouched);
+
+    view.timeFromInput.on.change.add(timeEntryChanged);
+    view.timeToInput.on.change.add(timeEntryChanged);
+    view.projectSelect.on.change.add(timeEntryChanged);
+    view.activitySelect.on.change.add(timeEntryChanged);
+    view.commentTextArea.on.change.add(timeEntryChanged);
 
     return view.editorElement;
   }
@@ -49,10 +56,11 @@ class TimeEntryEditor {
     }
   }
 
-  void editEntry() {
-    view.enableEditing(true);
+  void timeEntryChanged(Event event) {
+    model.timeEntryChanged(Math.parseInt(view.selectedActivityId),view.
+          timeFrom, view.timeTo, view.comment);
   }
-  
+
   void editTouched(Event event) {
     view.enableEditing(true);
     event.preventDefault();

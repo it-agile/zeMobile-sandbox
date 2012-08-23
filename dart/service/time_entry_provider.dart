@@ -56,6 +56,14 @@ class TimeEntryProvider {
     repository.rememberChangedTimeEntry(entry);
   }
 
+  void revertChanges(TimeEntry entry) {
+    repository.removeChangedTimeEntry(entry);
+
+    var loadedMonth = repository.loadMonth();
+    _mergeChangesIntoLoadedMonth(loadedMonth);
+    // TODO Event für die Aktualisierung abfeuern
+  }
+
   Future<String> save(TimeEntry timeEntry) {
     var parameters =
       {'taetigkeit': timeEntry.activityId,

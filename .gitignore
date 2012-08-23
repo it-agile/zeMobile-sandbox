@@ -7,3 +7,4 @@ sass/.sass-cache/
 tests.dart.js
 packages/
 zeMobile.dart.js.map
+pubspec.lock

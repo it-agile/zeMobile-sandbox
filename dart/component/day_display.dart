@@ -28,7 +28,7 @@ class DayDisplay {
   }
 
   void addEntryButtonTouched(Event event) {
-    addTimeEntry(model.createNewEntry()).editEntry();
+    addTimeEntry(model.createNewEntry());
   }
 
   TimeEntryEditor addTimeEntry(TimeEntry timeEntry) {
@@ -43,11 +43,12 @@ class DayDisplayModel {
 
   DayDisplayModel(this.day);
 
-  String get dayContainerId() => 'day${day.toString()}';
+  String get dayContainerId => 'day${day.toString()}';
 
   TimeEntry createNewEntry() {
     var newEntry = new TimeEntry();
     newEntry.date = day;
+    newEntry.currentlyBeingEdited = true;
     return newEntry;
   }
 }
