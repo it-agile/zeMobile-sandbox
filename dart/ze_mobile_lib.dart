@@ -3,6 +3,7 @@
 #import('dart:html');
 #import('dart:json');
 #import('dart:uri');
+#import('dart:math');
 
 #source('app_builder.dart');
 #source('app.dart');

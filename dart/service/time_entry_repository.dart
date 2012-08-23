@@ -4,40 +4,51 @@ class TimeEntryRepository {
   TimeEntryRepository(): storage = document.window.localStorage;
 
   Month loadMonth() {
-    var monthJSONString = storage[MONTH_KEY];
+    var monthJSONString = storage[MONTHDATA_KEY];
     var monthJSON = monthJSONString != null ? JSON.parse(monthJSONString) : null;
     return extractMonth(monthJSON);
   }
 
+  void saveMonth(Month month) {
+    storage[MONTHDATA_KEY] = serializeMonth(month);
+  }
+
   bool hasMonth(int month, int year) {
-    return document.window.localStorage[MONTH_DESC_KEY] == '$year$month';
+    return document.window.localStorage[MONTH_KEY] == '$month'
+      && document.window.localStorage[YEAR_KEY] == '$year';
   }
 
   void importMonthFromJSON(String monthJSON) {
     var monthMap = JSON.parse(monthJSON);
     var year = monthMap['jahr'];
     var month = monthMap['monat'];
-    storage[MONTH_KEY] = monthJSON;
-    storage[MONTH_DESC_KEY] = '$year$month';
+    storage[MONTHDATA_KEY] = monthJSON;
+    storage[MONTH_KEY] = '$month';
+    storage[YEAR_KEY] = '$year';
   }
 
   void rememberChangedTimeEntry(TimeEntry entry) {
-    var slot = entry.changeSlot != null ? createSlotKeyFromTimeEntry(entry) : findNextFreeSlot(entry.date);
-    storage[slot] = serializeTimeEntry(entry);
+    var slotKey = entry.changeSlot != null ? entry.changeSlot : findNextFreeSlot(entry.date);
+    entry.changeSlot = slotKey;
+    storage[slotKey] = serializeTimeEntry(entry);
   }
 
-  List<TimeEntry> changedTimeEntriesForMonth(int month, int year) {
+  List<TimeEntry> changedTimeEntriesForMonth() {
     var result = [];
-    new ZeDate(1, month, year).forEachDayOfMonth((day) => result.addAll(changedTimeEntries(day)));
+    if (storage[MONTH_KEY] != null) {
+      int month =  parseInt(storage[MONTH_KEY]);
+      int year =  parseInt(storage[YEAR_KEY]);
+      new ZeDate(1, month, year).forEachDayOfMonth((day) => result.addAll(changedTimeEntries(day)));
+    }
     return result;
   }
 
   List<TimeEntry> changedTimeEntries(ZeDate date) {
     var slot = 1;
     var results = [];
-    while(storage['$date-$slot'] != null) {
+    while(storage[createSlotKey(date, slot)] != null) {
       var timeEntry = deserializeTimeEntry(storage[createSlotKey(date, slot)]);
-      timeEntry.changeSlot = slot;
+      timeEntry.changeSlot = createSlotKey(date, slot);
       results.add(timeEntry);
       slot++;
     }
@@ -45,19 +56,38 @@ class TimeEntryRepository {
   }
 
   void removeChangedTimeEntry(TimeEntry entry) {
-    storage.remove(createSlotKeyFromTimeEntry(entry));
+    storage.remove(entry.changeSlot);
   }
 
   String findNextFreeSlot(ZeDate date) {
     var slot = 1;
     while (storage[createSlotKey(date, slot)] != null) slot++;
-    return '$date-$slot';
+    return createSlotKey(date, slot);
   }
 
-  String createSlotKeyFromTimeEntry(TimeEntry entry) => createSlotKey(entry.date, entry.changeSlot);
   String createSlotKey(ZeDate date, int slot) => '$date-$slot';
 
+  String serializeMonth(Month month) {
+    var jsonMap = {};
+
+    jsonMap[MONTH_YEAR_KEY] = month.year;
+    jsonMap[MONTH_MONTH_KEY] = month.month;
+    jsonMap[MONTH_BALANCE_KEY] = '${month.balance}';
+    jsonMap[MONTH_HOURS_TO_WORK_KEY] = '${month.hoursToWork}';
+    jsonMap[MONTH_HOURS_WORKED_KEY] = '${month.hoursWorked}';
+    jsonMap[MONTH_VACATION_KEY] = '${month.vacation}';
+
+    var timeEntries = new List.from(month.timeEntries.map(createTimeEntryJsonMap));
+    jsonMap[MONTH_TIME_ENTRIES_KEY] = timeEntries;
+
+    return JSON.stringify(jsonMap);
+  }
+
   String serializeTimeEntry(TimeEntry entry) {
+    return JSON.stringify(createTimeEntryJsonMap(entry));
+  }
+
+  Map createTimeEntryJsonMap(TimeEntry entry) {
     var jsonMap = {};
 
     var activityMap = {};
@@ -71,7 +101,7 @@ class TimeEntryRepository {
     jsonMap[TIME_ENTRY_DAY_KEY] = entry.date.toString();
     jsonMap[TIME_ENTRY_CURRENTLY_BEING_EDITED_KEY] = entry.currentlyBeingEdited;
 
-    return JSON.stringify(jsonMap);
+    return jsonMap;
   }
 
   TimeEntry deserializeTimeEntry(String timeEntryString) {
@@ -89,7 +119,7 @@ class TimeEntryRepository {
     month.vacation = convertToDoubleFromGermanFormat(monthJSON[MONTH_VACATION_KEY]);
     month.hoursWorked = convertToDoubleFromGermanFormat(monthJSON[MONTH_HOURS_WORKED_KEY]);
     month.hoursToWork = convertToDoubleFromGermanFormat(monthJSON[MONTH_HOURS_TO_WORK_KEY]);
-    month.timeEntries = new List.from(monthJSON['zeiten'].map(extractTimeEntry));
+    month.timeEntries = new List.from(monthJSON[MONTH_TIME_ENTRIES_KEY].map(extractTimeEntry));
 
     return month;
   }
@@ -113,8 +143,9 @@ class TimeEntryRepository {
   num convertToDoubleFromGermanFormat(String doubleString) => Math.parseDouble(doubleString.replaceAll(',', '.'));
 
 
+  static final MONTHDATA_KEY = 'monthData';
   static final MONTH_KEY = 'month';
-  static final MONTH_DESC_KEY = 'monthDesc';
+  static final YEAR_KEY = 'year';
 
   static final MONTH_YEAR_KEY = 'jahr';
   static final MONTH_MONTH_KEY = 'monat';
@@ -123,6 +154,8 @@ class TimeEntryRepository {
   static final MONTH_VACATION_KEY = 'urlaub';
   static final MONTH_HOURS_WORKED_KEY = 'ist_arbeitszeit';
   static final MONTH_HOURS_TO_WORK_KEY = 'soll_arbeitszeit';
+  static final MONTH_TIME_ENTRIES_KEY = 'zeiten';
+
 
   static final TIME_ENTRY_ACTIVITY_KEY = 'taetigkeit';
   static final TIME_ENTRY_DAY_KEY = 'tag';

@@ -35,7 +35,7 @@ void timeEntryProviderTests() {
       timeEntryRepository.when(callsTo('hasMonth', 4, 2012)).thenReturn(true);
       var month = new Month(2012, 4);
       timeEntryRepository.when(callsTo('loadMonth')).thenReturn(month);
-      timeEntryRepository.when(callsTo('changedTimeEntriesForMonth', 4, 2012)).thenReturn([]);
+      timeEntryRepository.when(callsTo('changedTimeEntriesForMonth')).thenReturn([]);
       var timeEntryFuture = timeEntryProvider.fetchTimeEntries(4, 2012);
       expect(timeEntryFuture.value, same(month));
     });
@@ -53,7 +53,7 @@ void timeEntryProviderTests() {
     setUp(() {
       clearMocks([errorDisplay, webServiceRequester, timeEntryRepository]);
       timeEntry = new TimeEntry(1, 3, new ZeDate(2,10,2012), new ZeTime(9,0), new ZeTime(12,0), 'test');
-      webServiceRequester.when(callsTo('sendRequest')).thenReturn(new Future.immediate('test'));
+      webServiceRequester.when(callsTo('sendRequest')).thenReturn(new Future.immediate('{"url":"test/1/", "message":"OK"}'));
     });
 
     test('should save a new time entry by posting it on the correct url', () {
@@ -62,6 +62,28 @@ void timeEntryProviderTests() {
 
       var expectedUrl = '/api/zeiten/2012/10/${WebServiceRequester.USER_MARKER}/';
       webServiceRequester.getLogs(callsTo('sendRequest', 'POST', expectedUrl, expectedParameters)).verify(happenedOnce);
+    });
+
+    test('should add the saved time entry to the month and save the month', () {
+      timeEntry.id = null;
+      var month = new Month(timeEntries: []);
+      timeEntryRepository.when(callsTo('loadMonth')).thenReturn(month);
+
+      timeEntryProvider.save(timeEntry).value;
+
+      expect(month.timeEntries, equals([timeEntry]));
+      timeEntryRepository.getLogs(callsTo('saveMonth')).verify(happenedOnce);
+    });
+
+    test('should assimilate the changed time entry into the month and save the month', () {
+      var oldEntry = new TimeEntry(1);
+      var month = new Month(timeEntries: [oldEntry]);
+      timeEntryRepository.when(callsTo('loadMonth')).thenReturn(month);
+
+      timeEntryProvider.save(timeEntry).value;
+
+      expect(month.timeEntries, equals([timeEntry]));
+      timeEntryRepository.getLogs(callsTo('saveMonth')).verify(happenedOnce);
     });
 
     test('should save a changed time entry by putting it on the correct url', () {
@@ -76,6 +98,16 @@ void timeEntryProviderTests() {
 
       var expectedUrl = '/api/zeiten/2012/10/${WebServiceRequester.USER_MARKER}/1/';
       webServiceRequester.getLogs(callsTo('sendRequest', 'DELETE', expectedUrl)).verify(happenedOnce);
+    });
+
+    test('should delete the time entry in the month and save the month', () {
+      var month = new Month(timeEntries: [timeEntry]);
+      timeEntryRepository.when(callsTo('loadMonth')).thenReturn(month);
+
+      timeEntryProvider.delete(timeEntry).value;
+
+      expect(month.timeEntries, isEmpty);
+      timeEntryRepository.getLogs(callsTo('saveMonth')).verify(happenedOnce);
     });
   });
 
@@ -96,7 +128,7 @@ void timeEntryProviderTests() {
       timeEntryRepository.when(callsTo('loadMonth')).thenReturn(new Month(2012, 10, timeEntries: [timeEntry, otherOldTimeEntry]));
       var changedTimeEntry = new TimeEntry(1, 8, new ZeDate(2,10,2012), new ZeTime(9,0), new ZeTime(12,0), 'test', true);
       var newTimeEntry = new TimeEntry(null, 8);
-      timeEntryRepository.when(callsTo('changedTimeEntriesForMonth', 10, 2012)).thenReturn([changedTimeEntry, newTimeEntry]);
+      timeEntryRepository.when(callsTo('changedTimeEntriesForMonth')).thenReturn([changedTimeEntry, newTimeEntry]);
 
       var month = timeEntryProvider.fetchTimeEntries(10,2012).value;
 
@@ -125,9 +157,9 @@ void timeEntryProviderTests() {
 
       webServiceRequester.when(callsTo('sendGet')).thenReturn(new Future.immediate('resultJSON'));
       timeEntryRepository.when(callsTo('loadMonth')).thenReturn(new Month(2012, 10, timeEntries: [timeEntry, otherOldTimeEntry]));
-      timeEntryRepository.when(callsTo('changedTimeEntriesForMonth', 10, 2012)).thenReturn([editedTimeEntry,
+      timeEntryRepository.when(callsTo('changedTimeEntriesForMonth')).thenReturn([editedTimeEntry,
         notEditedTimeEntry, noLongerExistingEntry, newEntry]);
-      timeEntryRepository.when(callsTo('changedTimeEntriesForMonth', 10, 2012)).thenReturn([editedTimeEntry, newEntry]);
+      timeEntryRepository.when(callsTo('changedTimeEntriesForMonth')).thenReturn([editedTimeEntry, newEntry]);
       processedMonth = timeEntryProvider.refetchTimeEntries(10, 2012).value;
     });
 

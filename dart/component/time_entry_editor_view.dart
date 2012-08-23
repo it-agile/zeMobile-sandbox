@@ -92,7 +92,7 @@ class TimeEntryEditorView {
   ZeTime get timeFrom => new ZeTime.fromString(timeFromInput.value);
          set timeTo(ZeTime time) => timeToInput.value = time != null ? time.toString() : '';
   ZeTime get timeTo => new ZeTime.fromString(timeToInput.value);
-         set comment(String comment) => commentTextArea.value = comment;
+         set comment(String comment) => commentTextArea.value = (comment != null ? comment : '');
   String get comment => commentTextArea.value;
          set availableProjects(List<Project> projectList) => _replaceOptions(projectSelect, projectList, (p) => p.name, (p) => p.name);
          set availableActivities(List<Activity> activityList) => _replaceOptions(activitySelect, activityList, (a) => '${a.id}', (a) => a.name);

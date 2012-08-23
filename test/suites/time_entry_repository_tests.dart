@@ -45,8 +45,9 @@ void timeEntryRepositoryTests() {
         timeEntryRespository.importMonthFromJSON(monthJSON);
       });
 
-      test('should have saved the month JSON into local storage', () => expect(storage['month'], equals(monthJSON)));
-      test('should have saved the description of the month into local storage', () => expect(storage['monthDesc'], equals('20122')));
+      test('should have saved the month JSON into local storage', () => expect(storage['monthData'], equals(monthJSON)));
+      test('should have saved the number of the month into local storage', () => expect(storage['month'], equals('2')));
+      test('should have saved the number of the year into local storage', () => expect(storage['year'], equals('2012')));
       test('should have the month after importing it', () => expect(timeEntryRespository.hasMonth(2, 2012), isTrue));
       test('should have another month after importing the new month', () => expect(timeEntryRespository.hasMonth(1, 2012), isFalse));
       test('should extract the month from the JSON', () {
@@ -55,6 +56,20 @@ void timeEntryRepositoryTests() {
         var expectedMonth = new Month(2012, 2, -106.0, 8.0, 6.25, 120.25, [expectedTimeEntry1, expectedTimeEntry2]);
         expect(timeEntryRespository.loadMonth(), equals(expectedMonth));
       });
+    });
+
+    group('saving a month', () {
+      var month = null;
+      setUp(() {
+        storage.clear();
+        var timeEntry = new TimeEntry(42, 3, new ZeDate(2,2,2012),
+          new ZeTime(9,30), new ZeTime(12,40), 'comment', true);
+        month = new Month(2012, 2, 2, 3, 5, 7, [timeEntry]);
+
+        timeEntryRespository.saveMonth(month);
+      });
+
+      test('should be able to load it again', () => expect(timeEntryRespository.loadMonth(), equals(month)));
     });
   });
 
@@ -83,21 +98,27 @@ void timeEntryRepositoryTests() {
       expect(timeEntryRespository.changedTimeEntries(timeEntry.date), contains(timeEntry));
     });
     test('should return the previously remembered time entry for the given month', () {
+      storage['month'] = '2';
+      storage['year'] = '2012';
       timeEntryRespository.rememberChangedTimeEntry(timeEntry);
-      expect(timeEntryRespository.changedTimeEntriesForMonth(2, 2012), contains(timeEntry));
+      expect(timeEntryRespository.changedTimeEntriesForMonth(), contains(timeEntry));
     });
-    test('should set the id of the change slot on a remembered time entry', () {
+    test('should set the id of the change slot on the original remembered time entry', () {
       timeEntryRespository.rememberChangedTimeEntry(timeEntry);
-      expect(timeEntryRespository.changedTimeEntries(timeEntry.date)[0].changeSlot, equals(1));
+      expect(timeEntry.changeSlot, equals('2012-02-02-1'));
+    });
+    test('should set the id of the change slot on a loaded remembered time entry', () {
+      timeEntryRespository.rememberChangedTimeEntry(timeEntry);
+      expect(timeEntryRespository.changedTimeEntries(timeEntry.date)[0].changeSlot, equals('2012-02-02-1'));
     });
     test('should remember a the time entry at the change slot of the time entry if one is defined', () {
-      timeEntry.changeSlot = 7;
+      timeEntry.changeSlot = '2012-02-02-7';
       timeEntryRespository.rememberChangedTimeEntry(timeEntry);
       expect(storage['2012-02-02-7'], isNotNull);
     });
     test('should remove the serialized time entry from the storage upon when told to remove it', () {
       storage['2012-02-02-7'] = 'some entry';
-      timeEntry.changeSlot = 7;
+      timeEntry.changeSlot = '2012-02-02-7';
       timeEntryRespository.removeChangedTimeEntry(timeEntry);
       expect(storage['2012-02-02-7'], isNull);
     });

@@ -2,6 +2,7 @@
 
 #import('dart:json');
 #import('dart:uri');
+#import('dart:math');
 
 #import('../darthtmltest/html.dart');
 

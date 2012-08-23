@@ -5,7 +5,7 @@ class TimeEntry {
   ZeTime start;
   ZeTime end;
   String comment;
-  int changeSlot;
+  String changeSlot;
   bool currentlyBeingEdited;
   
   TimeEntry([this.id, this.activityId, this.date, this.start, this.end, this.comment, this.currentlyBeingEdited]);

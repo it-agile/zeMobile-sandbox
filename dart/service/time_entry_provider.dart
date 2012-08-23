@@ -22,7 +22,7 @@ class TimeEntryProvider {
   }
 
   void _mergeChangesIntoLoadedMonth(Month loadedMonth) {
-    var changedEntries = repository.changedTimeEntriesForMonth(loadedMonth.month, loadedMonth.year);
+    var changedEntries = repository.changedTimeEntriesForMonth();
     var timeEntries = loadedMonth.timeEntries != null ? loadedMonth.timeEntries : [];
     timeEntries.forEach((entry) {
       var matchingEntries = changedEntries.filter((changedEntry) => changedEntry.id == entry.id);
@@ -44,7 +44,7 @@ class TimeEntryProvider {
   }
 
   void _removeObsoleteChangedEntries(Month month) {
-    repository.changedTimeEntriesForMonth(month.month, month.year).forEach((entry) {
+    repository.changedTimeEntriesForMonth().forEach((entry) {
       if (!entry.currentlyBeingEdited && entry.id != null
         || !month.timeEntries.some((fetchedEntry) => fetchedEntry.id == entry.id)) {
         repository.removeChangedTimeEntry(entry);
@@ -81,7 +81,7 @@ class TimeEntryProvider {
     var requestFuture =  webServiceRequester.sendRequest(method, url, parameters);
     requestFuture.handleException(errorDisplay.showWebServiceError);
 
-    return requestFuture;
+    return requestFuture.transform((response) => _handleSaveSuccess(timeEntry, response));
   }
 
   Future<String> delete(TimeEntry timeEntry) {
@@ -89,6 +89,37 @@ class TimeEntryProvider {
       '/api/zeiten/${timeEntry.date.year}/${timeEntry.date.month}/${WebServiceRequester.USER_MARKER}/${timeEntry.id}/');
     requestFuture.handleException(errorDisplay.showWebServiceError);
 
-    return requestFuture;
+    return requestFuture.transform((response) => _handleDeleteSuccess(timeEntry, response));
+  }
+
+  String _handleSaveSuccess(TimeEntry entry, String response) {
+    var responseJSON = JSON.parse(response);
+    var month = repository.loadMonth();
+
+    if (entry.id == null) {
+      String url = responseJSON['url'];
+      var idString = url.substring(0, url.length -1);
+      idString = idString.substring(idString.lastIndexOf('/') + 1);
+      entry.id = parseInt(idString);
+      entry.currentlyBeingEdited = false;
+      month.timeEntries.add(entry);
+    } else {
+      month.timeEntries.filter((te) => te.id == entry.id).forEach((te) => te.assimilate(entry));
+    }
+
+    repository.saveMonth(month);
+
+    return responseJSON['message'];
+  }
+
+  String _handleDeleteSuccess(TimeEntry entry, String response) {
+    var responseJSON = JSON.parse(response);
+    var month = repository.loadMonth();
+
+    month.timeEntries = month.timeEntries.filter((te) => te.id != entry.id);
+
+    repository.saveMonth(month);
+
+    return responseJSON['message'];
   }
 }
