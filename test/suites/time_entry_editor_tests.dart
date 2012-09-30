@@ -6,81 +6,6 @@ void timeEntryEditorTests() {
   final END = const ZeTime(12,30);
   final COMMENT = "comment";
 
-  group('A time entry editor model', () {
-    TimeEntry timeEntry = null;
-    var activitProvider = new ActivityProviderMock();
-    var timeEntryProvider = new TimeEntryProviderMock();
-    var projects = [];
-    var activity = new Activity(ACTIVITY_ID, 'A1');
-    var project = new Project('P1', []);
-    TimeEntryEditorModel model = null;
-
-    setUp(() {
-      clearMocks([activitProvider, timeEntryProvider]);
-      timeEntry = new TimeEntry(TIME_ENTRY_ID, ACTIVITY_ID, DATE, START, END, COMMENT);
-      activitProvider.when(callsTo('get fetchedProjects')). thenReturn(projects);
-      activitProvider.when(callsTo('activityWithId', ACTIVITY_ID)). thenReturn(activity);
-      activitProvider.when(callsTo('projectWithActivity', activity)). thenReturn(project);
-      model = new TimeEntryEditorModel(timeEntry, activitProvider,timeEntryProvider);
-    });
-
-    test('should fetch the available projects from the activity provider', () {
-      expect(model.projects, same(projects));
-    });
-
-    test('should retrieve matching activity from the activity provider', () {
-      expect(model.activity, same(activity));
-    });
-
-    test('should retrieve the project containing the activity from the activity provider', () {
-      expect(model.project, same(project));
-    });
-
-    test('should return false when asked whether a time entry with an id is new', () => expect(model.isEntryNew, isFalse));
-    test('should return true when asked whether a time entry without an id is new', () {
-      timeEntry.id = null;
-      expect(model.isEntryNew, isTrue);
-    });
-
-    test('should delete the time entry via time entry provider if the entry is not new', () {
-      model.deleteEntry();
-      timeEntryProvider.getLogs(callsTo('delete', timeEntry)).verify(happenedOnce);
-    });
-
-    test('should not try to delete a new time entry via time entry provider', () {
-      timeEntry.id = null;
-      model.deleteEntry();
-      timeEntryProvider.getLogs(callsTo('delete', timeEntry)).verify(neverHappened);
-    });
-
-    test('should apply the changes when asked to save changes', () {
-      var activityId = ACTIVITY_ID + 1;
-      var start = const ZeTime(10,30);
-      var end = const ZeTime(13,30);
-      var comment = 'co';
-
-      model.saveChanges(activityId, start, end, comment);
-
-      expect(timeEntry.activityId, equals(activityId));
-      expect(timeEntry.date, equals(DATE));
-      expect(timeEntry.start, equals(start));
-      expect(timeEntry.end, equals(end));
-      expect(timeEntry.comment, equals(comment));
-    });
-
-    test('should save the time entry via time entry provider when asked to save changes', () {
-      model.saveChanges(null, null, null, null);
-
-      timeEntryProvider.getLogs(callsTo('save', timeEntry)).verify(happenedOnce);
-    });
-
-    test('should get the project with the matching name and return its activities when asked for them', () {
-      var project = new Project('P1', []);
-      activitProvider.when(callsTo('projectWithName', 'P1')).thenReturn(project);
-      expect(model.activitiesForProject('P1'), same(project.activities));
-    });
-  });
-
   group('A time entry editor', () {
     var model = new TimeEntryEditorModelMock();
     var view = new TimeEntryEditorViewMock();
@@ -95,6 +20,7 @@ void timeEntryEditorTests() {
     setUp(() => clearMocks([model, view]));
 
     test('should enable editing when edit button is tousched', () {
+      model.when(callsTo('get currentlyBeingEdited')).thenReturn(true);
       editor.editTouched(new EventMock());
       view.getLogs(callsTo('enableEditing', true)).verify(happenedOnce);
     });
@@ -108,23 +34,8 @@ void timeEntryEditorTests() {
       model.when(callsTo('get activity')).thenReturn(activity);
     }
 
-    test('should overwrite all changes in the UI with data from the time entry when cancel is touched', () {
-      configureOverwrite();
-
-      editor.cancelTouched(new EventMock());
-
-      view.getLogs(callsTo('set:timeFrom', START)).verify(happenedOnce);
-      view.getLogs(callsTo('set:timeTo', END)).verify(happenedOnce);
-      view.getLogs(callsTo('set:comment', comment)).verify(happenedOnce);
-      view.getLogs(callsTo('set:availableProjects', projects)).verify(happenedOnce);
-      view.getLogs(callsTo('set:project', project)).verify(happenedOnce);
-      view.getLogs(callsTo('set:availableActivities', activities)).verify(happenedOnce);
-      view.getLogs(callsTo('set:activity', activity)).verify(happenedOnce);
-    });
-
     test('should disable editing when cancel is touched', () {
-      configureOverwrite();
-
+      model.when(callsTo('get currentlyBeingEdited')).thenReturn(false);
       editor.cancelTouched(new EventMock());
 
       view.getLogs(callsTo('enableEditing', false)).verify(happenedOnce);
@@ -146,10 +57,49 @@ void timeEntryEditorTests() {
       view.when(callsTo('get comment')).thenReturn(COMMENT);
       view.when(callsTo('get selectedActivityId')).thenReturn('$ACTIVITY_ID');
       model.when(callsTo('saveChanges', ACTIVITY_ID, START, END,COMMENT)).thenReturn(new Future.immediate('OK'));
+      model.when(callsTo('get currentlyBeingEdited')).thenReturn(false);
+
       editor.saveTouched(new EventMock());
 
       view.getLogs(callsTo('enableEditing', false)).verify(happenedOnce);
     });
+
+    test('should not update time entry in model when updating is not needed according to model', () {
+      var timeEntry = new TimeEntry();
+      model.when(callsTo('shouldUpdateTimeEntry', timeEntry)).thenReturn(false);
+
+      editor.updateTimeEntry(timeEntry);
+
+      model.getLogs(callsTo('updateTimeEntry', timeEntry)).verify(neverHappened);
+    });
+
+    test('should update time entry in model when updating the time entry', () {
+      configureOverwrite();
+      var timeEntry = new TimeEntry();
+      model.when(callsTo('shouldUpdateTimeEntry', timeEntry)).thenReturn(true);
+
+      editor.updateTimeEntry(timeEntry);
+
+      model.getLogs(callsTo('updateTimeEntry', timeEntry)).verify(happenedOnce);
+    });
+
+    test('should overwrite all changes in the UI with data from the time entry when updating the time entry', () {
+      configureOverwrite();
+      var timeEntry = new TimeEntry();
+      model.when(callsTo('shouldUpdateTimeEntry', timeEntry)).thenReturn(true);
+
+      editor.updateTimeEntry(timeEntry);
+
+      view.getLogs(callsTo('set:timeFrom', START)).verify(happenedOnce);
+      view.getLogs(callsTo('set:timeTo', END)).verify(happenedOnce);
+      view.getLogs(callsTo('set:comment', comment)).verify(happenedOnce);
+      view.getLogs(callsTo('set:availableProjects', projects)).verify(happenedOnce);
+      view.getLogs(callsTo('set:project', project)).verify(happenedOnce);
+      view.getLogs(callsTo('set:availableActivities', activities)).verify(happenedOnce);
+      view.getLogs(callsTo('set:activity', activity)).verify(happenedOnce);
+    });
+
+
 
     test('while overwritting UI with data from time entry should set the first project and its first activity if time entry has no project', () {
       model.when(callsTo('get start')).thenReturn(START);

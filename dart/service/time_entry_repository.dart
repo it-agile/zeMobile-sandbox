@@ -140,7 +140,7 @@ class TimeEntryRepository {
     return entry;
   }
 
-  num convertToDoubleFromGermanFormat(String doubleString) => Math.parseDouble(doubleString.replaceAll(',', '.'));
+  num convertToDoubleFromGermanFormat(String doubleString) => parseDouble(doubleString.replaceAll(',', '.'));
 
 
   static final MONTHDATA_KEY = 'monthData';

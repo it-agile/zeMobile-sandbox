@@ -25,6 +25,7 @@ class App {
     Element currentDayElement = monthDisplay.view.containerElement.query('#day${currentDay.toString()}');
     expander.expand(currentDayElement);
     currentDayElement.scrollIntoView();
+    timeEntryProvider.monthUpdated.addListener(monthDisplay.updateMonth);
+    timeEntryProvider.refetchTimeEntriesIfLoadedFromCache(month.month, month.year);
   }
-
 }

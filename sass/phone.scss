@@ -6,24 +6,48 @@
 @import "compass/css3/appearance";
 
 $default_border-radius: 5px;
+
+$border_color: #000000;
+$text_color: #000000;
+$light_border_color: #808080;
+
 $monthHeader_background_color:#656565;
 $monthHeader_text_color: #fdff78;
 $dayHeader_background_color:#3c8948;
 $dayHeaderWeekend_background_color: #676f9d;
 $dayHeader_text_color: $monthHeader_text_color;
-$timeEntry_border_color: #808080;
+$timeEntry_border_color: $light_border_color;
 $dialog_background_color: #f5f5f5;
-$dialog_border_color: #808080;
-$input_text_color: #000000;
+$dialog_border_color: $light_border_color;
+$input_text_color: $text_color;
 $input_border_color: #656565;
 $input_background_color: #eff3f5;
-$disabled_input_text_color: #000000;
+$disabled_input_text_color: $text_color;
 $expander_color: #ffffff;
+$tap_highlight_color: rgba(255, 255, 255, 0.2);
+$button_border_color: $border_color;
+$cancel_button_color: #750a17;
+$ok_button_color: #00aa00;
+$edit_button_color: #3b63b7;
+$save_button_color: $ok_button_color;
+$delete_button_color: #aa0000;
+$modalifier_color: rgba(0, 0, 0, 0.8);
+$dialogText_border_color:$border_color;
+$settings_color: #f5f5f5;
+$settings_border_color: $border_color;
+$settings_expander_text_color: #000000;
+$settings_section_border_color: #404040;
+$settings_title_color: #e8e8e8;
+$settings_button_text_color: #ffffff;
+$settings_reloadActivities_button_color: #11c611;
+$settings_reloadTimeEntries_button_color: #d4bf69;
+$settings_changeLogin_button_color: $ok_button_color;
+
+
 
 $symbol_plus: "\f055";
 $symbol_minus: "\f056";
 $symbol_slash: "\2192";
-
 
 @mixin ze-background($color) {
   background-color: $color;
@@ -48,6 +72,7 @@ body {
   outline: none;
   min-height: 100%;
   font-size: 17px;
+  color: $text_color;
   @include background-size(10px 10px);
   background-color: #c5c7ba;
   background-image: -webkit-gradient(linear, 0 0, 100% 0, color-stop(.5, rgba(255, 255, 255, .2)), color-stop(.5, transparent), to(transparent));
@@ -68,9 +93,9 @@ body {
   padding: 8px;
   min-width: 5em;
   @include border-radius;
-  border: solid 1px #000000;
+  border: solid 1px $button_border_color;
   margin-right: 5px;
-  -webkit-tap-highlight-color: rgba(255,255,255,0.2);
+  -webkit-tap-highlight-color: $tap_highlight_color;
 }
 
 input, select, textarea, button {
@@ -86,7 +111,7 @@ input, select, textarea, button {
   margin: 0;
   color: $monthHeader_text_color;
   @include ze-background($monthHeader_background_color);
-  -webkit-tap-highlight-color: rgba(255,255,255,0.2);
+  -webkit-tap-highlight-color: $tap_highlight_color;
 }
 
 .monthName:after {
@@ -109,7 +134,7 @@ input, select, textarea, button {
   color: $dayHeader_text_color;
   @include border-radius;
   @include ze-background($dayHeader_background_color);
-  -webkit-tap-highlight-color: rgba(255,255,255,0.2);
+  -webkit-tap-highlight-color: $tap_highlight_color;
 }
 
 .dayHeader:active {
@@ -230,7 +255,7 @@ input:disabled, textarea:disabled, select:disabled {
     top: 0;
     bottom: 0;
   }
-  -webkit-tap-highlight-color: rgba(255,255,255,0.2);
+  -webkit-tap-highlight-color: $tap_highlight_color;
 }
 
 .timeEntryActions {
@@ -243,38 +268,38 @@ input:disabled, textarea:disabled, select:disabled {
 
 .timeEntryEdit {
   @extend .zeButton;
-  @include ze-background(#3b63b7);
+  @include ze-background($edit_button_color);
 }
 
 .timeEntryEdit:active {
-  @include ze-background(lighten(#3b63b7, 20%));
+  @include ze-background(lighten($edit_button_color, 20%));
 }
 
 .timeEntrySave {
   @extend .zeButton;
-  @include ze-background(#00aa00);
+  @include ze-background($save_button_color);
 }
 
 .timeEntrySave:active {
-  @include ze-background(lighten(#00aa00, 20%));
+  @include ze-background(lighten($save_button_color, 20%));
 }
 
 .timeEntryDelete {
   @extend .zeButton;
-  @include ze-background(#aa0000);
+  @include ze-background($delete_button_color);
 }
 
 .timeEntryDelete:active {
-  @include ze-background(lighten(#aa0000, 20%));
+  @include ze-background(lighten($delete_button_color, 20%));
 }
 
 .timeEntryCancel {
   @extend .zeButton;
-  @include ze-background(#750a17);
+  @include ze-background($cancel_button_color);
 }
 
 .timeEntryCancel:active {
-  @include ze-background(lighten(#750a17, 20%));
+  @include ze-background(lighten($cancel_button_color, 20%));
 }
 
 .timeEntryView .timeEntrySave, .timeEntryView .timeEntryDelete, .timeEntryView .timeEntryCancel {
@@ -330,7 +355,7 @@ input:disabled, textarea:disabled, select:disabled {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: $modalifier_color;
   padding: {
     top: 30px;
     right: 0;
@@ -351,10 +376,9 @@ input:disabled, textarea:disabled, select:disabled {
   text-align: center;
 }
 
-$dialogText-border-color:#000000;
 .dialogText {
   display: block;
-  border: solid 1px $dialogText-border-color;
+  border: solid 1px $dialogText_border_color;
   @include ze-background(#adff2f);
   color: #000000;
   padding: 10px;
@@ -379,20 +403,20 @@ $dialogText-border-color:#000000;
 
 .dialogOkButton {
   @extend .zeButton;
-  @include ze-background(#00aa00);
+  @include ze-background($ok_button_color);
 }
 
 .dialogOkButton:active {
-  @include ze-background(lighten(#00aa00, 20%));
+  @include ze-background(lighten($ok_button_color, 20%));
 }
 
 .dialogCancelButton {
   @extend .zeButton;
-  @include ze-background(#750a17);
+  @include ze-background($cancel_button_color);
 }
 
 .dialogCancelButton:active {
-  @include ze-background(lighten(#750a17, 20%));
+  @include ze-background(lighten($cancel_button_color, 20%));
 }
 
 .modalified {
@@ -403,9 +427,9 @@ $dialogText-border-color:#000000;
   margin: 5px;
   padding: 5px;
   display: block;
-  border: 1px solid #000000;
+  border: 1px solid $settings_border_color;
   @include border-radius;
-  @include ze-background(#f5f5f5);
+  @include ze-background($settings_color);
 }
 
 .settingsHeader {
@@ -414,7 +438,7 @@ $dialogText-border-color:#000000;
 }
 
 .settingsHeader .expander {
-  color: #000000;
+  color: $settings_expander_text_color;
 }
 
 .section {
@@ -422,14 +446,14 @@ $dialogText-border-color:#000000;
   margin-top: 15px;
   padding: 5px;
   display: block;
-  border: 1px solid #404040;
+  border: 1px solid $settings_section_border_color;
   @include border-radius;
 }
 .sectionTitle {
   display: block;
-  border: 1px solid #404040;
+  border: 1px solid $settings_section_border_color;
   @include border-radius;
-  background-color: #e8e8e8;
+  background-color: $settings_title_color;
   width: 10em;
   padding: 3px;
   padding-left: 5px;
@@ -443,40 +467,41 @@ $dialogText-border-color:#000000;
   text-decoration: none;
   text-align: center;
   font-size: 14px;
-  color: #ffffff;
+  color: $settings_button_text_color;
   padding: 8px;
   min-width: 5em;
   @include border-radius;
-  border: solid 1px #000000;
+  border: solid 1px $button_border_color;
   margin: 5px;
-  -webkit-tap-highlight-color: rgba(255,255,255,0.2);
+  -webkit-tap-highlight-color: $tap_highlight_color;
 }
 
 .reloadActivities {
   @extend .settingsButton;
-  @include ze-background(#11c611);
+  @include ze-background($settings_reloadActivities_button_color);
 }
 
 .reloadActivities:active {
-  @include ze-background(lighten(#11c611, 20%));
+  @include ze-background(lighten($settings_reloadActivities_button_color, 20%));
 }
 
 .reloadTimeEntries {
   @extend .settingsButton;
-  @include ze-background(#d4bf69);
+  @include ze-background($settings_reloadTimeEntries_button_color);
 }
 
 .reloadTimeEntries:active {
-  @include ze-background(lighten(#d4bf69, 20%));
+  @include ze-background(lighten($settings_reloadTimeEntries_button_color, 20%));
 }
+
 
 .changeLogin {
   @extend .settingsButton;
-  @include ze-background(#00aa00);
+  @include ze-background($settings_changeLogin_button_color);
 }
 
 .changeLogin:active {
-  @include ze-background(lighten(#00aa00, 20%));
+  @include ze-background(lighten($settings_changeLogin_button_color, 20%));
 }
 
 .versionInfo {

@@ -7,10 +7,7 @@ class TimeEntryEditorModel {
   Project _projectOfEntry;
 
   TimeEntryEditorModel(TimeEntry timeEntry, this.activityProvider, this.timeEntryProvider) {
-    _entry = timeEntry;
-    _projects = activityProvider.fetchedProjects;
-    _activityOfEntry = activityProvider.activityWithId(_entry.activityId);
-    _projectOfEntry = _activityOfEntry != null ? activityProvider.projectWithActivity(_activityOfEntry) : null;
+    updateTimeEntry(timeEntry);
   }
 
   List<Project> get projects => _projects;
@@ -21,6 +18,22 @@ class TimeEntryEditorModel {
   String get comment => _entry.comment;
   bool get currentlyBeingEdited => _entry.currentlyBeingEdited;
   bool get isEntryNew => _entry.id == null;
+
+
+  bool isEditorOfEntry(TimeEntry timeEntry) {
+    return timeEntry.id != null ? timeEntry.id == _entry.id : timeEntry.changeSlot == _entry.changeSlot;
+  }
+
+  bool shouldUpdateTimeEntry(TimeEntry timeEntry) {
+    return !_entry.currentlyBeingEdited && _entry != timeEntry;
+  }
+
+  void updateTimeEntry(TimeEntry timeEntry) {
+    _entry = timeEntry;
+    _projects = activityProvider.fetchedProjects;
+    _activityOfEntry = activityProvider.activityWithId(_entry.activityId);
+    _projectOfEntry = _activityOfEntry != null ? activityProvider.projectWithActivity(_activityOfEntry) : null;
+  }
 
   Future<String> saveChanges(int activityId, ZeTime start, ZeTime end, String comment) {
     _updateEntry(activityId, start, end, comment);
@@ -41,7 +54,7 @@ class TimeEntryEditorModel {
     return project.activities;
   }
 
-  void timeEntryChanged(int activityId, ZeTime start, ZeTime end, String comment) {
+  void rememberChanges(int activityId, ZeTime start, ZeTime end, String comment) {
     _updateEntry(activityId, start, end, comment);
 
     timeEntryProvider.rememberChangedTimeEntry(_entry);
@@ -54,6 +67,8 @@ class TimeEntryEditorModel {
   }
 
   void cancelEditing() {
+    _entry.currentlyBeingEdited = false;
+
     timeEntryProvider.revertChanges(_entry);
   }
 
@@ -62,6 +77,8 @@ class TimeEntryEditorModel {
     _entry.start = start;
     _entry.end = end;
     _entry.comment = comment;
+
+    updateTimeEntry(_entry);
   }
 
 

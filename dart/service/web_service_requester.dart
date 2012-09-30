@@ -14,10 +14,10 @@ class WebServiceRequester {
   Future<String> sendRequest(String method,String url, [Map<String,Object> parameters]) {
     var completer = new Completer<String>();
     login.loginUserIfNotAlreadyLoggedIn().then((user) {
-      var req = new XMLHttpRequest();
+      var req = new HttpRequest();
       req.open(method, equipWithUser(url, user), true, user.name, user.password); 
       req.on.readyStateChange.add((event) {
-        if (req.readyState == XMLHttpRequest.DONE) {
+        if (req.readyState == HttpRequest.DONE) {
           if(req.status >= 200 && req.status < 300) {
             completer.complete(req.responseText);
           } else {

@@ -1,5 +1,5 @@
 class ErrorDisplay {
-  void showWebServiceError(XMLHttpRequest request) {
+  void showWebServiceError(HttpRequest request) {
     print('${request.status} : ${request.responseText}');
   }
 }

@@ -22,7 +22,6 @@ class TimeEntryEditor {
     view.createUI();
     view.activitiesDeterminer = model.activitiesForProject;
     overwriteViewDataWithTimeEntry();
-    view.enableEditing(model.currentlyBeingEdited);
 
     view.editButton.on.click.add(editTouched);
     view.cancelButton.on.click.add(cancelTouched);
@@ -34,8 +33,18 @@ class TimeEntryEditor {
     view.projectSelect.on.change.add(timeEntryChanged);
     view.activitySelect.on.change.add(timeEntryChanged);
     view.commentTextArea.on.change.add(timeEntryChanged);
-
     return view.editorElement;
+  }
+
+  bool isEditorOfEntry(TimeEntry timeEntry) {
+    return model.isEditorOfEntry(timeEntry);
+  }
+
+  void updateTimeEntry(TimeEntry timeEntry) {
+    if(model.shouldUpdateTimeEntry(timeEntry)) {
+      model.updateTimeEntry(timeEntry);
+      overwriteViewDataWithTimeEntry();
+    }
   }
 
   void overwriteViewDataWithTimeEntry() {
@@ -54,27 +63,29 @@ class TimeEntryEditor {
       view.availableActivities = projects[0].activities;
       view.activity = projects[0].activities[0];
     }
+    view.enableEditing(model.currentlyBeingEdited);
   }
 
   void timeEntryChanged(Event event) {
-    model.timeEntryChanged(Math.parseInt(view.selectedActivityId),view.
+    model.rememberChanges(parseInt(view.selectedActivityId),view.
           timeFrom, view.timeTo, view.comment);
   }
 
   void editTouched(Event event) {
-    view.enableEditing(true);
+    model.startEditing();
+    view.enableEditing(model.currentlyBeingEdited);
     event.preventDefault();
   }
   
   void cancelTouched(Event event) {
-    overwriteViewDataWithTimeEntry();
-    view.enableEditing(false);
+    model.cancelEditing();
+    view.enableEditing(model.currentlyBeingEdited);
     event.preventDefault();
   }
   
   void saveTouched(Event event) {
-    model.saveChanges(Math.parseInt(view.selectedActivityId),view.
-      timeFrom, view.timeTo, view.comment).then((response) => view.enableEditing(false));
+    model.saveChanges(parseInt(view.selectedActivityId),view.
+      timeFrom, view.timeTo, view.comment).then((response) => view.enableEditing(model.currentlyBeingEdited));
     event.preventDefault();
   }
   

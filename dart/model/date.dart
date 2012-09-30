@@ -1,6 +1,6 @@
 class ZeDate {
-  static final DAY_DURATION = const Duration(1);
-  static final MONTH_DURATION = const Duration(30);
+  static final DAY_DURATION = const Duration(days:1);
+  static final MONTH_DURATION = const Duration(days:30);
   final int day; 
   final int month; 
   final int year;
@@ -10,14 +10,14 @@ class ZeDate {
   factory ZeDate.fromGermanString(String dateString)  {
     RegExp dateReg = const RegExp(@'(\d*)\.(\d*)\.(\d*)');
     for(Match m in dateReg.allMatches(dateString)) {
-      return new ZeDate(Math.parseInt(m.group(1)), Math.parseInt(m.group(2)), Math.parseInt(m.group(3)));
+      return new ZeDate(parseInt(m.group(1)), parseInt(m.group(2)), parseInt(m.group(3)));
     }
   }
   
   factory ZeDate.fromString(String dateString)  {
     RegExp dateReg = const RegExp(@'(\d*)-(\d*)-(\d*)');
     for(Match m in dateReg.allMatches(dateString)) {
-      return new ZeDate(Math.parseInt(m.group(3)), Math.parseInt(m.group(2)), Math.parseInt(m.group(1)));
+      return new ZeDate(parseInt(m.group(3)), parseInt(m.group(2)), parseInt(m.group(1)));
     }
   }
   

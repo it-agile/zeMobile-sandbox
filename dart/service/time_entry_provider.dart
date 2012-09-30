@@ -2,16 +2,27 @@ class TimeEntryProvider {
   final ErrorDisplay errorDisplay;
   final WebServiceRequester webServiceRequester;
   final TimeEntryRepository repository;
+  final EventDispatcher<Month> monthUpdated;
+  bool monthLoadedFromCache = false;
 
-  TimeEntryProvider(this.errorDisplay, this.repository, this.webServiceRequester);
+  TimeEntryProvider(this.errorDisplay, this.repository, this.webServiceRequester): monthUpdated = new EventDispatcher();
   
   Future<Month> fetchTimeEntries(int month, int year) {
     if (repository.hasMonth(month, year)) {
+      monthLoadedFromCache = true;
       var loadedMonth = repository.loadMonth();
       _mergeChangesIntoLoadedMonth(loadedMonth);
       return new Future.immediate(loadedMonth);
     } else {
+      monthLoadedFromCache = false;
       return refetchTimeEntries(month, year);
+    }
+  }
+
+  void refetchTimeEntriesIfLoadedFromCache(int month, int year) {
+    if(monthLoadedFromCache) {
+      monthLoadedFromCache = false;
+      refetchTimeEntries(month, year);
     }
   }
 
@@ -40,13 +51,14 @@ class TimeEntryProvider {
     var month = repository.loadMonth();
     _removeObsoleteChangedEntries(month);
     _mergeChangesIntoLoadedMonth(month);
+    monthUpdated.dispatch(month);
     return month;
   }
 
   void _removeObsoleteChangedEntries(Month month) {
     repository.changedTimeEntriesForMonth().forEach((entry) {
-      if (!entry.currentlyBeingEdited && entry.id != null
-        || !month.timeEntries.some((fetchedEntry) => fetchedEntry.id == entry.id)) {
+      if (!entry.currentlyBeingEdited
+        || (entry.id != null && !month.timeEntries.some((fetchedEntry) => fetchedEntry.id == entry.id))) {
         repository.removeChangedTimeEntry(entry);
       }
     });
@@ -61,7 +73,7 @@ class TimeEntryProvider {
 
     var loadedMonth = repository.loadMonth();
     _mergeChangesIntoLoadedMonth(loadedMonth);
-    // TODO Event für die Aktualisierung abfeuern
+    monthUpdated.dispatch(loadedMonth);
   }
 
   Future<String> save(TimeEntry timeEntry) {
@@ -96,6 +108,9 @@ class TimeEntryProvider {
     var responseJSON = JSON.parse(response);
     var month = repository.loadMonth();
 
+    repository.removeChangedTimeEntry(entry);
+    entry.changeSlot = null;
+
     if (entry.id == null) {
       String url = responseJSON['url'];
       var idString = url.substring(0, url.length -1);
@@ -104,6 +119,7 @@ class TimeEntryProvider {
       entry.currentlyBeingEdited = false;
       month.timeEntries.add(entry);
     } else {
+      entry.currentlyBeingEdited = false;
       month.timeEntries.filter((te) => te.id == entry.id).forEach((te) => te.assimilate(entry));
     }
 
@@ -119,6 +135,9 @@ class TimeEntryProvider {
     month.timeEntries = month.timeEntries.filter((te) => te.id != entry.id);
 
     repository.saveMonth(month);
+
+    repository.removeChangedTimeEntry(entry);
+    entry.changeSlot = null;
 
     return responseJSON['message'];
   }

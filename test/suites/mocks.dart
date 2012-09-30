@@ -16,6 +16,7 @@ class TimeEntryEditorViewMock extends Mock implements TimeEntryEditorView {}
 class MonthDisplayModelMock extends Mock implements MonthDisplayModel {}
 class MonthDisplayViewMock extends Mock implements MonthDisplayView {}
 class EventMock extends Mock implements Event {}
+class ZeDateMock extends Mock implements ZeDate {}
 
 void clearMocks(List<Mock> mocks) => mocks.forEach((mock) => mock.reset());
 

@@ -31,6 +31,7 @@
 #source('../dart/service/activity_repository.dart');
 #source('../dart/service/user_repository.dart');
 #source('../dart/service/time_entry_repository.dart');
+#source('../dart/service/event_dispatcher.dart');
 
 #source('../dart/ui/expander.dart');
 #source('../dart/ui/dialog.dart');

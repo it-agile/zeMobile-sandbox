@@ -106,7 +106,7 @@ class TimeEntryEditorView {
     }
     objects.forEach((object) {
       var option = new OptionElement(text(object), value(object));
-      select.add(option, null);
+      select.nodes.add(option);
     });
   }
 

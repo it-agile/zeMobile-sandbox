@@ -1,3 +1,4 @@
+name: zeMobileTests
 dependencies:
   unittest:
     sdk: unittest

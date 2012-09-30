@@ -15,7 +15,8 @@ class DayDisplay {
   final DayDisplayModel model;
   final DayDisplayView view;
   final TimeEntryEditorFactory timeEntryEditorFactory;
-  DayDisplay(this.model, this.view, this.timeEntryEditorFactory);
+  List<TimeEntryEditor> timeEntryEditors;
+  DayDisplay(this.model, this.view, this.timeEntryEditorFactory): timeEntryEditors = [];
  
   Element createUI() {
     view.createUI();
@@ -27,6 +28,8 @@ class DayDisplay {
     return view.containerElement;
   }
 
+  ZeDate get day => model.day;
+
   void addEntryButtonTouched(Event event) {
     addTimeEntry(model.createNewEntry());
   }
@@ -34,8 +37,43 @@ class DayDisplay {
   TimeEntryEditor addTimeEntry(TimeEntry timeEntry) {
     var editor = timeEntryEditorFactory.createTimeEntryEditor(timeEntry);
     view.timeEntriesElement.insertBefore(editor.createUI(), view.addEntrySection);
+    timeEntryEditors.add(editor);
     return editor;
   }
+
+  void updateTimeEntries(List<TimeEntry> timeEntries) {
+    var timeEntriesToProcess = new List.from(timeEntries);
+    var editorsToRemove = [];
+    timeEntryEditors.forEach((editor) {
+      var timeEntry = takeOutMatchingEntry(timeEntriesToProcess, editor);
+      if (timeEntry != null) {
+        editor.updateTimeEntry(timeEntry);
+      } else {
+        editor.removeEditor();
+        editorsToRemove.add(editor);
+      }
+    });
+    timeEntryEditors = timeEntryEditors.filter((editor) => !editorsToRemove.some((editorToRemove) => editor === editorToRemove));
+    timeEntriesToProcess.forEach(addTimeEntry);
+  }
+
+  TimeEntry takeOutMatchingEntry(List<TimeEntry> timeEntries, TimeEntryEditor editor) {
+    var indexOfEntry = -1;
+    var entryToUpdate = null;
+    for(int i = 0; i < timeEntries.length; i++) {
+      var entry = timeEntries[i];
+      if (editor.isEditorOfEntry(entry)) {
+        indexOfEntry = i;
+        entryToUpdate = entry;
+        break;
+      }
+    }
+    if (indexOfEntry >= 0) {
+      timeEntries.removeRange(indexOfEntry, 1);
+    }
+    return entryToUpdate;
+  }
+
 }
 
 class DayDisplayModel {

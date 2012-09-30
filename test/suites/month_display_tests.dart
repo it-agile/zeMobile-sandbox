@@ -4,10 +4,6 @@ void monthDisplayTests() {
     var model = new MonthDisplayModel(month);
 
     test('should return the first day of the month', () => expect(model.firstDayInMonth, equals(new ZeDate(1,7,2012))));
-    test('should return the next day if it is in the same month', () =>
-      expect(model.nextDayInMonth(new ZeDate(1,7,2012)), equals(new ZeDate(2,7,2012))));
-    test('should return null if the next day is in the next month', () =>
-      expect(model.nextDayInMonth(new ZeDate(31,7,2012)), isNull));
   });
 
   group('A month display', () {
@@ -23,14 +19,16 @@ void monthDisplayTests() {
     var daysElement = new ElementMock();
     var daysElementNodes = [];
     var monthDisplay = new MonthDisplay(model, view, dayDisplayFactory);
+    var firstDayMock = new ZeDateMock();
 
     setUp(() {
+      monthDisplay = new MonthDisplay(model, view, dayDisplayFactory);
       daysElementNodes = [];
       clearMocks([model, view, dayDisplay, dayDisplayFactory, dayDisplayUI, daysElement]);
 
       model.when(callsTo('get month')).alwaysReturn(month);
-      model.when(callsTo('get firstDayInMonth')).thenReturn(firstDay);
-      model.when(callsTo('nextDayInMonth', firstDay)).thenReturn(null);
+      model.when(callsTo('get firstDayInMonth')).thenReturn(firstDayMock);
+      firstDayMock.when(callsTo('forEachDayOfMonth')).thenCall((callback) => callback(firstDay));
       dayDisplayFactory.when(callsTo('createDayDisplay', firstDay)).thenReturn(dayDisplay);
       dayDisplay.when(callsTo('createUI')).thenReturn(dayDisplayUI);
       view.when(callsTo('get daysElement')).thenReturn(daysElement);
@@ -47,5 +45,21 @@ void monthDisplayTests() {
       dayDisplay.getLogs(callsTo('addTimeEntry', timeEntry)).verify(happenedOnce));
     test('should not add time entries of other days to the created day display', () =>
       dayDisplay.getLogs(callsTo('addTimeEntry', timeEntryOnAntherDay)).verify(neverHappened));
+    test('should update the correct day displays with the updated time entries when updating a month', () {
+      dayDisplay.when(callsTo('get day')).thenReturn(firstDay);
+
+      monthDisplay.updateMonth(month);
+
+      dayDisplay.getLogs(callsTo('updateTimeEntries', [timeEntry])).verify(happenedOnce);
+    });
+
+    test('should not update day displays with time entries from another day when updating a month', () {
+      dayDisplay.when(callsTo('get day')).thenReturn(firstDay);
+
+      monthDisplay.updateMonth(new Month(2012, 7, timeEntries: [timeEntryOnAntherDay]));
+
+      print(dayDisplay.getLogs());
+      dayDisplay.getLogs(callsTo('updateTimeEntries', [])).verify(happenedOnce);
+    });
   });
 }

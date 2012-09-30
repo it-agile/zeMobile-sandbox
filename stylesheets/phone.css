@@ -72,6 +72,7 @@ body {
   outline: none;
   min-height: 100%;
   font-size: 17px;
+  color: black;
   -webkit-background-size: 10px 10px;
   -moz-background-size: 10px 10px;
   -o-background-size: 10px 10px;
@@ -98,7 +99,7 @@ body {
   -ms-border-radius: 5px;
   -o-border-radius: 5px;
   border-radius: 5px;
-  border: solid 1px #000000;
+  border: solid 1px black;
   margin-right: 5px;
   -webkit-tap-highlight-color: rgba(255, 255, 255, 0.2);
 }
@@ -557,7 +558,7 @@ input:disabled, textarea:disabled, select:disabled {
   margin: 5px;
   padding: 5px;
   display: block;
-  border: 1px solid #000000;
+  border: 1px solid black;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   -ms-border-radius: 5px;
@@ -578,7 +579,7 @@ input:disabled, textarea:disabled, select:disabled {
 }
 
 .settingsHeader .expander {
-  color: #000000;
+  color: black;
 }
 
 .section {
@@ -616,7 +617,7 @@ input:disabled, textarea:disabled, select:disabled {
   text-decoration: none;
   text-align: center;
   font-size: 14px;
-  color: #ffffff;
+  color: white;
   padding: 8px;
   min-width: 5em;
   -webkit-border-radius: 5px;
@@ -624,7 +625,7 @@ input:disabled, textarea:disabled, select:disabled {
   -ms-border-radius: 5px;
   -o-border-radius: 5px;
   border-radius: 5px;
-  border: solid 1px #000000;
+  border: solid 1px black;
   margin: 5px;
   -webkit-tap-highlight-color: rgba(255, 255, 255, 0.2);
 }

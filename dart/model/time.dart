@@ -22,8 +22,8 @@ class ZeTime {
 
     var timeReg = const RegExp(@'^(\d*):(\d*)(:(\d*))?$');
     for(Match m in timeReg.allMatches(timeString)) {
-      parsedHour = Math.parseInt(m.group(1));
-      parsedMinutes = Math.parseInt(m.group(2));
+      parsedHour = parseInt(m.group(1));
+      parsedMinutes = parseInt(m.group(2));
     }
 
     if (parsedHour == null || parsedMinutes == null) return null;
@@ -39,8 +39,8 @@ class ZeTime {
 
     var timeReg = const RegExp(@'^(\d{1,2})(\d{2})$');
     for(Match m in timeReg.allMatches(timeString)) {
-      parsedHour = Math.parseInt(m.group(1));
-      parsedMinutes = Math.parseInt(m.group(2));
+      parsedHour = parseInt(m.group(1));
+      parsedMinutes = parseInt(m.group(2));
     }
 
     if (parsedHour == null || parsedMinutes == null) return null;
