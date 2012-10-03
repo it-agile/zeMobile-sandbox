@@ -58,7 +58,6 @@ void monthDisplayTests() {
 
       monthDisplay.updateMonth(new Month(2012, 7, timeEntries: [timeEntryOnAntherDay]));
 
-      print(dayDisplay.getLogs());
       dayDisplay.getLogs(callsTo('updateTimeEntries', [])).verify(happenedOnce);
     });
   });

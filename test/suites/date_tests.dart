@@ -50,6 +50,9 @@ void dateTests() {
       date.forEachDayOfMonth((day) => iterResult.add(day.day));
       expect(iterResult.toString(), equals('1234567891011121314151617181920212223242526272829'));
     });
+    group('2012-10-28',() {
+      test('should be followed by 2012-10-28', () => expect(new ZeDate(28,10,2012).nextDay(), equals(new ZeDate(29,10,2012))));
+    });
 
 
   });

@@ -1,5 +1,5 @@
 class ZeDate {
-  static final DAY_DURATION = const Duration(days:1);
+  static final DAY_DURATION = const Duration(days:1, hours:10);
   static final MONTH_DURATION = const Duration(days:30);
   final int day; 
   final int month; 
