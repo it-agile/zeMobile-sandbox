@@ -122,5 +122,25 @@ void timeEntryRepositoryTests() {
       timeEntryRespository.removeChangedTimeEntry(timeEntry);
       expect(storage['2012-02-02-7'], isNull);
     });
+    test('should have no changed time entries if no where added', () {
+      storage['month'] = '2';
+      storage['year'] = '2012';
+      expect(timeEntryRespository.hasChangedTimeEntriesForMonth(), isFalse);
+    });
+    test('should have changed time entries if one was added', () {
+      storage['month'] = '2';
+      storage['year'] = '2012';
+      timeEntryRespository.rememberChangedTimeEntry(timeEntry);
+      expect(timeEntryRespository.hasChangedTimeEntriesForMonth(), isTrue);
+    });
+    test('should remove all changed entries for a month', () {
+      storage['month'] = '2';
+      storage['year'] = '2012';
+      timeEntryRespository.rememberChangedTimeEntry(timeEntry);
+      timeEntry.changeSlot = null;
+      timeEntryRespository.rememberChangedTimeEntry(timeEntry);
+      timeEntryRespository.removeAllChangedTimeEntriesForMonth();
+      expect(timeEntryRespository.hasChangedTimeEntriesForMonth(), isFalse);
+    });
   });
 }

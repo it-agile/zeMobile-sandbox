@@ -59,6 +59,14 @@ class TimeEntryRepository {
     storage.remove(entry.changeSlot);
   }
 
+  void removeAllChangedTimeEntriesForMonth() {
+    changedTimeEntriesForMonth().forEach((entry) => removeChangedTimeEntry(entry));
+  }
+
+  bool hasChangedTimeEntriesForMonth() {
+    return changedTimeEntriesForMonth().length > 0;
+  }
+
   String findNextFreeSlot(ZeDate date) {
     var slot = 1;
     while (storage[createSlotKey(date, slot)] != null) slot++;
