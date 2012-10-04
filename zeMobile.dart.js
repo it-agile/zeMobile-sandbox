@@ -723,10 +723,12 @@ $$.ActivityRepository = {"":
 };
 
 $$.UserRepository = {"":
- [],
+ ["storage"],
  "super": "Object",
- loadUser$0: function(){var userName=$.index($.document().get$window().get$localStorage(),'user');var password=$.index($.document().get$window().get$localStorage(),'password');if(!(userName==null)&&!(password==null))return $.User$(userName,password);return;},
- saveUser$1: function(user){$.indexSet($.document().get$window().get$localStorage(),'user',user.get$name());$.indexSet($.document().get$window().get$localStorage(),'password',user.get$password());}
+ loadUser$0: function(){var t1=this.storage;if(!($.index(t1,'user')==null)){t1.remove$1('user');t1.remove$1('password');}if(!($.index(t1,'up')==null))return this.decrypt$1($.index(t1,'up'));return;},
+ saveUser$1: function(user){$.indexSet(this.storage,'up',this.encrypt$1(user));},
+ encrypt$1: function(user){var userAndPassword='##0978656#-uztsgsg#!!'+$.S(user.get$name())+'@!!!UP!!!@'+$.S(user.get$password());var t1=userAndPassword.length;var middle=$.toInt($.floor(t1/2));var first=$.substring$2(userAndPassword,0,middle);var second=$.substring$1(userAndPassword,middle);var result=$.StringBuffer_StringBuffer('');for(var i=0;$.ltB(i,$.get$length(first));++i){var t2=i+1;$.add$1(result,$.substring$2(second,i,t2));$.add$1(result,$.substring$2(first,i,t2));}if(!($.mod(t1,2)===0))$.add$1(result,$.substring$1(second,$.sub($.get$length(second),1)));return $.toString(result);},
+ decrypt$1: function(userAndPasswordEncrypted){$.toInt($.floor($.div($.get$length(userAndPasswordEncrypted),2)));var first=$.StringBuffer_StringBuffer('');var second=$.StringBuffer_StringBuffer('');for(var i=0;$.ltB(i,$.sub($.get$length(userAndPasswordEncrypted),1));i+=2){var t1=i+1;$.add$1(second,$.substring$2(userAndPasswordEncrypted,i,t1));$.add$1(first,$.substring$2(userAndPasswordEncrypted,t1,i+2));}if(!$.eqB($.mod($.get$length(userAndPasswordEncrypted),2),0))$.add$1(second,$.substring$1(userAndPasswordEncrypted,$.sub($.get$length(userAndPasswordEncrypted),1)));var userAndPassword=$.substring$1($.S(first)+$.S(second),21);var delimIndex=$.indexOf$1(userAndPassword,'@!!!UP!!!@');return $.User$($.substring$2(userAndPassword,0,delimIndex),$.substring$1(userAndPassword,$.add(delimIndex,10)));}
 };
 
 $$.TimeEntryRepository = {"":
@@ -734,7 +736,7 @@ $$.TimeEntryRepository = {"":
  "super": "Object",
  loadMonth$0: function(){var monthJSONString=$.index(this.storage,'monthData');return this.extractMonth$1(!(monthJSONString==null)?$.JSON_parse(monthJSONString):null);},
  saveMonth$1: function(month){$.indexSet(this.storage,'monthData',this.serializeMonth$1(month));},
- hasMonth$2: function(month,year){return $.eqB($.index($.document().get$window().get$localStorage(),'month'),$.S(month))&&$.eqB($.index($.document().get$window().get$localStorage(),'year'),$.S(year));},
+ hasMonth$2: function(month,year){var t1=this.storage;return $.eqB($.index(t1,'month'),$.S(month))&&$.eqB($.index(t1,'year'),$.S(year));},
  importMonthFromJSON$1: function(monthJSON){var monthMap=$.JSON_parse(monthJSON);var year=$.index(monthMap,'jahr');var month=$.index(monthMap,'monat');var t1=this.storage;$.indexSet(t1,'monthData',monthJSON);$.indexSet(t1,'month',$.S(month));$.indexSet(t1,'year',$.S(year));},
  rememberChangedTimeEntry$1: function(entry){var slotKey=entry.get$changeSlot();slotKey=!(slotKey==null)?slotKey:this.findNextFreeSlot$1(entry.get$date());entry.set$changeSlot(slotKey);$.indexSet(this.storage,slotKey,this.serializeTimeEntry$1(entry));},
  changedTimeEntriesForMonth$0: function(){var result=[];var t1=this.storage;if(!($.index(t1,'month')==null))$.ZeDate$(1,$.parseInt($.index(t1,'month')),$.parseInt($.index(t1,'year'))).forEachDayOfMonth$1(new $.TimeEntryRepository_changedTimeEntriesForMonth_anon(this,result));return result;},
@@ -2054,6 +2056,8 @@ call$3: function(p0, p1, p2) { return this.self[this.target](p0, p1, p2); },
   return this.call$3(when,grainOffset,null)
 }
 };
+$.div$slow = function(a,b){if($.checkNumbers(a,b))return a / b;return a.operator$div$1(b);};
+
 $._InputElementEventsImpl$ = function(_ptr){return new $._InputElementEventsImpl(_ptr);};
 
 $._NativeJsSendPort$ = function(_receivePort,isolateId){return new $._NativeJsSendPort(_receivePort,isolateId);};
@@ -2112,7 +2116,7 @@ $.parseDouble = function(string){return $.double_parse(string);};
 
 $._convertDartToNative_PrepareForStructuredClone = function(value){var values=[];var copies=[];var t1=new $._convertDartToNative_PrepareForStructuredClone_findSlot(copies,values);var t2=new $._convertDartToNative_PrepareForStructuredClone_readSlot(copies);var t3=new $._convertDartToNative_PrepareForStructuredClone_writeSlot(copies);var t4=new $._convertDartToNative_PrepareForStructuredClone_cleanupSlots();var copy=new $._convertDartToNative_PrepareForStructuredClone_walk(t3,t1,t2).call$1(value);t4.call$0();return copy;};
 
-$.floor = function(receiver){return Math.floor(receiver);};
+$.floor = function(receiver){if(!(typeof receiver==='number'))return receiver.floor$0();return Math.floor(receiver);};
 
 $.MonthDisplayView$ = function(expander){return new $.MonthDisplayView(expander,null,null,null,null);};
 
@@ -2235,9 +2239,9 @@ $.regExpAttachGlobalNative = function(regExp){regExp._re = $.regExpMakeNative(re
 
 $.DateImplementation$fromMillisecondsSinceEpoch = function(millisecondsSinceEpoch,isUtc){var t1=new $.DateImplementation(millisecondsSinceEpoch,isUtc);t1.DateImplementation$fromMillisecondsSinceEpoch$2(millisecondsSinceEpoch,isUtc);return t1;};
 
-$._IDBRequestEventsImpl$ = function(_ptr){return new $._IDBRequestEventsImpl(_ptr);};
-
 $.mod = function(a,b){if($.checkNumbers(a,b)){var result=a % b;if(result===0)return 0;if(result>0)return result;if(b<0)return result-b;else return result+b;}return a.operator$mod$1(b);};
+
+$._IDBRequestEventsImpl$ = function(_ptr){return new $._IDBRequestEventsImpl(_ptr);};
 
 $.Collections_collectionToString = function(c){var result=$.StringBuffer_StringBuffer('');$.Collections__emitCollection(c,result,$.ListImplementation_List(null));return $.toString(result);};
 
@@ -2409,6 +2413,8 @@ $.indexSet = function(a,index,value){if(a.constructor === Array && !a.immutable$
 
 $.index$slow = function(a,index){if(typeof a==='string'||$.isJsArray(a)){if(!(typeof index==='number'&&Math.floor(index) === index)){if(!(typeof index==='number'))throw $.$$throw($.ArgumentError$(index));if(!($.truncate(index)===index))throw $.$$throw($.ArgumentError$(index));}if($.ltB(index,0)||$.geB(index,$.get$length(a)))throw $.$$throw($.IndexOutOfRangeException$(index));return a[index];}return a.operator$index$1(index);};
 
+$.div = function(a,b){return typeof a==='number'&&typeof b==='number'?a / b:$.div$slow(a,b);};
+
 $.Future_Future$immediate = function(value){return $.FutureImpl_FutureImpl$immediate(value);};
 
 $.Primitives_valueFromDecomposedDate = function(years,month,day,hours,minutes,seconds,milliseconds,isUtc){$.checkInt(years);$.checkInt(month);$.checkInt(day);$.checkInt(hours);$.checkInt(minutes);$.checkInt(seconds);$.checkInt(milliseconds);$.checkBool(isUtc);var jsMonth=$.sub(month,1);var value=isUtc?Date.UTC(years, jsMonth, day, hours, minutes, seconds, milliseconds):new Date(years, jsMonth, day, hours, minutes, seconds, milliseconds).valueOf();if($.isNaN(value)===true||value<-8640000000000000||value>8640000000000000)throw $.$$throw($.ArgumentError$(''));if($.leB(years,0)||$.ltB(years,100))return $.Primitives_patchUpY2K(value,years,isUtc);return value;};
@@ -2529,7 +2535,7 @@ $.map = function(receiver,f){if(!$.isJsArray(receiver))return receiver.map$1(f);
 
 $._convertNativeToDart_AcceptStructuredClone = function(object){var values=[];var copies=[];var t1=new $._convertNativeToDart_AcceptStructuredClone_findSlot(copies,values);var t2=new $._convertNativeToDart_AcceptStructuredClone_readSlot(copies);return new $._convertNativeToDart_AcceptStructuredClone_walk(new $._convertNativeToDart_AcceptStructuredClone_writeSlot(copies),t1,t2).call$1(object);};
 
-$.UserRepository$ = function(){return new $.UserRepository();};
+$.UserRepository$ = function(){return new $.UserRepository($.document().get$window().get$localStorage());};
 
 $._FrozenCSSClassSet$ = function(){return new $._FrozenCSSClassSet(null);};
 
@@ -2584,6 +2590,8 @@ $._Collections_map = function(source,destination,f){for(var t1=$.iterator(source
 $.isNaN = function(receiver){if(typeof receiver==='number')return isNaN(receiver);else return receiver.isNaN$0();};
 
 $.iterator = function(receiver){if($.isJsArray(receiver))return $.ListIterator$(receiver);return receiver.iterator$0();};
+
+$.toInt = function(receiver){if(!(typeof receiver==='number'))return receiver.toInt$0();if($.isNaN(receiver)===true)throw $.$$throw($.FormatException$('NaN'));if($.isInfinite(receiver)===true)throw $.$$throw($.FormatException$('Infinity'));var truncated=$.truncate(receiver);return truncated == -0.0?0:truncated;};
 
 $.lastIndexOf$1 = function(receiver,element){if($.isJsArray(receiver))return $.Arrays_lastIndexOf(receiver,element,receiver.length);else if(typeof receiver==='string'){$.checkNull(element);return receiver.lastIndexOf(element);}return receiver.lastIndexOf$1(element);};
 
@@ -2663,6 +2671,8 @@ $.Completer_Completer = function(){return $.CompleterImpl$();};
 
 $.CompleterImpl$ = function(){return new $.CompleterImpl($.FutureImpl$());};
 
+$.isInfinite = function(receiver){return receiver == Infinity||receiver == -Infinity;};
+
 $.HashMapImplementation__computeLoadLimit = function(capacity){return $.tdiv(capacity*3,4);};
 
 $.DivElement_DivElement = function(){return $._Elements_createDivElement();};
@@ -2723,8 +2733,6 @@ $.replaceAll = function(receiver,from,to){if(!(typeof receiver==='string'))retur
 
 $.setRange$3 = function(receiver,start,length$,from){if($.isJsArray(receiver))return $.setRange$4(receiver,start,length$,from,0);return receiver.setRange$3(start,length$,from);};
 
-$.Arrays_lastIndexOf = function(a,element,startIndex){if(typeof a!=='string'&&(typeof a!=='object'||a===null||a.constructor!==Array&&!a.is$JavaScriptIndexingBehavior()))return $.Arrays_lastIndexOf$bailout(1,a,element,startIndex);if(startIndex<0)return -1;var t1=a.length;if(startIndex>=t1)startIndex=t1-1;for(var i=startIndex;i>=0;--i){if(i!==(i|0))throw $.iae(i);if(i<0||i>=a.length)throw $.ioore(i);if($.eqB(a[i],element))return i;}return -1;};
-
 $._Device_isOpera = function(){return $.contains$2($._Device_userAgent(),'Opera',0);};
 
 $.toString = function(value){if(typeof value == "object" && value !== null)if($.isJsArray(value))return $.Collections_collectionToString(value);else return value.toString$0();if(value === 0 && (1 / value) < 0)return '-0.0';if(value==null)return 'null';if(typeof value == "function")return 'Closure';return String(value);};
@@ -2756,6 +2764,8 @@ $._TextTrackCueEventsImpl$ = function(_ptr){return new $._TextTrackCueEventsImpl
 $.regExpExec = function(regExp,str){var result=$.regExpGetNative(regExp).exec(str);if(result === null)return;return result;};
 
 $.endsWith = function(receiver,other){$.checkString(other);var receiverLength=receiver.length;var otherLength=other.length;if(otherLength>receiverLength)return false;return other===$.substring$1(receiver,receiverLength-otherLength);};
+
+$.Arrays_lastIndexOf = function(a,element,startIndex){if(typeof a!=='string'&&(typeof a!=='object'||a===null||a.constructor!==Array&&!a.is$JavaScriptIndexingBehavior()))return $.Arrays_lastIndexOf$bailout(1,a,element,startIndex);if(startIndex<0)return -1;var t1=a.length;if(startIndex>=t1)startIndex=t1-1;for(var i=startIndex;i>=0;--i){if(i!==(i|0))throw $.iae(i);if(i<0||i>=a.length)throw $.ioore(i);if($.eqB(a[i],element))return i;}return -1;};
 
 $._SpeechRecognitionEventsImpl$ = function(_ptr){return new $._SpeechRecognitionEventsImpl(_ptr);};
 

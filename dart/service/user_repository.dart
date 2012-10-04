@@ -1,18 +1,63 @@
 class UserRepository {
+  final Storage storage;
+
+  UserRepository(): storage = document.window.localStorage;
+
+
   User loadUser() {
-    var userName = document.window.localStorage[USER_KEY];
-    var password = document.window.localStorage[PASSWORD_KEY];
-    if (userName != null && password != null) {
-      return new User(userName, password);
+    if (storage[USER_KEY] != null) {
+      storage.remove(USER_KEY);
+      storage.remove(PASSWORD_KEY);
+    }
+    if (storage[USER_PASSWORD_KEY] != null) {
+      return decrypt(storage[USER_PASSWORD_KEY]);
     }
     return null;
   }
 
   void saveUser(User user) {
-    document.window.localStorage[USER_KEY] = user.name;
-    document.window.localStorage[PASSWORD_KEY] = user.password;
+    storage[USER_PASSWORD_KEY] = encrypt(user);
+  }
+
+  String encrypt(User user) {
+    var userAndPassword = '$ENC_GARBAGE${user.name}$USER_PASSWORD_DELIM${user.password}';
+    var middle = (userAndPassword.length / 2).floor().toInt();
+    var first = userAndPassword.substring(0, middle);
+    var second = userAndPassword.substring(middle);
+    var result = new StringBuffer();
+    for (var i = 0; i < first.length; i++) {
+      result.add(second.substring(i, i+1));
+      result.add(first.substring(i, i+1));
+    }
+    if (userAndPassword.length % 2 != 0) {
+      result.add(second.substring(second.length - 1));
+    }
+    return result.toString();
+  }
+
+  User decrypt(String userAndPasswordEncrypted) {
+    var middle = (userAndPasswordEncrypted.length / 2).floor().toInt();
+    var first = new StringBuffer();
+    var second = new StringBuffer();
+
+    for (var i = 0; i < userAndPasswordEncrypted.length - 1; i+=2) {
+      second.add(userAndPasswordEncrypted.substring(i, i+1));
+      first.add(userAndPasswordEncrypted.substring(i+1, i+2));
+    }
+    if (userAndPasswordEncrypted.length % 2 != 0) {
+      second.add(userAndPasswordEncrypted.substring(userAndPasswordEncrypted.length - 1));
+    }
+
+    var userAndPassword = '$first$second';
+    userAndPassword = userAndPassword.substring(ENC_GARBAGE.length);
+    var delimIndex = userAndPassword.indexOf(USER_PASSWORD_DELIM);
+    return new User(userAndPassword.substring(0, delimIndex),
+                    userAndPassword.substring(delimIndex + USER_PASSWORD_DELIM.length));
   }
 
   static final USER_KEY = 'user';
   static final PASSWORD_KEY = 'password';
+  static final USER_PASSWORD_KEY = 'up';
+  static final USER_PASSWORD_DELIM = '@!!!UP!!!@';
+  static final ENC_GARBAGE = '##0978656#-uztsgsg#!!';
 }

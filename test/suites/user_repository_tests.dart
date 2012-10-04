@@ -3,6 +3,8 @@ void userRepositoryTests() {
 
   group('A user repository', () {
     var userRepository = new UserRepository();
+    var userEven = new User('abc', 'defgh');
+    var userOdd = new User('abc', 'defg');
     setUp(() {
       storage.clear();
     });
@@ -14,11 +16,13 @@ void userRepositoryTests() {
         userRepository.saveUser(user);
       });
       test('should have saved the name of the user in the local storage', () =>
-        expect(storage[UserRepository.USER_KEY], equals(user.name)));
-      test('should have saved the password of the user in the local storage', () =>
-        expect(storage[UserRepository.PASSWORD_KEY], equals(user.password)));
+        expect(storage[UserRepository.USER_PASSWORD_KEY], isNotNull));
       test('should create a user based on the saved data upon load', () =>
         expect(userRepository.loadUser(), equals(user)));
     });
+    test('should encrypt/decrypt user/password with even number of characters', () =>
+      expect(userRepository.decrypt(userRepository.encrypt(userEven)), equals(userEven)));
+    test('should encrypt/decrypt user/password with odd number of characters', () =>
+      expect(userRepository.decrypt(userRepository.encrypt(userOdd)), equals(userOdd)));
   });
 }

@@ -14,8 +14,8 @@ class TimeEntryRepository {
   }
 
   bool hasMonth(int month, int year) {
-    return document.window.localStorage[MONTH_KEY] == '$month'
-      && document.window.localStorage[YEAR_KEY] == '$year';
+    return storage[MONTH_KEY] == '$month'
+      && storage[YEAR_KEY] == '$year';
   }
 
   void importMonthFromJSON(String monthJSON) {
