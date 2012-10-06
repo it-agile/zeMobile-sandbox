@@ -1,8 +1,4 @@
-class TimeEntryRepository {
-  final Storage storage;
-
-  TimeEntryRepository(): storage = document.window.localStorage;
-
+class TimeEntryRepository extends Repository {
   Month loadMonth() {
     var monthJSONString = storage[MONTHDATA_KEY];
     var monthJSON = monthJSONString != null ? JSON.parse(monthJSONString) : null;

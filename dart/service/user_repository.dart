@@ -1,9 +1,4 @@
-class UserRepository {
-  final Storage storage;
-
-  UserRepository(): storage = document.window.localStorage;
-
-
+class UserRepository extends Repository {
   User loadUser() {
     if (storage[USER_KEY] != null) {
       storage.remove(USER_KEY);

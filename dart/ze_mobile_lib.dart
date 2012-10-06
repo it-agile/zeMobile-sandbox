@@ -24,6 +24,7 @@
 #source('model/date.dart');
 #source('model/time.dart');
 
+#source('service/repository.dart');
 #source('service/web_service_requester.dart');
 #source('service/activity_provider.dart');
 #source('service/time_entry_provider.dart');

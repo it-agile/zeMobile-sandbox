@@ -1,6 +1,6 @@
-class ActivityRepository {
+class ActivityRepository extends Repository {
   List<Project> loadProjects() {
-      var projectsJSON = document.window.localStorage[PROJECTS_KEY];
+      var projectsJSON = storage[PROJECTS_KEY];
       if (projectsJSON != null) {
           return extractProjects(projectsJSON);
       }
@@ -8,7 +8,7 @@ class ActivityRepository {
   }
 
   void importProjectsFromJSON(String projectsJSON) {
-      document.window.localStorage[PROJECTS_KEY] = projectsJSON;
+      storage[PROJECTS_KEY] = projectsJSON;
   }
 
   List<Project> extractProjects(String projectsJSON) {
