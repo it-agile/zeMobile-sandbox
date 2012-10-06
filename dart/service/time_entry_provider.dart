@@ -15,6 +15,7 @@ class TimeEntryProvider {
       return new Future.immediate(loadedMonth);
     } else {
       monthLoadedFromCache = false;
+      repository.removeAllChangedTimeEntriesForMonth();
       return refetchTimeEntries(month, year);
     }
   }

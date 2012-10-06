@@ -24,6 +24,11 @@ void timeEntryProviderTests() {
       var timeEntryFuture = timeEntryProvider.fetchTimeEntries(4, 2012);
       expect(timeEntryFuture.value, same(month));
     });
+
+    test('should remove saved changed time entries from previously loaded month', () {
+      timeEntryProvider.fetchTimeEntries(4, 2012);
+      timeEntryRepository.getLogs(callsTo('removeAllChangedTimeEntriesForMonth')).verify(happenedOnce);
+    });
   });
 
   group('A time entry provider fetching an existing month', () {
