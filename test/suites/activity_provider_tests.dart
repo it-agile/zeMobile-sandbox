@@ -3,7 +3,7 @@ void activityProviderTests() {
     var errorDisplay = new ErrorDisplayMock();
     var webServiceRequester = new WebServiceRequesterMock();
     var activityRespository = new ActivityRepositoryMock();
-    var activityProvider = new ActivityProvider(errorDisplay, activityRespository, webServiceRequester);
+    var activityProvider = new ActivityProvider(errorDisplay, activityRespository, null, webServiceRequester);
     var fetchedProjectsFuture = null;
 
     setUp(() {
@@ -42,10 +42,42 @@ void activityProviderTests() {
     var p2a2 = new Activity(4, 'P2T2');
     var p2 = new Project('P2', [p2a1, p2a2]);
 
-    var activityProvider = new ActivityProvider(null, null, null);
+    var activityProvider = new ActivityProvider(null, null, null, null);
     activityProvider.fetchedProjects = [p1, p2];
     
     test('should return activity p2a1 for id 3', () => expect(activityProvider.activityWithId(3), equals(p2a1)));
     test('should return project p1 for activity p1a2', () => expect(activityProvider.projectWithActivity(p1a2), equals(p1)));
-  }); 
+  });
+
+  group('An activity provider handling top projects', () {
+    var settingsProvider = new SettingsProviderMock();
+    var activityRepository = new ActivityRepositoryMock();
+
+    var p1a1 = new Activity(1, 'P1T1');
+    var p1a2 = new Activity(2, 'P1T2');
+    var p1 = new Project('P1', [p1a1, p1a2]);
+    var p2a1 = new Activity(3, 'P2T1');
+    var p2a2 = new Activity(4, 'P2T2');
+    var p2 = new Project('P2', [p2a1, p2a2]);
+    ActivityProvider activityProvider;
+
+    setUp(() {
+      clearMocks([settingsProvider, activityRepository]);
+      activityProvider = new ActivityProvider(null, activityRepository, settingsProvider, null);
+      activityProvider.fetchedProjects = [p1, p2];
+    });
+
+    test('should return a list of projects for the list of top project names from the repository', () {
+      activityRepository.when(callsTo('loadTopProjectNames')).thenReturn(['P1']);
+      expect(activityProvider.topProjects, equals([p1]));
+    });
+
+    test('should not load project names from repository if top projects are already cached', () {
+      activityProvider.cachedTopProjects = [p1];
+      activityProvider.topProjects;
+      activityRepository.getLogs(callsTo('loadTopProjectNames')).verify(neverHappened);
+
+    });
+
+  });
 }

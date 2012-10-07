@@ -4,6 +4,8 @@ class ActivityRepositoryMock extends Mock implements ActivityRepository {}
 class ActivityProviderMock extends Mock implements ActivityProvider {}
 class TimeEntryRepositoryMock extends Mock implements TimeEntryRepository {}
 class TimeEntryProviderMock extends Mock implements TimeEntryProvider {}
+class SettingsRepositoryMock extends Mock implements SettingsRepository {}
+class SettingsProviderMock extends Mock implements SettingsProvider {}
 class DayDisplayMock extends Mock implements DayDisplay {}
 class DayDisplayViewMock extends Mock implements DayDisplayView {}
 class DayDisplayModelMock extends Mock implements DayDisplayModel {}

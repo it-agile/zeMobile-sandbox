@@ -33,6 +33,19 @@ void activityRepositoryTests() {
       test('should have saved the projects JSON into the storage', () =>
         expect(storage[ActivityRepository.PROJECTS_KEY], equals(projectsJSON)));
       test('should create a project based on the saved JSON', () => expect(activityRepository.loadProjects()[0], equals(project)));
+      test('should load the previously saved top projects', () {
+        activityRepository.saveTopProjectNames(['p 1', 'p 2']);
+        expect(activityRepository.loadTopProjectNames(), equals(['p 1', 'p 2']));
+      });
+      test('should load the previously saved top activities for a project', () {
+        activityRepository.saveTopActivitiesForProject('p 1', [1, 2]);
+        expect(activityRepository.loadTopActivitiesForProject('p 1'), equals([1, 2]));
+      });
+      test('should delete top activities for a project', () {
+        activityRepository.saveTopActivitiesForProject('p 1', [1, 2]);
+        activityRepository.deleteTopActivitiesForProject('p 1');
+        expect(activityRepository.loadTopActivitiesForProject('p 1'), isNull);
+      });
 
     });
 

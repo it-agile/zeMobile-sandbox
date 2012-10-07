@@ -1,8 +1,8 @@
-class Settings {
-  SettingsView view;
+class SettingsEditor {
+  SettingsEditorView view;
   ActivityProvider activityProvider;
 
-  Settings(this.view, this.activityProvider);
+  SettingsEditor(this.view, this.activityProvider);
 
   Element createUI() {
     view.createUI();
@@ -27,7 +27,7 @@ class Settings {
   }
 }
 
-class SettingsView {
+class SettingsEditorView {
   Expander expander;
   Element containerElement;
   Element reloadActivitiesButton;
@@ -36,7 +36,7 @@ class SettingsView {
   InputElement passwordInput;
   Element changeLoginButton;
 
-  SettingsView(this.expander);
+  SettingsEditorView(this.expander);
 
   createUI() {
     containerElement = new DivElement();

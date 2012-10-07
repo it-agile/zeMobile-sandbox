@@ -15,7 +15,7 @@
 #source('../dart/component/time_entry_editor.dart');
 #source('../dart/component/time_entry_editor_model.dart');
 #source('../dart/component/time_entry_editor_view.dart');
-#source('../dart/component/settings.dart');
+#source('../dart/component/settings_editor.dart');
 
 #source('../dart/model/user.dart');
 #source('../dart/model/month.dart');
@@ -24,6 +24,7 @@
 #source('../dart/model/activity.dart');
 #source('../dart/model/date.dart');
 #source('../dart/model/time.dart');
+#source('../dart/model/settings.dart');
 
 #source('../dart/service/repository.dart');
 #source('../dart/service/web_service_requester.dart');
@@ -32,6 +33,8 @@
 #source('../dart/service/activity_repository.dart');
 #source('../dart/service/user_repository.dart');
 #source('../dart/service/time_entry_repository.dart');
+#source('../dart/service/settings_repository.dart');
+#source('../dart/service/settings_provider.dart');
 #source('../dart/service/event_dispatcher.dart');
 
 #source('../dart/ui/expander.dart');

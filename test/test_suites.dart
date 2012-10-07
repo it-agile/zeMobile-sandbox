@@ -21,6 +21,8 @@
 #source('suites/activity_provider_tests.dart');
 #source('suites/time_entry_repository_tests.dart');
 #source('suites/time_entry_provider_tests.dart');
+#source('suites/settings_repository_tests.dart');
+#source('suites/settings_provider_tests.dart');
 #source('suites/event_dispatcher_tests.dart');
 
 #source('suites/login_tests.dart');
@@ -43,6 +45,8 @@ void testSuites() {
   activityProviderTests();
   timeEntryRepositoryTests();
   timeEntryProviderTests();
+  settingsRepositoryTests();
+  settingsProviderTests();
   eventDispatcherTests();
 
   loginTests();

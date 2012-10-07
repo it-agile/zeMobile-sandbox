@@ -4,9 +4,21 @@ class ActivityProvider {
   final ErrorDisplay errorDisplay;
   final WebServiceRequester requester;
   final ActivityRepository repository;
+  final SettingsProvider settingsProvider;
   List<Project> fetchedProjects;
+  List<Project> cachedTopProjects;
   
-  ActivityProvider(this.errorDisplay, this.repository, this.requester);
+  ActivityProvider(this.errorDisplay, this.repository, this.settingsProvider, this.requester);
+
+  List<Project> get topProjects() {
+    if(cachedTopProjects == null) {
+      cachedTopProjects = [];
+      repository.loadTopProjectNames().forEach((projectName) {
+        cachedTopProjects.addAll(fetchedProjects.filter((project) => project.name == projectName));
+      });
+    }
+    return cachedTopProjects;
+  }
 
   Future<List<Project>> refetchProjects() {
     var result = requester.sendGet('/api/projekte/');

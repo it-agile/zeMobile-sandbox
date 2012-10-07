@@ -11,6 +11,28 @@ class ActivityRepository extends Repository {
       storage[PROJECTS_KEY] = projectsJSON;
   }
 
+  List<String> loadTopProjectNames() {
+    var topProjects = storage[TOP_PROJECTS_KEY];
+    return topProjects != null ? JSON.parse(topProjects) : null;
+  }
+
+  void saveTopProjectNames(List<String> projectNames) {
+    storage[TOP_PROJECTS_KEY] = JSON.stringify(projectNames);
+  }
+
+  List<int> loadTopActivitiesForProject(String projectName) {
+    var topActivities = storage['$TOP_ACTIVITIES_KEY_PREFIX$projectName'];
+    return topActivities != null ? JSON.parse(topActivities) : null;
+  }
+
+  void saveTopActivitiesForProject(String projectName, List<int> topActivities) {
+    storage['$TOP_ACTIVITIES_KEY_PREFIX$projectName'] = JSON.stringify(topActivities);
+  }
+
+  void deleteTopActivitiesForProject(String projectName) {
+    storage.remove('$TOP_ACTIVITIES_KEY_PREFIX$projectName');
+  }
+
   List<Project> extractProjects(String projectsJSON) {
       var projectJSONs = JSON.parse(projectsJSON);
       var projects = new List.from(projectJSONs.map(extractProject));
@@ -30,4 +52,6 @@ class ActivityRepository extends Repository {
   }
 
   static final PROJECTS_KEY = 'projects';
+  static final TOP_PROJECTS_KEY = 'topProjects';
+  static final TOP_ACTIVITIES_KEY_PREFIX = 'ta_';
 }

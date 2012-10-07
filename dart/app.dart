@@ -2,7 +2,7 @@ class App {
   final ActivityProvider activityProvider;
   final TimeEntryProvider timeEntryProvider;
   final MonthDisplayFactory monthDisplayFactory;
-  final Settings settings;
+  final SettingsEditor settings;
   final Expander expander;
   
   App(this.activityProvider, this.timeEntryProvider, this.monthDisplayFactory, this.settings, this.expander);
