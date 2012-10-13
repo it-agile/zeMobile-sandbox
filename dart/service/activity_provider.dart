@@ -28,7 +28,11 @@ class ActivityProvider {
       recentProjects.removeAt(lastIndexOfProject);
     }
     while(recentProjects.length > settingsProvider.settings.numberOfRecentProjects) {
-      recentProjects.removeLast();
+      var removedProject = recentProjects.removeLast();
+      if(cachedRecentActivities != null) {
+        cachedRecentActivities.remove(removedProject);
+        repository.deleteRecentActivitiesForProject(removedProject.name);
+      }
     }
     repository.saveRecentProjectNames(recentProjects.map((project) => project.name));
   }

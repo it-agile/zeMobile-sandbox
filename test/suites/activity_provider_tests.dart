@@ -107,6 +107,24 @@ void activityProviderTests() {
       expect(activityProvider.cachedRecentProjects, equals([p1]));
     });
 
+    test('should remove recent activities for removed recent projects', () {
+      settings.numberOfRecentProjects = 1;
+      activityProvider.cachedRecentProjects = [p2];
+      activityProvider.cachedRecentActivities = {};
+      activityProvider.cachedRecentActivities[p2] = [p2a1];
+      activityProvider.addToRecentProjects(p1);
+      expect(activityProvider.cachedRecentActivities[p2], isNull);
+    });
+
+    test('should remove recent activities for removed recent projects in repository', () {
+      settings.numberOfRecentProjects = 1;
+      activityProvider.cachedRecentProjects = [p2];
+      activityProvider.cachedRecentActivities = {};
+      activityProvider.cachedRecentActivities[p2] = [p2a1];
+      activityProvider.addToRecentProjects(p1);
+      activityRepository.getLogs(callsTo('deleteRecentActivitiesForProject', 'P2')).verify(happenedOnce);
+    });
+
     test('should return a list of activities for the list of recent activity ids from the repository', () {
       activityRepository.when(callsTo('loadRecentActivitiesForProject', 'P1')).thenReturn([2, 1]);
       expect(activityProvider.recentActivitiesForProject(p1), equals([p1a2, p1a1]));
