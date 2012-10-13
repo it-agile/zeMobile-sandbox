@@ -44,7 +44,7 @@ void activityRepositoryTests() {
       test('should delete recent activities for a project', () {
         activityRepository.saveRecentActivitiesForProject('p 1', [1, 2]);
         activityRepository.deleteRecentActivitiesForProject('p 1');
-        expect(activityRepository.loadRecentActivitiesForProject('p 1'), isNull);
+        expect(activityRepository.loadRecentActivitiesForProject('p 1'), isEmpty);
       });
 
     });

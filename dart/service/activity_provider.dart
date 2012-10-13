@@ -7,6 +7,7 @@ class ActivityProvider {
   final SettingsProvider settingsProvider;
   List<Project> fetchedProjects;
   List<Project> cachedRecentProjects;
+  Map<Project, List<Activity>> cachedRecentActivities;
   
   ActivityProvider(this.errorDisplay, this.repository, this.settingsProvider, this.requester);
 
@@ -18,6 +19,45 @@ class ActivityProvider {
       });
     }
     return cachedRecentProjects;
+  }
+
+  void addToRecentProjects(Project project) {
+    recentProjects.insertRange(0,1, project);
+    var lastIndexOfProject = recentProjects.lastIndexOf(project);
+    if (lastIndexOfProject > 0) {
+      recentProjects.removeAt(lastIndexOfProject);
+    }
+    while(recentProjects.length > settingsProvider.settings.numberOfRecentProjects) {
+      recentProjects.removeLast();
+    }
+    repository.saveRecentProjectNames(recentProjects.map((project) => project.name));
+  }
+
+  List<Activity> recentActivitiesForProject(Project project) {
+    if (cachedRecentActivities == null) {
+      cachedRecentActivities = {};
+    }
+    var recentActivities = cachedRecentActivities[project];
+    if (recentActivities == null) {
+      var recentActivityIds = repository.loadRecentActivitiesForProject(project.name);
+      recentActivities = recentActivityIds.map((id) => activityWithId(id));
+      cachedRecentActivities[project] = recentActivities;
+    }
+
+    return recentActivities;
+  }
+
+  void addToRecentActivitiesOfProject(Project project, Activity activity) {
+    var recentActivities = recentActivitiesForProject(project);
+    recentActivities.insertRange(0,1, activity);
+    var lastIndexOfActivity = recentActivities.lastIndexOf(activity);
+    if (lastIndexOfActivity > 0) {
+      recentActivities.removeAt(lastIndexOfActivity);
+    }
+    while(recentActivities.length > settingsProvider.settings.numberOfRecentActivities) {
+      recentActivities.removeLast();
+    }
+    repository.saveRecentActivitiesForProject(project.name, recentActivities.map((activity) => activity.id));
   }
 
   Future<List<Project>> refetchProjects() {

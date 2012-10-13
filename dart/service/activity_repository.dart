@@ -13,7 +13,7 @@ class ActivityRepository extends Repository {
 
   List<String> loadRecentProjectNames() {
     var recentProjects = storage[RECENT_PROJECTS_KEY];
-    return recentProjects != null ? JSON.parse(recentProjects) : null;
+    return recentProjects != null ? JSON.parse(recentProjects) : [];
   }
 
   void saveRecentProjectNames(List<String> projectNames) {
@@ -22,7 +22,7 @@ class ActivityRepository extends Repository {
 
   List<int> loadRecentActivitiesForProject(String projectName) {
     var recentActivities = storage['$RECENT_ACTIVITIES_KEY_PREFIX$projectName'];
-    return recentActivities != null ? JSON.parse(recentActivities) : null;
+    return recentActivities != null ? JSON.parse(recentActivities) : [];
   }
 
   void saveRecentActivitiesForProject(String projectName, List<int> topActivities) {

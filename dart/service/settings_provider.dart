@@ -26,8 +26,8 @@ class SettingsProvider {
   void _createDefaultSettingsIfNeeded() {
     if (cachedSettings == null) {
       cachedSettings = new Settings();
-      cachedSettings.numberOfTopProjects = DEFAULT_NUMBER_OF_TOP_PROJECTS;
-      cachedSettings.numberOfTopActivities = DEFAULT_NUMBER_OF_TOP_ACTIVITIES;
+      cachedSettings.numberOfRecentProjects = DEFAULT_NUMBER_OF_TOP_PROJECTS;
+      cachedSettings.numberOfRecentActivities = DEFAULT_NUMBER_OF_TOP_ACTIVITIES;
     }
   }
 }

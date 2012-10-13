@@ -1,11 +1,11 @@
 class Settings {
-  int numberOfTopProjects;
-  int numberOfTopActivities;
+  int numberOfRecentProjects;
+  int numberOfRecentActivities;
 
-  Settings([this.numberOfTopProjects, this.numberOfTopActivities]);
+  Settings([this.numberOfRecentProjects, this.numberOfRecentActivities]);
 
   operator ==(Settings other) => other != null
-    && (this === other || numberOfTopProjects == other.numberOfTopProjects
-                       && numberOfTopActivities == other.numberOfTopActivities);
+    && (this === other || numberOfRecentProjects == other.numberOfRecentProjects
+                       && numberOfRecentActivities == other.numberOfRecentActivities);
 
 }
