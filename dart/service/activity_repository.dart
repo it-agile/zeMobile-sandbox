@@ -11,26 +11,26 @@ class ActivityRepository extends Repository {
       storage[PROJECTS_KEY] = projectsJSON;
   }
 
-  List<String> loadTopProjectNames() {
-    var topProjects = storage[TOP_PROJECTS_KEY];
-    return topProjects != null ? JSON.parse(topProjects) : null;
+  List<String> loadRecentProjectNames() {
+    var recentProjects = storage[RECENT_PROJECTS_KEY];
+    return recentProjects != null ? JSON.parse(recentProjects) : null;
   }
 
-  void saveTopProjectNames(List<String> projectNames) {
-    storage[TOP_PROJECTS_KEY] = JSON.stringify(projectNames);
+  void saveRecentProjectNames(List<String> projectNames) {
+    storage[RECENT_PROJECTS_KEY] = JSON.stringify(projectNames);
   }
 
-  List<int> loadTopActivitiesForProject(String projectName) {
-    var topActivities = storage['$TOP_ACTIVITIES_KEY_PREFIX$projectName'];
-    return topActivities != null ? JSON.parse(topActivities) : null;
+  List<int> loadRecentActivitiesForProject(String projectName) {
+    var recentActivities = storage['$RECENT_ACTIVITIES_KEY_PREFIX$projectName'];
+    return recentActivities != null ? JSON.parse(recentActivities) : null;
   }
 
-  void saveTopActivitiesForProject(String projectName, List<int> topActivities) {
-    storage['$TOP_ACTIVITIES_KEY_PREFIX$projectName'] = JSON.stringify(topActivities);
+  void saveRecentActivitiesForProject(String projectName, List<int> topActivities) {
+    storage['$RECENT_ACTIVITIES_KEY_PREFIX$projectName'] = JSON.stringify(topActivities);
   }
 
-  void deleteTopActivitiesForProject(String projectName) {
-    storage.remove('$TOP_ACTIVITIES_KEY_PREFIX$projectName');
+  void deleteRecentActivitiesForProject(String projectName) {
+    storage.remove('$RECENT_ACTIVITIES_KEY_PREFIX$projectName');
   }
 
   List<Project> extractProjects(String projectsJSON) {
@@ -52,6 +52,6 @@ class ActivityRepository extends Repository {
   }
 
   static final PROJECTS_KEY = 'projects';
-  static final TOP_PROJECTS_KEY = 'topProjects';
-  static final TOP_ACTIVITIES_KEY_PREFIX = 'ta_';
+  static final RECENT_PROJECTS_KEY = 'recentProjects';
+  static final RECENT_ACTIVITIES_KEY_PREFIX = 'ra_';
 }

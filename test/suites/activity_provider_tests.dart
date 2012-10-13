@@ -49,7 +49,7 @@ void activityProviderTests() {
     test('should return project p1 for activity p1a2', () => expect(activityProvider.projectWithActivity(p1a2), equals(p1)));
   });
 
-  group('An activity provider handling top projects', () {
+  group('An activity provider handling recent projects', () {
     var settingsProvider = new SettingsProviderMock();
     var activityRepository = new ActivityRepositoryMock();
 
@@ -67,15 +67,15 @@ void activityProviderTests() {
       activityProvider.fetchedProjects = [p1, p2];
     });
 
-    test('should return a list of projects for the list of top project names from the repository', () {
-      activityRepository.when(callsTo('loadTopProjectNames')).thenReturn(['P1']);
-      expect(activityProvider.topProjects, equals([p1]));
+    test('should return a list of projects for the list of recent project names from the repository', () {
+      activityRepository.when(callsTo('loadRecentProjectNames')).thenReturn(['P1']);
+      expect(activityProvider.recentProjects, equals([p1]));
     });
 
-    test('should not load project names from repository if top projects are already cached', () {
-      activityProvider.cachedTopProjects = [p1];
-      activityProvider.topProjects;
-      activityRepository.getLogs(callsTo('loadTopProjectNames')).verify(neverHappened);
+    test('should not load project names from repository if recent projects are already cached', () {
+      activityProvider.cachedRecentProjects = [p1];
+      activityProvider.recentProjects;
+      activityRepository.getLogs(callsTo('loadRecentProjectNames')).verify(neverHappened);
 
     });
 

@@ -8,14 +8,14 @@ class ZeDate {
   const ZeDate(this.day, this.month, this.year);
   
   factory ZeDate.fromGermanString(String dateString)  {
-    RegExp dateReg = const RegExp(@'(\d*)\.(\d*)\.(\d*)');
+    RegExp dateReg = const RegExp(r'(\d*)\.(\d*)\.(\d*)');
     for(Match m in dateReg.allMatches(dateString)) {
       return new ZeDate(parseInt(m.group(1)), parseInt(m.group(2)), parseInt(m.group(3)));
     }
   }
   
   factory ZeDate.fromString(String dateString)  {
-    RegExp dateReg = const RegExp(@'(\d*)-(\d*)-(\d*)');
+    RegExp dateReg = const RegExp(r'(\d*)-(\d*)-(\d*)');
     for(Match m in dateReg.allMatches(dateString)) {
       return new ZeDate(parseInt(m.group(3)), parseInt(m.group(2)), parseInt(m.group(1)));
     }
