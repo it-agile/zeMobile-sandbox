@@ -147,25 +147,25 @@ class TimeEntryRepository extends Repository {
   num convertToDoubleFromGermanFormat(String doubleString) => parseDouble(doubleString.replaceAll(',', '.'));
 
 
-  static final MONTHDATA_KEY = 'monthData';
-  static final MONTH_KEY = 'month';
-  static final YEAR_KEY = 'year';
+  static const MONTHDATA_KEY = 'monthData';
+  static const MONTH_KEY = 'month';
+  static const YEAR_KEY = 'year';
 
-  static final MONTH_YEAR_KEY = 'jahr';
-  static final MONTH_MONTH_KEY = 'monat';
+  static const MONTH_YEAR_KEY = 'jahr';
+  static const MONTH_MONTH_KEY = 'monat';
 
-  static final MONTH_BALANCE_KEY = 'saldo';
-  static final MONTH_VACATION_KEY = 'urlaub';
-  static final MONTH_HOURS_WORKED_KEY = 'ist_arbeitszeit';
-  static final MONTH_HOURS_TO_WORK_KEY = 'soll_arbeitszeit';
-  static final MONTH_TIME_ENTRIES_KEY = 'zeiten';
+  static const MONTH_BALANCE_KEY = 'saldo';
+  static const MONTH_VACATION_KEY = 'urlaub';
+  static const MONTH_HOURS_WORKED_KEY = 'ist_arbeitszeit';
+  static const MONTH_HOURS_TO_WORK_KEY = 'soll_arbeitszeit';
+  static const MONTH_TIME_ENTRIES_KEY = 'zeiten';
 
 
-  static final TIME_ENTRY_ACTIVITY_KEY = 'taetigkeit';
-  static final TIME_ENTRY_DAY_KEY = 'tag';
-  static final TIME_ENTRY_START_KEY = 'start';
-  static final TIME_ENTRY_END_KEY = 'ende';
-  static final TIME_ENTRY_COMMENT_KEY = 'kommentar';
-  static final TIME_ENTRY_ID_KEY = 'id';
-  static final TIME_ENTRY_CURRENTLY_BEING_EDITED_KEY = 'currentlyBeingEdited';
+  static const TIME_ENTRY_ACTIVITY_KEY = 'taetigkeit';
+  static const TIME_ENTRY_DAY_KEY = 'tag';
+  static const TIME_ENTRY_START_KEY = 'start';
+  static const TIME_ENTRY_END_KEY = 'ende';
+  static const TIME_ENTRY_COMMENT_KEY = 'kommentar';
+  static const TIME_ENTRY_ID_KEY = 'id';
+  static const TIME_ENTRY_CURRENTLY_BEING_EDITED_KEY = 'currentlyBeingEdited';
 }

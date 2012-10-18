@@ -12,6 +12,7 @@ class TimeEntryEditorView {
   Element deleteButton;
   Element cancelButton;
   ActivitiesForProjectDeterminer activitiesDeterminer;
+  ActivitiesForProjectDeterminer recentActivitiesDeterminer;
 
   void createUI() {
     editorElement = new DivElement();
@@ -94,30 +95,62 @@ class TimeEntryEditorView {
   ZeTime get timeTo => new ZeTime.fromString(timeToInput.value);
          set comment(String comment) => commentTextArea.value = (comment != null ? comment : '');
   String get comment => commentTextArea.value;
-         set availableProjects(List<Project> projectList) => _replaceOptions(projectSelect, projectList, (p) => p.name, (p) => p.name);
-         set availableActivities(List<Activity> activityList) => _replaceOptions(activitySelect, activityList, (a) => '${a.id}', (a) => a.name);
          set project(Project project) {if(project != null) _selectOption(projectSelect, project.name);}
          set activity(Activity activity) {if(activity != null) _selectOption(activitySelect, '${activity.id}');}
   String get selectedActivityId => activitySelect.value;
 
-  void _replaceOptions(SelectElement select, List objects, String value(object), String text(object)) {
+  void setupProjects(List<Project> recentProjects, List<Project> projects) {
+    _replaceOptions(projectSelect, 'zuletzt verwendet', recentProjects, 'alle', projects ,
+        (p) => p.name, (p) => p.name);
+  }
+
+  void setupActivities(List<Activity> recentActivites, List<Activity> activities) {
+    _replaceOptions(activitySelect, 'zuletzt verwendet', recentActivites, 'alle', activities ,
+        (a) => "${a.id}", (a) => a.name);
+  }
+
+
+  void _replaceOptions(SelectElement select, String recentObjectsTitle, List recentObjects,
+                       String objectsTitle, List objects, String value(object), String text(object)) {
     while(select.nodes.length > 0) {
       select.nodes[0].remove();
     }
+    OptGroupElement mainGroup = null;
+    if (recentObjects != null && recentObjects.length > 0) {
+      OptGroupElement recentGroup = new OptGroupElement();
+      recentGroup.label = recentObjectsTitle;
+      _addOptionsToSelect(select, recentGroup, recentObjects, value, text);
+      select.nodes.add(recentGroup);
+
+      mainGroup = new OptGroupElement();
+      mainGroup.label = objectsTitle;
+    }
+    _addOptionsToSelect(select, mainGroup, objects, value, text);
+    if(mainGroup != null) {
+      select.nodes.add(mainGroup);
+    }
+  }
+
+  void _addOptionsToSelect(SelectElement select, OptGroupElement optGroup, List objects, String value(object), String text(object)) {
     objects.forEach((object) {
       var option = new OptionElement(text(object), value(object));
-      select.nodes.add(option);
+      if(optGroup != null) {
+        optGroup.nodes.add(option);
+      } else {
+        select.nodes.add(option);
+      }
     });
   }
 
   void _selectOption(SelectElement select, String value) {
     for(int i = 0; i < select.nodes.length; i++) {
-      OptionElement option = select.nodes[i];
-      if(option.value == value) {
-        select.selectedIndex = i;
-        break;
+      if(select.nodes[i] is OptionElement) {
+        OptionElement option = select.nodes[i];
+        if(option.value == value) {
+          select.selectedIndex = i;
+          break;
+        }
       }
-
     }
   }
 
@@ -136,7 +169,11 @@ class TimeEntryEditorView {
 
   void projectSelected() {
     if (_projectSelectIndex != projectSelect.selectedIndex) {
-      availableActivities = activitiesDeterminer(projectSelect.value);
+      var projectName = projectSelect.value;
+      if (projectName != null && projectName.trim().length > 0) {
+        print("projectName : $projectName");
+        setupActivities(recentActivitiesDeterminer(projectName), activitiesDeterminer(projectName));
+      }
       _projectSelectIndex = projectSelect.selectedIndex;
     }
   }

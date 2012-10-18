@@ -21,6 +21,7 @@ class TimeEntryEditor {
   Element createUI() {
     view.createUI();
     view.activitiesDeterminer = model.activitiesForProject;
+    view.recentActivitiesDeterminer = model.recentActivitiesForProject;
     overwriteViewDataWithTimeEntry();
 
     view.editButton.on.click.add(editTouched);
@@ -52,15 +53,15 @@ class TimeEntryEditor {
     view.timeTo = model.end;
     view.comment = model.comment;
     var projects = model.projects;
-    view.availableProjects = projects;
+    view.setupProjects(model.recentProjects, projects);
     var project = model.project;
     if (project != null) {
       view.project = project;
-      view.availableActivities = project.activities;
+      view.projectSelected();
       view.activity = model.activity;
     } else {
       view.project = projects[0];
-      view.availableActivities = projects[0].activities;
+      view.projectSelected();
       view.activity = projects[0].activities[0];
     }
     view.enableEditing(model.currentlyBeingEdited);

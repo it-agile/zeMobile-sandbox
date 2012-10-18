@@ -50,9 +50,9 @@ class UserRepository extends Repository {
                     userAndPassword.substring(delimIndex + USER_PASSWORD_DELIM.length));
   }
 
-  static final USER_KEY = 'user';
-  static final PASSWORD_KEY = 'password';
-  static final USER_PASSWORD_KEY = 'up';
-  static final USER_PASSWORD_DELIM = '@!!!UP!!!@';
-  static final ENC_GARBAGE = '##0978656#-uztsgsg#!!';
+  static const USER_KEY = 'user';
+  static const PASSWORD_KEY = 'password';
+  static const USER_PASSWORD_KEY = 'up';
+  static const USER_PASSWORD_DELIM = '@!!!UP!!!@';
+  static const ENC_GARBAGE = '##0978656#-uztsgsg#!!';
 }

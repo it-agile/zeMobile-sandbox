@@ -17,7 +17,7 @@ void timeEntryEditorModelTests() {
 
     setUp(() {
       clearMocks([activitProvider, timeEntryProvider]);
-      timeEntry = new TimeEntry(TIME_ENTRY_ID, ACTIVITY_ID, DATE, START, END, COMMENT);
+      timeEntry = new TimeEntry(id: TIME_ENTRY_ID, activityId: ACTIVITY_ID, date: DATE, start: START, end: END, comment: COMMENT);
       activitProvider.when(callsTo('get fetchedProjects')).alwaysReturn(projects);
       activitProvider.when(callsTo('activityWithId', ACTIVITY_ID)).thenReturn(activity);
       activitProvider.when(callsTo('projectWithActivity', activity)).thenReturn(project);
@@ -78,6 +78,24 @@ void timeEntryEditorModelTests() {
       model.saveChanges(ACTIVITY_ID + 1, null, null, null);
 
       timeEntryProvider.getLogs(callsTo('save', timeEntry)).verify(happenedOnce);
+    });
+
+    test('should save project as recent project when saving a time entry', () {
+      activitProvider.when(callsTo('activityWithId', ACTIVITY_ID + 1)).thenReturn(activity);
+      activitProvider.when(callsTo('projectWithActivity', activity)).thenReturn(project);
+
+      model.saveChanges(ACTIVITY_ID + 1, null, null, null);
+
+      activitProvider.getLogs(callsTo('addToRecentProjects', project)).verify(happenedOnce);
+    });
+
+    test('should save activity as recent activity when saving a time entry', () {
+      activitProvider.when(callsTo('activityWithId', ACTIVITY_ID + 1)).thenReturn(activity);
+      activitProvider.when(callsTo('projectWithActivity', activity)).thenReturn(project);
+
+      model.saveChanges(ACTIVITY_ID + 1, null, null, null);
+
+      activitProvider.getLogs(callsTo('addToRecentActivitiesOfProject', project, activity)).verify(happenedOnce);
     });
 
     test('should get the project with the matching name and return its activities when asked for them', () {

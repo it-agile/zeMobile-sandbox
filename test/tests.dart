@@ -1,7 +1,7 @@
-#library('runs all tests on the console');
+library consoleTestRunner;
 
-#import('package:unittest/unittest.dart');
-#import('test_suites.dart');
+import 'package:unittest/unittest.dart';
+import 'test_suites.dart';
 
 main() {
   testSuites();

@@ -1,42 +1,43 @@
-#library('library containing all zeMobile sources');
+library zemobileLib;
 
-#import('dart:html');
-#import('dart:json');
-#import('dart:uri');
-#import('dart:math');
+import 'dart:html';
 
-#source('app_builder.dart');
-#source('app.dart');
+import 'dart:json';
+import 'dart:uri';
+import 'dart:math';
 
-#source('component/login.dart');
-#source('component/month_display.dart');
-#source('component/day_display.dart');
-#source('component/time_entry_editor.dart');
-#source('component/time_entry_editor_model.dart');
-#source('component/time_entry_editor_view.dart');
-#source('component/settings_editor.dart');
+part 'app_builder.dart';
+part 'app.dart';
 
-#source('model/user.dart');
-#source('model/month.dart');
-#source('model/time_entry.dart');
-#source('model/project.dart');
-#source('model/activity.dart');
-#source('model/date.dart');
-#source('model/time.dart');
-#source('model/settings.dart');
+part 'component/login.dart';
+part 'component/month_display.dart';
+part 'component/day_display.dart';
+part 'component/time_entry_editor.dart';
+part 'component/time_entry_editor_model.dart';
+part 'component/time_entry_editor_view.dart';
+part 'component/settings_editor.dart';
 
-#source('service/repository.dart');
-#source('service/web_service_requester.dart');
-#source('service/activity_provider.dart');
-#source('service/time_entry_provider.dart');
-#source('service/activity_repository.dart');
-#source('service/user_repository.dart');
-#source('service/time_entry_repository.dart');
-#source('service/settings_repository.dart');
-#source('service/settings_provider.dart');
-#source('service/event_dispatcher.dart');
+part 'model/user.dart';
+part 'model/month.dart';
+part 'model/time_entry.dart';
+part 'model/project.dart';
+part 'model/activity.dart';
+part 'model/date.dart';
+part 'model/time.dart';
+part 'model/settings.dart';
 
-#source('ui/expander.dart');
-#source('ui/dialog.dart');
-#source('ui/classes.dart');
-#source('ui/error_display.dart');
+part 'service/repository.dart';
+part 'service/web_service_requester.dart';
+part 'service/activity_provider.dart';
+part 'service/time_entry_provider.dart';
+part 'service/activity_repository.dart';
+part 'service/user_repository.dart';
+part 'service/time_entry_repository.dart';
+part 'service/settings_repository.dart';
+part 'service/settings_provider.dart';
+part 'service/event_dispatcher.dart';
+
+part 'ui/expander.dart';
+part 'ui/dialog.dart';
+part 'ui/classes.dart';
+part 'ui/error_display.dart';

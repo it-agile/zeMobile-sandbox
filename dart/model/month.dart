@@ -7,7 +7,7 @@ class Month {
   num hoursToWork;
   List<TimeEntry> timeEntries;
 
-  Month([this.year, this.month, this.balance, this.vacation, this.hoursWorked, this.hoursToWork, this.timeEntries]);
+  Month({this.year, this.month, this.balance, this.vacation, this.hoursWorked, this.hoursToWork, this.timeEntries});
 
   List<TimeEntry> timeEntriesFor(ZeDate day) => new List.from(timeEntries.filter((entry) => entry.date == day));
 

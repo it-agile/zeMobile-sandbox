@@ -1,6 +1,4 @@
 class SettingsProvider {
-  static final DEFAULT_NUMBER_OF_TOP_PROJECTS = 3;
-  static final DEFAULT_NUMBER_OF_TOP_ACTIVITIES = 3;
   final SettingsRepository repository;
   Settings cachedSettings;
 
@@ -30,4 +28,7 @@ class SettingsProvider {
       cachedSettings.numberOfRecentActivities = DEFAULT_NUMBER_OF_TOP_ACTIVITIES;
     }
   }
+
+  static const DEFAULT_NUMBER_OF_TOP_PROJECTS = 3;
+  static const DEFAULT_NUMBER_OF_TOP_ACTIVITIES = 3;
 }

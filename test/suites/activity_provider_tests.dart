@@ -77,50 +77,50 @@ void activityProviderTests() {
     });
 
     test('should not load project names from repository if recent projects are already cached', () {
-      activityProvider.cachedRecentProjects = [p1];
+      activityProvider.cachedRecentProjects = <Project>[p1];
       activityProvider.recentProjects;
       activityRepository.getLogs(callsTo('loadRecentProjectNames')).verify(neverHappened);
     });
 
     test('should add a new recent project to the list of the cached recent projects', () {
-      activityProvider.cachedRecentProjects = [p2];
+      activityProvider.cachedRecentProjects = <Project>[p2];
       activityProvider.addToRecentProjects(p1);
       expect(activityProvider.cachedRecentProjects, equals([p1, p2]));
     });
 
     test('should move a previously used recent project to the top of the list', () {
-      activityProvider.cachedRecentProjects = [p2, p1];
+      activityProvider.cachedRecentProjects = <Project>[p2, p1];
       activityProvider.addToRecentProjects(p1);
       expect(activityProvider.cachedRecentProjects, equals([p1, p2]));
     });
 
     test('should save changed list of recent projects in repository', () {
-      activityProvider.cachedRecentProjects = [p2];
+      activityProvider.cachedRecentProjects = <Project>[p2];
       activityProvider.addToRecentProjects(p1);
       activityRepository.getLogs(callsTo('saveRecentProjectNames', ['P1', 'P2'])).verify(happenedOnce);
     });
 
     test('should remove projects if list of recent projects gets longer than the maximum number of recent projects', () {
       settings.numberOfRecentProjects = 1;
-      activityProvider.cachedRecentProjects = [p2];
+      activityProvider.cachedRecentProjects = <Project>[p2];
       activityProvider.addToRecentProjects(p1);
       expect(activityProvider.cachedRecentProjects, equals([p1]));
     });
 
     test('should remove recent activities for removed recent projects', () {
       settings.numberOfRecentProjects = 1;
-      activityProvider.cachedRecentProjects = [p2];
-      activityProvider.cachedRecentActivities = {};
-      activityProvider.cachedRecentActivities[p2] = [p2a1];
+      activityProvider.cachedRecentProjects = <Project>[p2];
+      activityProvider.cachedRecentActivities = new Map<Project, List<Activity>>();
+      activityProvider.cachedRecentActivities[p2] = <Activity>[p2a1];
       activityProvider.addToRecentProjects(p1);
       expect(activityProvider.cachedRecentActivities[p2], isNull);
     });
 
     test('should remove recent activities for removed recent projects in repository', () {
       settings.numberOfRecentProjects = 1;
-      activityProvider.cachedRecentProjects = [p2];
-      activityProvider.cachedRecentActivities = {};
-      activityProvider.cachedRecentActivities[p2] = [p2a1];
+      activityProvider.cachedRecentProjects = <Project>[p2];
+      activityProvider.cachedRecentActivities = new Map<Project, List<Activity>>();
+      activityProvider.cachedRecentActivities[p2] = <Activity>[p2a1];
       activityProvider.addToRecentProjects(p1);
       activityRepository.getLogs(callsTo('deleteRecentActivitiesForProject', 'P2')).verify(happenedOnce);
     });
@@ -131,31 +131,31 @@ void activityProviderTests() {
     });
 
     test('should not load activity ids from repository if recent activities are already cached', () {
-      activityProvider.cachedRecentActivities = {};
-      activityProvider.cachedRecentActivities[p1] = [p1a1];
+      activityProvider.cachedRecentActivities = new Map<Project, List<Activity>>();
+      activityProvider.cachedRecentActivities[p1] = <Activity>[p1a1];
       activityProvider.recentActivitiesForProject(p1);
       activityRepository.getLogs(callsTo('loadRecentActivitiesForProject')).verify(neverHappened);
     });
 
     test('should add a new recent activity to the list of the cached recent activities', () {
-      activityProvider.cachedRecentActivities = {};
-      activityProvider.cachedRecentActivities[p1] = [];
+      activityProvider.cachedRecentActivities = new Map<Project, List<Activity>>();
+      activityProvider.cachedRecentActivities[p1] = <Activity>[];
 
       activityProvider.addToRecentActivitiesOfProject(p1, p1a1);
       expect(activityProvider.cachedRecentActivities[p1], equals([p1a1]));
     });
 
     test('should move a previously used recent activity to the top of the list', () {
-      activityProvider.cachedRecentActivities = {};
-      activityProvider.cachedRecentActivities[p1] = [p1a1, p1a2];
+      activityProvider.cachedRecentActivities = new Map<Project, List<Activity>>();
+      activityProvider.cachedRecentActivities[p1] = <Activity>[p1a1, p1a2];
 
       activityProvider.addToRecentActivitiesOfProject(p1, p1a2);
       expect(activityProvider.cachedRecentActivities[p1], equals([p1a2, p1a1]));
     });
 
     test('should save changed list of recent activities in repository', () {
-      activityProvider.cachedRecentActivities = {};
-      activityProvider.cachedRecentActivities[p1] = [p1a1, p1a2];
+      activityProvider.cachedRecentActivities = new Map<Project, List<Activity>>();
+      activityProvider.cachedRecentActivities[p1] = <Activity>[p1a1, p1a2];
 
       activityProvider.addToRecentActivitiesOfProject(p1, p1a2);
       activityRepository.getLogs(callsTo('saveRecentActivitiesForProject', 'P1', [2, 1])).verify(happenedOnce);
@@ -163,8 +163,8 @@ void activityProviderTests() {
 
     test('should remove activities if list of recent activities gets longer than the maximum number of recent activities', () {
       settings.numberOfRecentActivities = 1;
-      activityProvider.cachedRecentActivities = {};
-      activityProvider.cachedRecentActivities[p1] = [p1a1];
+      activityProvider.cachedRecentActivities = new Map<Project, List<Activity>>();
+      activityProvider.cachedRecentActivities[p1] = <Activity>[p1a1];
       activityProvider.addToRecentActivitiesOfProject(p1, p1a2);
       expect(activityProvider.cachedRecentActivities[p1], equals([p1a2]));
     });

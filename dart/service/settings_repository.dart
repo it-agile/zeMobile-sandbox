@@ -19,7 +19,7 @@ class SettingsRepository extends Repository {
   }
 
 
-  static final SETTINGS_KEY = 'settings';
-  static final NUMBER_OF_RECENT_PROJECTS_KEY = 'numberOfRecentProjects';
-  static final NUMBER_OF_RECENT_ACTIVITIES_KEY = 'numberOfRecentActivities';
+  static const SETTINGS_KEY = 'settings';
+  static const NUMBER_OF_RECENT_PROJECTS_KEY = 'numberOfRecentProjects';
+  static const NUMBER_OF_RECENT_ACTIVITIES_KEY = 'numberOfRecentActivities';
 }

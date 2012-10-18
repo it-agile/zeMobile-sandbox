@@ -1,6 +1,6 @@
 void monthDisplayTests() {
   group('A month display model', () {
-    var month = new Month(2012,7);
+    var month = new Month(year: 2012, month: 7);
     var model = new MonthDisplayModel(month);
 
     test('should return the first day of the month', () => expect(model.firstDayInMonth, equals(new ZeDate(1,7,2012))));
@@ -10,7 +10,7 @@ void monthDisplayTests() {
     var firstDay = new ZeDate(1,7,2012);
     var timeEntry = new TimeEntry(date: firstDay);
     var timeEntryOnAntherDay = new TimeEntry(date: new ZeDate(4,7,2012));
-    var month = new Month(2012, 7, timeEntries: [timeEntry, timeEntryOnAntherDay]);
+    var month = new Month(year: 2012, month: 7, timeEntries: [timeEntry, timeEntryOnAntherDay]);
     var model = new MonthDisplayModelMock();
     var view = new MonthDisplayViewMock();
     var dayDisplayFactory = new DayDisplayFactoryMock();
@@ -56,7 +56,7 @@ void monthDisplayTests() {
     test('should not update day displays with time entries from another day when updating a month', () {
       dayDisplay.when(callsTo('get day')).thenReturn(firstDay);
 
-      monthDisplay.updateMonth(new Month(2012, 7, timeEntries: [timeEntryOnAntherDay]));
+      monthDisplay.updateMonth(new Month(year: 2012, month: 7, timeEntries: [timeEntryOnAntherDay]));
 
       dayDisplay.getLogs(callsTo('updateTimeEntries', [])).verify(happenedOnce);
     });

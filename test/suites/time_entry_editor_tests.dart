@@ -15,7 +15,9 @@ void timeEntryEditorTests() {
     var activity = new Activity(ACTIVITY_ID, 'A1');
     var activities = [activity];
     var project = new Project('P1', activities);
+    var recentProject = new Project('P2', []);
     var projects = [project];
+    var recentProjects = [recentProject];
 
     setUp(() => clearMocks([model, view]));
 
@@ -30,6 +32,7 @@ void timeEntryEditorTests() {
       model.when(callsTo('get end')).thenReturn(END);
       model.when(callsTo('get comment')).thenReturn(comment);
       model.when(callsTo('get projects')).thenReturn(projects);
+      model.when(callsTo('get recentProjects')).thenReturn(recentProjects);
       model.when(callsTo('get project')).thenReturn(project);
       model.when(callsTo('get activity')).thenReturn(activity);
     }
@@ -93,9 +96,8 @@ void timeEntryEditorTests() {
       view.getLogs(callsTo('set:timeFrom', START)).verify(happenedOnce);
       view.getLogs(callsTo('set:timeTo', END)).verify(happenedOnce);
       view.getLogs(callsTo('set:comment', comment)).verify(happenedOnce);
-      view.getLogs(callsTo('set:availableProjects', projects)).verify(happenedOnce);
+      view.getLogs(callsTo('setupProjects', recentProjects, projects)).verify(happenedOnce);
       view.getLogs(callsTo('set:project', project)).verify(happenedOnce);
-      view.getLogs(callsTo('set:availableActivities', activities)).verify(happenedOnce);
       view.getLogs(callsTo('set:activity', activity)).verify(happenedOnce);
     });
 
@@ -111,7 +113,6 @@ void timeEntryEditorTests() {
       editor.overwriteViewDataWithTimeEntry();
 
       view.getLogs(callsTo('set:project', project)).verify(happenedOnce);
-      view.getLogs(callsTo('set:availableActivities', project.activities)).verify(happenedOnce);
       view.getLogs(callsTo('set:activity', activity)).verify(happenedOnce);
     });
 

@@ -6,7 +6,7 @@ class TimeEntryProvider {
   bool monthLoadedFromCache = false;
 
   TimeEntryProvider(this.errorDisplay, this.repository, this.webServiceRequester): monthUpdated = new EventDispatcher();
-  
+
   Future<Month> fetchTimeEntries(int month, int year) {
     if (repository.hasMonth(month, year)) {
       monthLoadedFromCache = true;
@@ -21,7 +21,7 @@ class TimeEntryProvider {
   }
 
   void refetchTimeEntriesIfLoadedFromCache(int month, int year) {
-    if(monthLoadedFromCache) {
+    if (monthLoadedFromCache) {
       monthLoadedFromCache = false;
       refetchTimeEntries(month, year);
     }
@@ -59,7 +59,7 @@ class TimeEntryProvider {
   void _removeObsoleteChangedEntries(Month month) {
     repository.changedTimeEntriesForMonth().forEach((entry) {
       if (!entry.currentlyBeingEdited
-        || (entry.id != null && !month.timeEntries.some((fetchedEntry) => fetchedEntry.id == entry.id))) {
+      || (entry.id != null && !month.timeEntries.some((fetchedEntry) => fetchedEntry.id == entry.id))) {
         repository.removeChangedTimeEntry(entry);
       }
     });
@@ -79,11 +79,11 @@ class TimeEntryProvider {
 
   Future<String> save(TimeEntry timeEntry) {
     var parameters =
-      {'taetigkeit': timeEntry.activityId,
-       'tag' : timeEntry.date.toGermanString(),
-       'start': timeEntry.start.toString(),
-       'ende': timeEntry.end.toString(),
-       'kommentar': timeEntry.comment};
+    {'taetigkeit': timeEntry.activityId,
+        'tag' : timeEntry.date.toGermanString(),
+        'start': timeEntry.start.toString(),
+        'ende': timeEntry.end.toString(),
+        'kommentar': timeEntry.comment};
     var url = '/api/zeiten/${timeEntry.date.year}/${timeEntry.date.month}/${WebServiceRequester.USER_MARKER}/';
     var method = 'POST';
     if (timeEntry.id != null) {
@@ -91,15 +91,15 @@ class TimeEntryProvider {
       method = 'PUT';
     }
 
-    var requestFuture =  webServiceRequester.sendRequest(method, url, parameters);
+    var requestFuture = webServiceRequester.sendRequest(method, url, parameters);
     requestFuture.handleException(errorDisplay.showWebServiceError);
 
     return requestFuture.transform((response) => _handleSaveSuccess(timeEntry, response));
   }
 
   Future<String> delete(TimeEntry timeEntry) {
-    var requestFuture =  webServiceRequester.sendRequest('DELETE',
-      '/api/zeiten/${timeEntry.date.year}/${timeEntry.date.month}/${WebServiceRequester.USER_MARKER}/${timeEntry.id}/');
+    var requestFuture = webServiceRequester.sendRequest('DELETE',
+    '/api/zeiten/${timeEntry.date.year}/${timeEntry.date.month}/${WebServiceRequester.USER_MARKER}/${timeEntry.id}/');
     requestFuture.handleException(errorDisplay.showWebServiceError);
 
     return requestFuture.transform((response) => _handleDeleteSuccess(timeEntry, response));
@@ -114,7 +114,7 @@ class TimeEntryProvider {
 
     if (entry.id == null) {
       String url = responseJSON['url'];
-      var idString = url.substring(0, url.length -1);
+      var idString = url.substring(0, url.length - 1);
       idString = idString.substring(idString.lastIndexOf('/') + 1);
       entry.id = parseInt(idString);
       entry.currentlyBeingEdited = false;

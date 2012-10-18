@@ -51,9 +51,9 @@ void timeEntryRepositoryTests() {
       test('should have the month after importing it', () => expect(timeEntryRespository.hasMonth(2, 2012), isTrue));
       test('should have another month after importing the new month', () => expect(timeEntryRespository.hasMonth(1, 2012), isFalse));
       test('should extract the month from the JSON', () {
-        var expectedTimeEntry1 = new TimeEntry(1, 3, new ZeDate(8,2,2012), new ZeTime(9,0), new ZeTime(12,0), 'bla');
-        var expectedTimeEntry2 = new TimeEntry(2, 4, new ZeDate(9,2,2012), new ZeTime(10,15), new ZeTime(13,0), 'blub');
-        var expectedMonth = new Month(2012, 2, -106.0, 8.0, 6.25, 120.25, [expectedTimeEntry1, expectedTimeEntry2]);
+        var expectedTimeEntry1 = new TimeEntry(id: 1, activityId: 3, date: new ZeDate(8,2,2012), start: new ZeTime(9,0),   end: new ZeTime(12,0), comment: 'bla');
+        var expectedTimeEntry2 = new TimeEntry(id: 2, activityId: 4, date: new ZeDate(9,2,2012), start: new ZeTime(10,15), end: new ZeTime(13,0), comment: 'blub');
+        var expectedMonth = new Month(year: 2012, month: 2, balance: -106.0, vacation: 8.0, hoursWorked: 6.25, hoursToWork: 120.25, timeEntries: [expectedTimeEntry1, expectedTimeEntry2]);
         expect(timeEntryRespository.loadMonth(), equals(expectedMonth));
       });
     });
@@ -62,9 +62,9 @@ void timeEntryRepositoryTests() {
       var month = null;
       setUp(() {
         storage.clear();
-        var timeEntry = new TimeEntry(42, 3, new ZeDate(2,2,2012),
-          new ZeTime(9,30), new ZeTime(12,40), 'comment', true);
-        month = new Month(2012, 2, 2, 3, 5, 7, [timeEntry]);
+        var timeEntry = new TimeEntry(id: 42, activityId: 3, date: new ZeDate(2,2,2012),
+          start: new ZeTime(9,30), end: new ZeTime(12,40), comment: 'comment', currentlyBeingEdited: true);
+        month = new Month(year:2012, month:2, balance:2, vacation: 3, hoursWorked: 5, hoursToWork: 7, timeEntries: [timeEntry]);
 
         timeEntryRespository.saveMonth(month);
       });
@@ -79,8 +79,9 @@ void timeEntryRepositoryTests() {
 
     setUp(() {
       storage.clear();
-      timeEntry = new TimeEntry(42, 3, new ZeDate(2,2,2012),
-        new ZeTime(9,30), new ZeTime(12,40), 'comment', true);
+      timeEntry = new TimeEntry(id: 42, activityId: 3, date: new ZeDate(2,2,2012),
+                                    start: new ZeTime(9,30), end: new ZeTime(12,40),
+                                    comment: 'comment', currentlyBeingEdited: true);
     });
 
     test('should serialize a time entry into a string and deserialize it from the string', () {

@@ -51,7 +51,7 @@ class ActivityRepository extends Repository {
     return new Activity(activityJSON['id'], activityJSON['name']);
   }
 
-  static final PROJECTS_KEY = 'projects';
-  static final RECENT_PROJECTS_KEY = 'recentProjects';
-  static final RECENT_ACTIVITIES_KEY_PREFIX = 'ra_';
+  static const PROJECTS_KEY = 'projects';
+  static const RECENT_PROJECTS_KEY = 'recentProjects';
+  static const RECENT_ACTIVITIES_KEY_PREFIX = 'ra_';
 }

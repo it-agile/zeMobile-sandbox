@@ -18,6 +18,12 @@ class TimeEntryEditorModel {
   String get comment => _entry.comment;
   bool get currentlyBeingEdited => _entry.currentlyBeingEdited;
   bool get isEntryNew => _entry.id == null;
+  List<Project> get recentProjects => activityProvider.recentProjects;
+
+  List<Activity> recentActivitiesForProject(String projectName) {
+    print("project with name $projectName ${activityProvider.projectWithName(projectName)}");
+    activityProvider.recentActivitiesForProject(activityProvider.projectWithName(projectName));
+  }
 
 
   bool isEditorOfEntry(TimeEntry timeEntry) {
@@ -37,6 +43,9 @@ class TimeEntryEditorModel {
 
   Future<String> saveChanges(int activityId, ZeTime start, ZeTime end, String comment) {
     _updateEntry(activityId, start, end, comment);
+
+    activityProvider.addToRecentProjects(project);
+    activityProvider.addToRecentActivitiesOfProject(project, activity);
 
     return timeEntryProvider.save(_entry);
   }

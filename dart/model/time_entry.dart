@@ -8,7 +8,7 @@ class TimeEntry {
   String changeSlot;
   bool currentlyBeingEdited;
   
-  TimeEntry([this.id, this.activityId, this.date, this.start, this.end, this.comment, this.currentlyBeingEdited]);
+  TimeEntry({this.id, this.activityId, this.date, this.start, this.end, this.comment, this.currentlyBeingEdited});
 
   void assimilate(TimeEntry otherEntry) {
     activityId = otherEntry.activityId;

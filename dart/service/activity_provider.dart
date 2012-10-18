@@ -13,7 +13,7 @@ class ActivityProvider {
 
   List<Project> get recentProjects {
     if(cachedRecentProjects == null) {
-      cachedRecentProjects = [];
+      cachedRecentProjects = new List<Project>();
       repository.loadRecentProjectNames().forEach((projectName) {
         cachedRecentProjects.addAll(fetchedProjects.filter((project) => project.name == projectName));
       });
@@ -39,8 +39,11 @@ class ActivityProvider {
 
   List<Activity> recentActivitiesForProject(Project project) {
     if (cachedRecentActivities == null) {
-      cachedRecentActivities = {};
+      cachedRecentActivities = new Map<Project, List<Activity>>();
     }
+    print("$cachedRecentActivities");
+    print("$project");
+
     var recentActivities = cachedRecentActivities[project];
     if (recentActivities == null) {
       var recentActivityIds = repository.loadRecentActivitiesForProject(project.name);
