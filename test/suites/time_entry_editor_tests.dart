@@ -108,6 +108,8 @@ void timeEntryEditorTests() {
       model.when(callsTo('get end')).thenReturn(END);
       model.when(callsTo('get comment')).thenReturn(comment);
       model.when(callsTo('get projects')).thenReturn(projects);
+      model.when(callsTo('get recentProjects')).thenReturn([]);
+      model.when(callsTo('recentActivitiesForProject', 'P1')).thenReturn([]);
       model.when(callsTo('get project')).thenReturn(null, 2);
 
       editor.overwriteViewDataWithTimeEntry();

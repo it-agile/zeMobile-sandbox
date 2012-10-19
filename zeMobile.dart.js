@@ -525,7 +525,7 @@ $$.TimeEntryEditor = {"":
  createUI$0: function(){var t1=this.view;t1.createUI$0();var t2=this.model;t1.activitiesDeterminer=t2.get$activitiesForProject();t1.recentActivitiesDeterminer=t2.get$recentActivitiesForProject();this.overwriteViewDataWithTimeEntry$0();$.add$1(t1.editButton.get$on().get$click(),this.get$editTouched());$.add$1(t1.cancelButton.get$on().get$click(),this.get$cancelTouched());$.add$1(t1.saveButton.get$on().get$click(),this.get$saveTouched());$.add$1(t1.deleteButton.get$on().get$click(),this.get$deleteTouched());$.add$1(t1.timeFromInput.get$on().get$change(),this.get$timeEntryChanged());$.add$1(t1.timeToInput.get$on().get$change(),this.get$timeEntryChanged());$.add$1(t1.projectSelect.get$on().get$change(),this.get$timeEntryChanged());$.add$1(t1.activitySelect.get$on().get$change(),this.get$timeEntryChanged());$.add$1(t1.commentTextArea.get$on().get$change(),this.get$timeEntryChanged());return t1.editorElement;},
  isEditorOfEntry$1: function(timeEntry){return this.model.isEditorOfEntry$1(timeEntry);},
  updateTimeEntry$1: function(timeEntry){var t1=this.model;if(t1.shouldUpdateTimeEntry$1(timeEntry)===true){t1.updateTimeEntry$1(timeEntry);this.overwriteViewDataWithTimeEntry$0();}},
- overwriteViewDataWithTimeEntry$0: function(){var t1=this.model;var t2=t1.get$start();var t3=this.view;t3.set$timeFrom(t2);t3.set$timeTo(t1.get$end());t3.set$comment(t1.get$comment());var projects=t1.get$projects();t3.setupProjects$2(t1.get$recentProjects(),projects);var project=t1.get$project();if(!(project==null)){t3.set$project(project);t3.projectSelected$0();t3.set$activity(t1.get$activity());}else{t3.set$project($.index(projects,0));t3.projectSelected$0();t3.set$activity($.index($.index(projects,0).get$activities(),0));}t3.enableEditing$1(t1.get$currentlyBeingEdited());},
+ overwriteViewDataWithTimeEntry$0: function(){var t1=this.model;var t2=t1.get$start();var t3=this.view;t3.set$timeFrom(t2);t3.set$timeTo(t1.get$end());t3.set$comment(t1.get$comment());var projects=t1.get$projects();var recentProjects=t1.get$recentProjects();t3.setupProjects$2(recentProjects,projects);var project=t1.get$project();if(!(project==null)){t3.set$project(project);t3.projectSelected$0();t3.set$activity(t1.get$activity());}else{project=$.isEmpty(recentProjects)!==true?$.index(recentProjects,0):$.index(projects,0);t3.set$project(project);t3.projectSelected$0();var recentActivities=t1.recentActivitiesForProject$1(project.get$name());t3.set$activity($.isEmpty(recentActivities)!==true?$.index(recentActivities,0):$.index(project.get$activities(),0));}t3.enableEditing$1(t1.get$currentlyBeingEdited());},
  timeEntryChanged$1: function(event$){var t1=this.model;var t2=this.view;t1.rememberChanges$4($.parseInt(t2.get$selectedActivityId()),t2.get$timeFrom(),t2.get$timeTo(),t2.get$comment());},
  get$timeEntryChanged: function() { return new $.BoundClosure(this, 'timeEntryChanged$1'); },
  editTouched$1: function(event$){var t1=this.model;t1.startEditing$0();this.view.enableEditing$1(t1.get$currentlyBeingEdited());event$.preventDefault$0();},
@@ -552,7 +552,7 @@ $$.TimeEntryEditorModel = {"":
  get$currentlyBeingEdited: function(){return this._entry.get$currentlyBeingEdited();},
  get$isEntryNew: function(){return this._entry.get$id()==null;},
  get$recentProjects: function(){return this.activityProvider.get$recentProjects();},
- recentActivitiesForProject$1: function(projectName){var t1='project with name '+$.S(projectName)+' ';var t2=this.activityProvider;$.print(t1+$.S(t2.projectWithName$1(projectName)));t2.recentActivitiesForProject$1(t2.projectWithName$1(projectName));},
+ recentActivitiesForProject$1: function(projectName){var t1=this.activityProvider;return t1.recentActivitiesForProject$1(t1.projectWithName$1(projectName));},
  get$recentActivitiesForProject: function() { return new $.BoundClosure(this, 'recentActivitiesForProject$1'); },
  isEditorOfEntry$1: function(timeEntry){return !(timeEntry.get$id()==null)?$.eq(timeEntry.get$id(),this._entry.get$id()):$.eq(timeEntry.get$changeSlot(),this._entry.get$changeSlot());},
  shouldUpdateTimeEntry$1: function(timeEntry){return this._entry.get$currentlyBeingEdited()!==true&&!$.eqB(this._entry,timeEntry);},
@@ -590,7 +590,7 @@ $$.TimeEntryEditorView = {"":
  _addOptionsToSelect$5: function(select,optGroup,objects,value,text){$.forEach(objects,new $.TimeEntryEditorView__addOptionsToSelect_anon(optGroup,value,text,select));},
  _selectOption$2: function(select,value){for(var i=0;$.ltB(i,$.get$length(select.get$nodes()));++i){var t1=$.index(select.get$nodes(),i);if(typeof t1==='object'&&t1!==null&&t1.is$OptionElement())if($.eqB($.index(select.get$nodes(),i).get$value(),value)){select.set$selectedIndex(i);break;}}},
  setUpProjectSelectionAutoUpdate$0: function(){$.add$1(this.projectSelect.get$on().get$change(),new $.TimeEntryEditorView_setUpProjectSelectionAutoUpdate_anon(this));$.add$1(this.projectSelect.get$on().get$focus(),new $.TimeEntryEditorView_setUpProjectSelectionAutoUpdate_anon0(this));$.add$1(this.projectSelect.get$on().get$blur(),new $.TimeEntryEditorView_setUpProjectSelectionAutoUpdate_anon1(this));},
- projectSelected$0: function(){if(!$.eqB(this._projectSelectIndex,this.projectSelect.get$selectedIndex())){var projectName=this.projectSelect.get$value();if(!(projectName==null)&&$.gtB($.get$length($.trim(projectName)),0)){$.print('projectName : '+$.S(projectName));this.setupActivities$2(this.recentActivitiesDeterminer$1(projectName),this.activitiesDeterminer$1(projectName));}this._projectSelectIndex=this.projectSelect.get$selectedIndex();}},
+ projectSelected$0: function(){if(!$.eqB(this._projectSelectIndex,this.projectSelect.get$selectedIndex())){var projectName=this.projectSelect.get$value();if(!(projectName==null)&&$.gtB($.get$length($.trim(projectName)),0))this.setupActivities$2(this.recentActivitiesDeterminer$1(projectName),this.activitiesDeterminer$1(projectName));this._projectSelectIndex=this.projectSelect.get$selectedIndex();}},
  get$projectSelected: function() { return new $.BoundClosure0(this, 'projectSelected$0'); }
 };
 
@@ -701,7 +701,7 @@ $$.ActivityProvider = {"":
  "super": "Object",
  get$recentProjects: function(){if(this.cachedRecentProjects==null){this.cachedRecentProjects=$.ListImplementation_List(null);$.forEach(this.repository.loadRecentProjectNames$0(),new $.ActivityProvider_recentProjects_anon(this));}return this.cachedRecentProjects;},
  addToRecentProjects$1: function(project){$.insertRange$3(this.get$recentProjects(),0,1,project);var lastIndexOfProject=$.lastIndexOf$1(this.get$recentProjects(),project);if($.gtB(lastIndexOfProject,0))$.removeAt$1(this.get$recentProjects(),lastIndexOfProject);for(var t1=this.settingsProvider,t2=this.repository;$.gtB($.get$length(this.get$recentProjects()),t1.get$settings().get$numberOfRecentProjects());){var removedProject=$.removeLast(this.get$recentProjects());var t3=this.cachedRecentActivities;if(!(t3==null)){t3.remove$1(removedProject);t2.deleteRecentActivitiesForProject$1(removedProject.get$name());}}t2.saveRecentProjectNames$1($.map(this.get$recentProjects(),new $.ActivityProvider_addToRecentProjects_anon()));},
- recentActivitiesForProject$1: function(project){if(this.cachedRecentActivities==null)this.cachedRecentActivities=$.HashMapImplementation$();$.print($.S(this.cachedRecentActivities));$.print($.S(project));var recentActivities=$.index(this.cachedRecentActivities,project);if(recentActivities==null){recentActivities=$.map(this.repository.loadRecentActivitiesForProject$1(project.get$name()),new $.ActivityProvider_recentActivitiesForProject_anon(this));$.indexSet(this.cachedRecentActivities,project,recentActivities);}return recentActivities;},
+ recentActivitiesForProject$1: function(project){if(this.cachedRecentActivities==null)this.cachedRecentActivities=$.HashMapImplementation$();var recentActivities=$.index(this.cachedRecentActivities,project);if(recentActivities==null){recentActivities=$.map(this.repository.loadRecentActivitiesForProject$1(project.get$name()),new $.ActivityProvider_recentActivitiesForProject_anon(this));$.indexSet(this.cachedRecentActivities,project,recentActivities);}return recentActivities;},
  addToRecentActivitiesOfProject$2: function(project,activity){var recentActivities=this.recentActivitiesForProject$1(project);$.insertRange$3(recentActivities,0,1,activity);var lastIndexOfActivity=$.lastIndexOf$1(recentActivities,activity);if($.gtB(lastIndexOfActivity,0))$.removeAt$1(recentActivities,lastIndexOfActivity);for(var t1=this.settingsProvider;$.gtB($.get$length(recentActivities),t1.get$settings().get$numberOfRecentActivities());)$.removeLast(recentActivities);this.repository.saveRecentActivitiesForProject$2(project.get$name(),$.map(recentActivities,new $.ActivityProvider_addToRecentActivitiesOfProject_anon()));},
  refetchProjects$0: function(){var result=this.requester.sendGet$1('/api/projekte/');result.handleException$1(this.errorDisplay.get$showWebServiceError());return result.transform$1(this.get$_processFetchedProjects());},
  fetchProjects$0: function(){if(this.fetchedProjects==null){this.fetchedProjects=this.repository.loadProjects$0();if(this.fetchedProjects==null)return this.refetchProjects$0();}var completer=$.Completer_Completer();completer.complete$1(this.fetchedProjects);return completer.get$future();},
@@ -1898,6 +1898,12 @@ $$.TimeEntryEditorView__addOptionsToSelect_anon = {"":
  call$1: function(object){var option=$.OptionElement_OptionElement(this.text_1.call$1(object),this.value_2.call$1(object),$,$);var t1=this.optGroup_3;if(!(t1==null))$.add$1(t1.get$nodes(),option);else $.add$1(this.select_0.get$nodes(),option);}
 };
 
+$$.ActivityProvider_recentActivitiesForProject_anon = {"":
+ ["this_0"],
+ "super": "Closure",
+ call$1: function(id){return this.this_0.activityWithId$1(id);}
+};
+
 $$.TimeEntryEditorView_setupProjects_anon = {"":
  [],
  "super": "Closure",
@@ -1974,12 +1980,6 @@ $$.ActivityProvider_addToRecentActivitiesOfProject_anon = {"":
  [],
  "super": "Closure",
  call$1: function(activity){return activity.get$id();}
-};
-
-$$.ActivityProvider_recentActivitiesForProject_anon = {"":
- ["this_0"],
- "super": "Closure",
- call$1: function(id){return this.this_0.activityWithId$1(id);}
 };
 
 $$.ActivityProvider_addToRecentProjects_anon = {"":
@@ -2658,15 +2658,15 @@ $.DualPivotQuicksort_insertionSort_ = function(a,left,right,compare){if(typeof a
 
 $.ge$slow = function(a,b){if($.checkNumbers(a,b))return a >= b;return a.operator$ge$1(b);};
 
-$.JSON_stringify = function(object){return $._JsonStringifier_stringify(object);};
-
 $.indexSet$slow = function(a,index,value){if($.isJsArray(a)){if(!(typeof index==='number'&&Math.floor(index) === index))throw $.$$throw($.ArgumentError$(index));if(index<0||$.geB(index,$.get$length(a)))throw $.$$throw($.IndexOutOfRangeException$(index));$.checkMutable(a,'indexed set');a[index] = value;return;}a.operator$indexSet$2(index,value);};
 
-$._JsonStringifier_stringify = function(object){var output=$.StringBuffer_StringBuffer('');$._JsonStringifier$(output).stringifyValue$1(object);return $.toString(output);};
+$.JSON_stringify = function(object){return $._JsonStringifier_stringify(object);};
 
 $.getFunctionForTypeNameOf = function(){if(!(typeof(navigator)==='object'))return $.typeNameInChrome;var userAgent=navigator.userAgent;if($.contains(userAgent,'Chrome')||$.contains(userAgent,'DumpRenderTree'))return $.typeNameInChrome;else if($.contains(userAgent,'Firefox'))return $.typeNameInFirefox;else if($.contains(userAgent,'MSIE'))return $.typeNameInIE;else if($.contains(userAgent,'Opera'))return $.typeNameInOpera;else if($.contains(userAgent,'AppleWebKit'))return $.typeNameInSafari;else return $.constructorNameFallback;};
 
 $.Primitives_objectHashCode = function(object){var hash=object.$identityHash;if(hash==null){hash=$.add($.Primitives_hashCodeSeed,1);$.Primitives_hashCodeSeed=hash;object.$identityHash = hash;}return hash;};
+
+$._JsonStringifier_stringify = function(object){var output=$.StringBuffer_StringBuffer('');$._JsonStringifier$(output).stringifyValue$1(object);return $.toString(output);};
 
 $.gt = function(a,b){return typeof a==='number'&&typeof b==='number'?a > b:$.gt$slow(a,b);};
 

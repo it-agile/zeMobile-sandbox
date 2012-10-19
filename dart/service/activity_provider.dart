@@ -41,8 +41,6 @@ class ActivityProvider {
     if (cachedRecentActivities == null) {
       cachedRecentActivities = new Map<Project, List<Activity>>();
     }
-    print("$cachedRecentActivities");
-    print("$project");
 
     var recentActivities = cachedRecentActivities[project];
     if (recentActivities == null) {

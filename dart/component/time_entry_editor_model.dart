@@ -21,8 +21,7 @@ class TimeEntryEditorModel {
   List<Project> get recentProjects => activityProvider.recentProjects;
 
   List<Activity> recentActivitiesForProject(String projectName) {
-    print("project with name $projectName ${activityProvider.projectWithName(projectName)}");
-    activityProvider.recentActivitiesForProject(activityProvider.projectWithName(projectName));
+    return activityProvider.recentActivitiesForProject(activityProvider.projectWithName(projectName));
   }
 
 

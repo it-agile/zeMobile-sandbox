@@ -171,7 +171,6 @@ class TimeEntryEditorView {
     if (_projectSelectIndex != projectSelect.selectedIndex) {
       var projectName = projectSelect.value;
       if (projectName != null && projectName.trim().length > 0) {
-        print("projectName : $projectName");
         setupActivities(recentActivitiesDeterminer(projectName), activitiesDeterminer(projectName));
       }
       _projectSelectIndex = projectSelect.selectedIndex;
