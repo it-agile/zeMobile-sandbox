@@ -27,7 +27,7 @@ class AppBuilder {
       var monthDisplayFactory = new MonthDisplayFactory(expander, dayDisplayFactory);
       
       var settingsView = new SettingsEditorView(expander);
-      var settings = new SettingsEditor(settingsView, activityProvider);
+      var settings = new SettingsEditor(settingsView, activityProvider, settingsProvider);
       
       app = new App(activityProvider, timeEntryProvider, monthDisplayFactory, settings, expander);
     }

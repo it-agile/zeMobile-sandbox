@@ -113,7 +113,7 @@ class TimeEntryRepository extends Repository {
     return extractTimeEntry(jsonMap);
   }
 
-  Month extractMonth(Map<String, Dynamic> monthJSON) {
+  Month extractMonth(Map<String, dynamic> monthJSON) {
     if (monthJSON ==  null) return null;
 
     Month month = new Month();
@@ -128,7 +128,7 @@ class TimeEntryRepository extends Repository {
     return month;
   }
 
-  TimeEntry extractTimeEntry(Map<String, Dynamic> timeEntryJSON) {
+  TimeEntry extractTimeEntry(Map<String, dynamic> timeEntryJSON) {
     if (timeEntryJSON == null) return null;
 
     TimeEntry entry = new TimeEntry();

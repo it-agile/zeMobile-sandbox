@@ -53,7 +53,7 @@ class DayDisplay {
         editorsToRemove.add(editor);
       }
     });
-    timeEntryEditors = timeEntryEditors.filter((editor) => !editorsToRemove.some((editorToRemove) => editor === editorToRemove));
+    timeEntryEditors = timeEntryEditors.filter((editor) => !editorsToRemove.some((editorToRemove) => identical(editor, editorToRemove)));
     timeEntriesToProcess.forEach(addTimeEntry);
   }
 

@@ -22,7 +22,7 @@ class TimeEntry {
 
   bool operator ==(TimeEntry other) {
     if (other == null) return false;
-    if (other === this) return true;
+    if (identical(this, other)) return true;
     return id == other.id && activityId == other.activityId && date == other.date
       && start == other.start && end == other.end && comment == other.comment
       && currentlyBeingEdited == other.currentlyBeingEdited;

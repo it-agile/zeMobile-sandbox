@@ -5,7 +5,7 @@ class Project {
   Project(this.name, this.activities);
   operator ==(Project other) {
     if (other == null) return false;
-    if (this === other) return true;
+    if (identical(this, other)) return true;
     if (name != other.name) return false;
     if (activities == null) return other.activities == null;
     if (other.activities == null) return false;

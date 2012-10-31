@@ -1,29 +1,37 @@
 class SettingsEditor {
   SettingsEditorView view;
   ActivityProvider activityProvider;
+  SettingsProvider settingsProvider;
 
-  SettingsEditor(this.view, this.activityProvider);
+  SettingsEditor(this.view, this.activityProvider, this.settingsProvider);
 
   Element createUI() {
     view.createUI();
 
     view.reloadActivitiesButton.on.click.add(reloadActivitiesButtonTouched);
-    view.reloadTimeEntriesButton.on.click.add(reloadTimeEntriesButtonTouched);
-    view.changeLoginButton.on.click.add(changeLoginButtonTouched);
+    var settings = settingsProvider.settings;
+    view.maxRecentProjectsInput.value = '${settings.numberOfRecentProjects}';
+    view.maxRecentProjectsInput.on.change.add(changeNumberOfRecentProjects);
+    view.maxRecentActivitiesInput.value = '${settings.numberOfRecentActivities}';
+    view.maxRecentActivitiesInput.on.change.add(changeNumberOfRecentActivities);
+
 
     return view.containerElement;
   }
 
+  changeNumberOfRecentProjects(Event event) {
+    settingsProvider.settings.numberOfRecentProjects = int.parse(view.maxRecentProjectsInput.value);
+    settingsProvider.settings = settingsProvider.settings;
+
+  }
+
+  changeNumberOfRecentActivities(Event event) {
+    settingsProvider.settings.numberOfRecentActivities = int.parse(view.maxRecentActivitiesInput.value);
+    settingsProvider.settings = settingsProvider.settings;
+  }
+
   reloadActivitiesButtonTouched(Event event) {
     activityProvider.refetchProjects();
-  }
-
-  reloadTimeEntriesButtonTouched(Event event) {
-
-  }
-
-  changeLoginButtonTouched(Event event) {
-
   }
 }
 
@@ -31,10 +39,8 @@ class SettingsEditorView {
   Expander expander;
   Element containerElement;
   Element reloadActivitiesButton;
-  Element reloadTimeEntriesButton;
-  InputElement userNameInput;
-  InputElement passwordInput;
-  Element changeLoginButton;
+  InputElement maxRecentProjectsInput;
+  InputElement maxRecentActivitiesInput;
 
   SettingsEditorView(this.expander);
 
@@ -63,48 +69,34 @@ class SettingsEditorView {
     content.classes.addAll([Classes.SETTINGS_CONTENT, Classes.CONTENT]);
     containerElement.nodes.add(content);
 
-    var reloadSection = new DivElement();
-    reloadSection.classes.addAll([Classes.RELOAD_SECTION, Classes.SECTION]);
-    content.nodes.add(reloadSection);
+    var recentSection = new DivElement();
+    recentSection.classes.addAll([Classes.LOGIN_SECTION, Classes.SECTION]);
 
-    var reloadSectionTitle = new SpanElement();
-    reloadSectionTitle.classes.add(Classes.SECTION_TITLE);
-    reloadSection.nodes.add(reloadSectionTitle);
-    reloadSectionTitle.text = 'Neu laden';
+    var recentSectionTitle = new SpanElement();
+    recentSectionTitle.classes.add(Classes.SECTION_TITLE);
+    recentSectionTitle.text = 'Kürzlich Verwendetes';
+    recentSection.nodes.add(recentSectionTitle);
+
+    maxRecentProjectsInput = new InputElement();
+    maxRecentProjectsInput.type = 'number';
+    maxRecentProjectsInput.min = '1';
+    maxRecentProjectsInput.max = '10';
+    maxRecentProjectsInput.step = '1';
+    recentSection.nodes.add(wrapInDiv([maxRecentProjectsInput, createLabel(maxRecentProjectsInput, 'maxRecentProjects', 'Projekte maximal')]));
+
+    maxRecentActivitiesInput = new InputElement();
+    maxRecentActivitiesInput.type = 'number';
+    maxRecentActivitiesInput.min = '1';
+    maxRecentActivitiesInput.max = '10';
+    maxRecentActivitiesInput.step = '1';
+    recentSection.nodes.add(wrapInDiv([maxRecentActivitiesInput, createLabel(maxRecentActivitiesInput, 'maxRecentActivities', 'Tätigkeiten maximal')]));
+
+    content.nodes.add(recentSection);
 
     reloadActivitiesButton = new AnchorElement();
     reloadActivitiesButton.classes.add(Classes.RELOAD_ACTIVITIES);
-    reloadActivitiesButton.text = 'Tätigkeiten';
-    reloadSection.nodes.add(reloadActivitiesButton);
-
-    reloadTimeEntriesButton = new AnchorElement();
-    reloadTimeEntriesButton.classes.add(Classes.RELOAD_TIME_ENTRIES);
-    reloadTimeEntriesButton.text = 'Zeiten';
-
-    var loginSection = new DivElement();
-    loginSection.classes.addAll([Classes.LOGIN_SECTION, Classes.SECTION]);
-
-    var loginSectionTitle = new SpanElement();
-    loginSectionTitle.classes.add(Classes.SECTION_TITLE);
-    loginSectionTitle.text = 'Login ändern';
-    loginSection.nodes.add(loginSectionTitle);
-
-    userNameInput = new InputElement();
-    userNameInput.type = 'text';
-    userNameInput.placeholder = 'Name';
-    userNameInput.attributes['autocapitalize'] = 'off';
-    userNameInput.attributes['autocorrect'] = 'off';
-    loginSection.nodes.add(userNameInput);
-
-    passwordInput = new InputElement();
-    passwordInput.type = 'password';
-    passwordInput.placeholder = 'Passwort';
-    loginSection.nodes.add(passwordInput);
-
-    changeLoginButton = new AnchorElement();
-    changeLoginButton.classes.add(Classes.CHANGE_LOGIN);
-    changeLoginButton.text = 'Ändern';
-    loginSection.nodes.add(changeLoginButton);
+    reloadActivitiesButton.text = 'Tätigkeiten neu laden';
+    content.nodes.add(reloadActivitiesButton);
 
     var versionInfo = new DivElement();
     versionInfo.classes.add(Classes.VERSION_INFO);
@@ -114,4 +106,20 @@ class SettingsEditorView {
     expander.connect(containerElement);
     expander.collapse(containerElement);
   }
+
+  LabelElement createLabel(Element element, String elementId, String labelText) {
+    element.id = elementId;
+    var maxRecentProjectsLabel = new LabelElement();
+    maxRecentProjectsLabel.text = labelText;
+    maxRecentProjectsLabel.htmlFor = element.id;
+    return maxRecentProjectsLabel;
+  }
+
+  DivElement wrapInDiv(List<Element> elementList) {
+    var div = new DivElement();
+    div.nodes.addAll(elementList);
+    return div;
+  }
+
+
 }

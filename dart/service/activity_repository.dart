@@ -40,14 +40,14 @@ class ActivityRepository extends Repository {
       return projects;
   }
 
-  Project extractProject(Map<String, Dynamic> projectJSON) {
+  Project extractProject(Map<String, dynamic> projectJSON) {
     List activityJSONs = projectJSON['taetigkeiten'];
     var activities = new List.from(activityJSONs.map(extractActivity));
     activities.sort((a, b) => a.name.compareTo(b.name));
     return new Project(projectJSON['name'], activities);
   }
 
-  Activity extractActivity(Map<String, Dynamic> activityJSON) {
+  Activity extractActivity(Map<String, dynamic> activityJSON) {
     return new Activity(activityJSON['id'], activityJSON['name']);
   }
 

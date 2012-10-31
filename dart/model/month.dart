@@ -13,7 +13,7 @@ class Month {
 
   bool operator ==(Month other) {
     if (other == null) return false;
-    if (other === this) return true;
+    if (identical(this, other)) return true;
     if (other.year != year || other.month != month || other.balance != balance
       || other.vacation != vacation || other.hoursToWork != hoursToWork || other.hoursWorked != hoursWorked) return false;
     if(timeEntries == null) return other.timeEntries == null;

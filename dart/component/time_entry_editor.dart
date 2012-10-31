@@ -61,11 +61,11 @@ class TimeEntryEditor {
       view.projectSelected();
       view.activity = model.activity;
     } else {
-      project = !recentProjects.isEmpty() ? recentProjects[0] : projects[0];
+      project = !recentProjects.isEmpty ? recentProjects[0] : projects[0];
       view.project = project;
       view.projectSelected();
       var recentActivities = model.recentActivitiesForProject(project.name);
-      view.activity = !recentActivities.isEmpty() ? recentActivities[0] : project.activities[0];
+      view.activity = !recentActivities.isEmpty ? recentActivities[0] : project.activities[0];
     }
     view.enableEditing(model.currentlyBeingEdited);
   }

@@ -5,7 +5,7 @@ class Settings {
   Settings([this.numberOfRecentProjects, this.numberOfRecentActivities]);
 
   operator ==(Settings other) => other != null
-    && (this === other || numberOfRecentProjects == other.numberOfRecentProjects
+    && (identical(this, other) || numberOfRecentProjects == other.numberOfRecentProjects
                        && numberOfRecentActivities == other.numberOfRecentActivities);
 
 }

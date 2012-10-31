@@ -38,7 +38,7 @@ class TimeEntryProvider {
     var timeEntries = loadedMonth.timeEntries != null ? loadedMonth.timeEntries : [];
     timeEntries.forEach((entry) {
       var matchingEntries = changedEntries.filter((changedEntry) => changedEntry.id == entry.id);
-      if (!matchingEntries.isEmpty()) {
+      if (!matchingEntries.isEmpty) {
         entry.assimilate(matchingEntries[0]);
         changedEntries.removeRange(changedEntries.indexOf(matchingEntries[0]), 1);
       }

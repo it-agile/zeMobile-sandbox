@@ -18,7 +18,7 @@ class TimeEntryEditorView {
     editorElement = new DivElement();
     editorElement.classes.add(Classes.TIME_ENTRY);
 
-    timeFromInput = new InputElement('time');
+    timeFromInput = new InputElement(type:'time');
     timeFromInput.classes.addAll([Classes.TIME, Classes.ENTRY_TIME_FROM]);
     editorElement.nodes.add(timeFromInput);
 
@@ -26,7 +26,7 @@ class TimeEntryEditorView {
     timeSeparator.classes.add(Classes.TIME_SEPARATOR);
     editorElement.nodes.add(timeSeparator);
 
-    timeToInput = new InputElement('time');
+    timeToInput = new InputElement(type:'time');
     timeToInput.classes.addAll([Classes.TIME, Classes.ENTRY_TIME_TO]);
     editorElement.nodes.add(timeToInput);
 
