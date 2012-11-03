@@ -130,7 +130,6 @@ class TimeEntryProvider {
   }
 
   String _handleDeleteSuccess(TimeEntry entry, String response) {
-    var responseJSON = JSON.parse(response);
     var month = repository.loadMonth();
 
     month.timeEntries = month.timeEntries.filter((te) => te.id != entry.id);
@@ -140,6 +139,10 @@ class TimeEntryProvider {
     repository.removeChangedTimeEntry(entry);
     entry.changeSlot = null;
 
-    return responseJSON['message'];
+    if (response != null && !response.trim().isEmpty) {
+      var responseJSON = JSON.parse(response);
+      return responseJSON['message'];
+    }
+    return 'Eintrag gelöscht';
   }
 }

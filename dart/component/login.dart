@@ -47,20 +47,18 @@ class LoginView {
 
   Future<bool> showLoginDialog() {
     var loginDialogContent = new DivElement();
-    nameInput = new InputElement();
-    nameInput.type = 'text';
+    nameInput = new InputElement(type: 'text');
     nameInput.placeholder = 'Name';
     nameInput.attributes['autocapitalize'] = 'off';
     nameInput.attributes['autocorrect'] = 'off';
     loginDialogContent.nodes.add(nameInput);
-    passwordInput = new InputElement();
-    passwordInput.type = 'password';
+    passwordInput = new InputElement(type: 'password');
     passwordInput.placeholder = 'Passwort';
     loginDialogContent.nodes.add(passwordInput);
     var loginDialog = new Dialog('Log Dich in ze ein.', loginDialogContent, 'Einloggen', null);
 
     var completer = new Completer();
-    loginDialog.show((String pressedButtonText) {
+    loginDialog.showDialog((String pressedButtonText) {
       loginDialog.dispose();
       completer.complete(true);
     });

@@ -11,7 +11,7 @@ class Dialog {
   
   Dialog(this.text, [this.content = null, this.okButtonText='OK', this.cancelButtonText='Abbrechen']);
   
-  void show(DialogCallback dialogCallback) {
+  void showDialog(DialogCallback dialogCallback) {
     modalifier = new DivElement();
     modalifier.classes.add(Classes.MODALIFIER);
     

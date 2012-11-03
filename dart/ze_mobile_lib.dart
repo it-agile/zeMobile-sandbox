@@ -5,6 +5,7 @@ import 'dart:html';
 import 'dart:json';
 import 'dart:uri';
 import 'dart:math';
+import 'dart:isolate';
 
 part 'app_builder.dart';
 part 'app.dart';

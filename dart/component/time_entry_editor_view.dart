@@ -143,28 +143,45 @@ class TimeEntryEditorView {
   }
 
   void _selectOption(SelectElement select, String value) {
-    for(int i = 0; i < select.nodes.length; i++) {
-      if(select.nodes[i] is OptionElement) {
-        OptionElement option = select.nodes[i];
+    _selectOptionInGroup(select, value);
+  }
+
+  bool _selectOptionInGroup(Element group, String value) {
+    for(int i = 0; i < group.nodes.length; i++) {
+      var node = group.nodes[i];
+      if(node is OptionElement) {
+        OptionElement option = node;
         if(option.value == value) {
-          select.selectedIndex = i;
-          break;
+          option.selected = true;
+          return true;
+        }
+      } else if (node is OptGroupElement) {
+        if (_selectOptionInGroup(node, value)) {
+          return true;
         }
       }
     }
+    return false;
   }
 
-  int _projectSelectIntervalId;
   int _projectSelectIndex;
+  Timer _timer;
 
   void setUpProjectSelectionAutoUpdate() {
     projectSelect.on.change.add((Event event) => projectSelected());
 
     projectSelect.on.focus.add((event) {
       _projectSelectIndex = projectSelect.selectedIndex;
-      _projectSelectIntervalId = document.window.setInterval(projectSelected, 100);
+      if (_timer != null) {
+        _timer.cancel();
+        _timer = null;
+      }
+      _timer = new Timer(100, (timer) => projectSelected());
     });
-    projectSelect.on.blur.add((event) {document.window.clearInterval(_projectSelectIntervalId);});
+    projectSelect.on.blur.add((event) {
+      _timer.cancel();
+      _timer = null;
+    });
   }
 
   void projectSelected() {

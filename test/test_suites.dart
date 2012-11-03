@@ -1,10 +1,11 @@
 library testSuites;
 
 import 'dart:json';
-import '../darthtmltest/html.dart';
+import 'dart:html';
 
-import 'ze_mobile_test_lib.dart';
+import '../dart/ze_mobile_lib.dart';
 import 'package:unittest/unittest.dart';
+import 'package:unittest/mock.dart';
 
 part 'suites/mocks.dart';
 
