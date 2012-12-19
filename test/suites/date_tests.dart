@@ -1,3 +1,5 @@
+part of testSuites;
+
 void dateTests() {
   group('A ze date based on a string', () {
     var date = new ZeDate.fromString('2012-11-03');

@@ -1,3 +1,5 @@
+part of zemobileLib;
+
 class Activity {
   int id;
   String name;

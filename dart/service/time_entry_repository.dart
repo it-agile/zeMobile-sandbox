@@ -1,3 +1,5 @@
+part of zemobileLib;
+
 class TimeEntryRepository extends Repository {
   Month loadMonth() {
     var monthJSONString = storage[MONTHDATA_KEY];

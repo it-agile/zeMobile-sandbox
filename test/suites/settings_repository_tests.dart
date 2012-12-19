@@ -1,3 +1,5 @@
+part of testSuites;
+
 void settingsRepositoryTests() {
   group('A settings repository', () {
     var repository = new SettingsRepository();

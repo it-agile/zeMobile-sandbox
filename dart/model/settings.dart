@@ -1,3 +1,5 @@
+part of zemobileLib;
+
 class Settings {
   int numberOfRecentProjects;
   int numberOfRecentActivities;

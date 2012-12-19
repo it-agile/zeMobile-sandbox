@@ -1,3 +1,5 @@
+part of zemobileLib;
+
 class ActivityRepository extends Repository {
   List<Project> loadProjects() {
       var projectsJSON = storage[PROJECTS_KEY];

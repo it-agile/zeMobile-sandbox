@@ -1,3 +1,5 @@
+part of testSuites;
+
 class LoginModelMock extends Mock implements LoginModel {}
 class LoginViewMock extends Mock implements LoginView {}
 class UserRepositoryMock extends Mock implements UserRepository {}

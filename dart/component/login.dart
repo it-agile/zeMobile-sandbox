@@ -1,3 +1,5 @@
+part of zemobileLib;
+
 class Login {
   final LoginView view;
   final LoginModel model;

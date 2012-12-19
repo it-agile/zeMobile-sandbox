@@ -1,3 +1,5 @@
+part of testSuites;
+
 void monthDisplayTests() {
   group('A month display model', () {
     var month = new Month(year: 2012, month: 7);

@@ -1,3 +1,5 @@
+part of testSuites;
+
 void settingsProviderTests() {
   group('A settings provider', () {
     var repository = new SettingsRepositoryMock();

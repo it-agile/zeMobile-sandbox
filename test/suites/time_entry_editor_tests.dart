@@ -1,3 +1,5 @@
+part of testSuites;
+
 void timeEntryEditorTests() {
   final TIME_ENTRY_ID = 42;
   final ACTIVITY_ID = 76;
@@ -91,14 +93,18 @@ void timeEntryEditorTests() {
       var timeEntry = new TimeEntry();
       model.when(callsTo('shouldUpdateTimeEntry', timeEntry)).thenReturn(true);
 
-      editor.updateTimeEntry(timeEntry);
+      print('t1 ');
 
-      view.getLogs(callsTo('set:timeFrom', START)).verify(happenedOnce);
-      view.getLogs(callsTo('set:timeTo', END)).verify(happenedOnce);
-      view.getLogs(callsTo('set:comment', comment)).verify(happenedOnce);
+      editor.updateTimeEntry(timeEntry);
+      print('t2 ');
+      print(view.getLogs().logs);
+
+      view.getLogs(callsTo('timeFrom=', START)).verify(happenedOnce);
+      view.getLogs(callsTo('timeTo=', END)).verify(happenedOnce);
+      view.getLogs(callsTo('comment=', comment)).verify(happenedOnce);
       view.getLogs(callsTo('setupProjects', recentProjects, projects)).verify(happenedOnce);
-      view.getLogs(callsTo('set:project', project)).verify(happenedOnce);
-      view.getLogs(callsTo('set:activity', activity)).verify(happenedOnce);
+      view.getLogs(callsTo('project=', project)).verify(happenedOnce);
+      view.getLogs(callsTo('activity=', activity)).verify(happenedOnce);
     });
 
 
@@ -114,8 +120,8 @@ void timeEntryEditorTests() {
 
       editor.overwriteViewDataWithTimeEntry();
 
-      view.getLogs(callsTo('set:project', project)).verify(happenedOnce);
-      view.getLogs(callsTo('set:activity', activity)).verify(happenedOnce);
+      view.getLogs(callsTo('project=', project)).verify(happenedOnce);
+      view.getLogs(callsTo('activity=', activity)).verify(happenedOnce);
     });
 
   });

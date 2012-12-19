@@ -1,3 +1,5 @@
+part of zemobileLib;
+
 class SettingsEditor {
   SettingsEditorView view;
   ActivityProvider activityProvider;

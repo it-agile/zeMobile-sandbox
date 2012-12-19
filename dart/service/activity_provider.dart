@@ -1,3 +1,5 @@
+part of zemobileLib;
+
 typedef void OnProjectFetched(List<Project> projects);
 
 class ActivityProvider {

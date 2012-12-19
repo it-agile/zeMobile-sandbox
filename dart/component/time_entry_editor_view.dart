@@ -1,3 +1,5 @@
+part of zemobileLib;
+
 typedef ActivitiesForProjectDeterminer(String projectName);
 
 class TimeEntryEditorView {

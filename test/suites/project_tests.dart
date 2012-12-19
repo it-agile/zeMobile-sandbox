@@ -1,3 +1,5 @@
+part of testSuites;
+
 void projectTests() {
   group('A project', () {
     final activity1 = new Activity(1, 'A1');

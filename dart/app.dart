@@ -1,3 +1,5 @@
+part of zemobileLib;
+
 class App {
   final ActivityProvider activityProvider;
   final TimeEntryProvider timeEntryProvider;

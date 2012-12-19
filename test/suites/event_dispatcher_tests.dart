@@ -1,3 +1,5 @@
+part of testSuites;
+
 void eventDispatcherTests() {
   var eventDispatcher = new EventDispatcher<int>();
   var listener1Called = false;

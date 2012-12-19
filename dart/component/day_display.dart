@@ -1,3 +1,5 @@
+part of zemobileLib;
+
 class DayDisplayFactory {
   final Expander expander;
   final TimeEntryEditorFactory timeEntryEditorFactory;

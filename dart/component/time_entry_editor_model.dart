@@ -1,3 +1,5 @@
+part of zemobileLib;
+
 class TimeEntryEditorModel {
   TimeEntry _entry;
   List<Project> _projects;

@@ -1,3 +1,5 @@
+part of testSuites;
+
 void monthTests() {
   final timeEntry1 = new TimeEntry(id: 1, activityId: 2, date: new ZeDate(1, 2, 2012), start: new ZeTime(9, 0),
                                    end: new ZeTime(12, 0), comment: 'c1');

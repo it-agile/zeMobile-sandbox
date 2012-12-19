@@ -1,3 +1,5 @@
+part of testSuites;
+
 void dayDisplayTests() {
   group('A day display model', () {
     var day = const ZeDate(11, 10, 2011);

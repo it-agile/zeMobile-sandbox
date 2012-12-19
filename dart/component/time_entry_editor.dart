@@ -1,3 +1,5 @@
+part of zemobileLib;
+
 class TimeEntryEditorFactory {
   final ActivityProvider activityProvider;
   final TimeEntryProvider timeEntryProvider;
@@ -44,11 +46,13 @@ class TimeEntryEditor {
   void updateTimeEntry(TimeEntry timeEntry) {
     if(model.shouldUpdateTimeEntry(timeEntry)) {
       model.updateTimeEntry(timeEntry);
+      print('kak1 ');
       overwriteViewDataWithTimeEntry();
     }
   }
 
   void overwriteViewDataWithTimeEntry() {
+    print('kak2');
     view.timeFrom = model.start;
     view.timeTo = model.end;
     view.comment = model.comment;

@@ -1,3 +1,5 @@
+part of zemobileLib;
+
 class MonthDisplayFactory {
   final Expander expander;
   final DayDisplayFactory dayDisplayFactory;

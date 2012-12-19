@@ -1,3 +1,5 @@
+part of testSuites;
+
 void timeTests() {
   group('A ze time based on a string with the format hh:mm', () {
     var time = new ZeTime.fromString('09:34');

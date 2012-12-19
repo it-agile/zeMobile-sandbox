@@ -1,3 +1,5 @@
+part of zemobileLib;
+
 class UserRepository extends Repository {
   User loadUser() {
     if (storage[USER_KEY] != null) {

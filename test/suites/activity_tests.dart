@@ -1,3 +1,5 @@
+part of testSuites;
+
 void activityTests() {
 
   group('An activity', () {

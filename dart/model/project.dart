@@ -1,3 +1,5 @@
+part of zemobileLib;
+
 class Project {
   String name;
   List<Activity> activities;

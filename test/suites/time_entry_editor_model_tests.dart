@@ -1,3 +1,5 @@
+part of testSuites;
+
 void timeEntryEditorModelTests() {
   final TIME_ENTRY_ID = 42;
   final ACTIVITY_ID = 76;

@@ -1,3 +1,5 @@
+part of testSuites;
+
 void timeEntryProviderTests() {
   var errorDisplay = new ErrorDisplayMock();
   var webServiceRequester = new WebServiceRequesterMock();

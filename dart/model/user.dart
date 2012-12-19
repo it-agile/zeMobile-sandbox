@@ -1,3 +1,5 @@
+part of zemobileLib;
+
 class User {
   String name;
   String password;

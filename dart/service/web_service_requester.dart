@@ -1,3 +1,5 @@
+part of zemobileLib;
+
 class WebServiceRequester {
   static final String USER_MARKER = '@@USER@@';
   Login login;

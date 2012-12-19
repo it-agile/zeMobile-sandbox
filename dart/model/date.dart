@@ -1,3 +1,5 @@
+part of zemobileLib;
+
 class ZeDate {
   static final DAY_DURATION = const Duration(days:1, hours:10);
   static final MONTH_DURATION = const Duration(days:30);
@@ -8,14 +10,14 @@ class ZeDate {
   const ZeDate(this.day, this.month, this.year);
   
   factory ZeDate.fromGermanString(String dateString)  {
-    RegExp dateReg = const RegExp(r'(\d*)\.(\d*)\.(\d*)');
+    RegExp dateReg = new RegExp(r'(\d*)\.(\d*)\.(\d*)');
     for(Match m in dateReg.allMatches(dateString)) {
       return new ZeDate(parseInt(m.group(1)), parseInt(m.group(2)), parseInt(m.group(3)));
     }
   }
   
   factory ZeDate.fromString(String dateString)  {
-    RegExp dateReg = const RegExp(r'(\d*)-(\d*)-(\d*)');
+    RegExp dateReg = new RegExp(r'(\d*)-(\d*)-(\d*)');
     for(Match m in dateReg.allMatches(dateString)) {
       return new ZeDate(parseInt(m.group(3)), parseInt(m.group(2)), parseInt(m.group(1)));
     }

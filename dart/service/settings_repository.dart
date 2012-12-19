@@ -1,3 +1,5 @@
+part of zemobileLib;
+
 class SettingsRepository extends Repository {
 
   Settings loadSettings() {

@@ -1,3 +1,5 @@
+part of testSuites;
+
 void timeEntryTests() {
   group('A time entry', () {
     final date1 = const ZeDate(1,2,2010);

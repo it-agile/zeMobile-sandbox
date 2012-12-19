@@ -1,3 +1,5 @@
+part of testSuites;
+
 void timeEntryRepositoryTests() {
   var storage = document.window.localStorage;
 

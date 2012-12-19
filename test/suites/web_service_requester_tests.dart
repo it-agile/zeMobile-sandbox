@@ -1,3 +1,5 @@
+part of testSuites;
+
 void webServiceRequesterTests() {
   group('A web service requester', () {
     var user = new User('u', 'p');

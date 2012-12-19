@@ -1,3 +1,5 @@
+part of zemobileLib;
+
 class Classes {
   static const String HEADER = 'header';
   static const String CONTAINER = 'container';

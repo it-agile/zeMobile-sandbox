@@ -1,3 +1,5 @@
+part of testSuites;
+
 void userRepositoryTests() {
   var storage = document.window.localStorage;
 

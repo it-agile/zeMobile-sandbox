@@ -1,3 +1,5 @@
+part of zemobileLib;
+
 class TimeEntryProvider {
   final ErrorDisplay errorDisplay;
   final WebServiceRequester webServiceRequester;

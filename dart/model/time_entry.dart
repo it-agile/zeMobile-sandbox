@@ -1,3 +1,5 @@
+part of zemobileLib;
+
 class TimeEntry {
   int id;
   int activityId;

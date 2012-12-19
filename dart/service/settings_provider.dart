@@ -1,3 +1,5 @@
+part of zemobileLib;
+
 class SettingsProvider {
   final SettingsRepository repository;
   Settings cachedSettings;

@@ -1,3 +1,5 @@
+part of zemobileLib;
+
 class Repository {
   final Storage storage;
 

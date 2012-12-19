@@ -1,3 +1,5 @@
+part of testSuites;
+
 void activityProviderTests() {
   group('An activity provider', () {
     var errorDisplay = new ErrorDisplayMock();

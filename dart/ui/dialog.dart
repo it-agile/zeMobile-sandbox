@@ -1,3 +1,5 @@
+part of zemobileLib;
+
 typedef DialogCallback(String pressedButtonText);
 
 class Dialog {

@@ -1,3 +1,5 @@
+part of zemobileLib;
+
 class AppBuilder {
   static App app = null;
   static App buildApp() {

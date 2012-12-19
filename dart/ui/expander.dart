@@ -1,3 +1,5 @@
+part of zemobileLib;
+
 class Expander {
   void connect(Element element) {
     Element expander = findExpander(element);
