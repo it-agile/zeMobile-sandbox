@@ -1,7 +1,7 @@
 part of testSuites;
 
 void activityRepositoryTests() {
-  var storage = document.window.localStorage;
+  var storage = window.localStorage;
 
   group('An activity repository', () {
     var activityRepository = new ActivityRepository();

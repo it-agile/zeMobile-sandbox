@@ -1,7 +1,7 @@
 part of testSuites;
 
 void timeEntryRepositoryTests() {
-  var storage = document.window.localStorage;
+  var storage = window.localStorage;
 
   group('A time entry repository', () {
     var timeEntryRespository = new TimeEntryRepository();

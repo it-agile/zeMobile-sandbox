@@ -36,7 +36,7 @@ void loginTests() {
     var userFuture = null;
 
     resetMocks() {
-      document.window.localStorage.clear();
+      window.localStorage.clear();
       clearMocks([modelMock, viewMock]);
     }
 

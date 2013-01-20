@@ -1,7 +1,7 @@
 part of testSuites;
 
 void userRepositoryTests() {
-  var storage = document.window.localStorage;
+  var storage = window.localStorage;
 
   group('A user repository', () {
     var userRepository = new UserRepository();

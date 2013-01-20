@@ -10,6 +10,7 @@ class App {
   App(this.activityProvider, this.timeEntryProvider, this.monthDisplayFactory, this.settings, this.expander);
   
   void start() {
+    fixiPhone5FullScreen();
     document.body.nodes.add(settings.createUI());
     activityProvider.fetchProjects().chain(fetchCurrentMonthAfterFetchingProjects)
                                     .then(displayCurrentDayInCurrentMonth);
@@ -29,5 +30,11 @@ class App {
     currentDayElement.scrollIntoView();
     timeEntryProvider.monthUpdated.addListener(monthDisplay.updateMonth);
     timeEntryProvider.refetchTimeEntriesIfLoadedFromCache(month.month, month.year);
+  }
+
+  void fixiPhone5FullScreen() {
+    if (window.screen.height == 568) {
+      document.query('meta[name=viewport]').attributes['content'] = 'initial-scale=1';
+    }
   }
 }
